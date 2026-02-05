@@ -1,6 +1,6 @@
 {
   "name": "Sahu Agent MoE - DeepThink AI",
-  "short_name": "Sahu Agent",
+  "short_name": "SahuAI Agent",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0f172a",
