@@ -1220,9 +1220,7 @@
             const doc = new Document({ sections: [{ children: [new Paragraph({ children: [new TextRun(window.lastAnswer || '')] })] }] });
             Packer.toBlob(doc).then(blob => saveAs(blob, 'sahu-answer.docx'));
         }
-    </script>
-
-    <script>
+        
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("./sw.js").then(reg => {
         if (reg.waiting) {
@@ -1240,6 +1238,6 @@
         });
       });
     }
-    </script>
+        </script>
 </body>
 </html>
