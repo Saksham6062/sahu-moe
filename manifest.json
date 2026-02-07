@@ -2,12 +2,13 @@
   "name": "Sahu Agent MoE - DeepThink AI",
   "short_name": "SahuAI Agent",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#667eea",
   "icons": [
     {
-      "src": "./icon-512.png",
+      "src": "icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
