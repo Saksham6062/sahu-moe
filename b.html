@@ -1,0 +1,1713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>SAHU 2.0 - Ultra AI Workbench</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Export Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://unpkg.com/docx@8.2.0/build/index.umd.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    
+    <!-- SAHU 2.0 New Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjs/lib/browser/math.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+
+    <style>
+        @import url(https://fonts.googleapis.com/css?family=Google+Sans+Text);
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f8f8;
+            --bg-tertiary: #efefef;
+            --text-primary: #1a1a1a;
+            --text-secondary: #525252;
+            --accent: #667eea;
+            --accent-hover: #5a6fd6;
+            --border: #e0e0e0;
+        }
+        .dark-mode {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #141414;
+            --bg-tertiary: #1e1e1e;
+            --text-primary: #e5e5e5;
+            --text-secondary: #a3a3a3;
+            --accent: #667eea;
+            --accent-hover: #7c8ff0;
+            --border: #2a2a2a;
+        }
+        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Google Sans Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overscroll-behavior: none;
+            margin: 0;
+            padding: 0;
+        }
+        .sidebar { background-color: var(--bg-secondary); border-color: var(--border); }
+        .message-user { background: linear-gradient(135deg, var(--accent) 0%, #764ba2 100%); }
+        .message-assistant { background-color: var(--bg-tertiary); }
+        .input-area { background-color: var(--bg-secondary); border-color: var(--border); }
+        .expert-card {
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+        .expert-card.thinking { border-color: #f59e0b; box-shadow: 0 0 15px rgba(245, 158, 11, 0.15); }
+        .expert-card.complete { border-color: #22c55e; }
+        .expert-card.error { border-color: #ef4444; }
+        .expert-card.unsafe { border-color: #ef4444; background-color: rgba(239, 68, 68, 0.05); }
+        
+        .typing-indicator span { animation: typing 1.4s infinite; }
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+            30% { transform: translateY(-6px); opacity: 1; }
+        }
+        .scrollbar-thin::-webkit-scrollbar { width: 5px; }
+        .scrollbar-thin::-webkit-scrollbar-track { background: var(--bg-secondary); }
+        .scrollbar-thin::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        pre code {
+            display: block;
+            padding: 12px;
+            background: #1a1a1a;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 12px;
+            line-height: 1.5;
+            color: #e5e5e5;
+        }
+        .thinking-block {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            font-size: 13px;
+            display: none; /* Hidden by default */
+        }
+        .deepthink-active .thinking-block {
+            display: block; /* Shown when active */
+        }
+        .thinking-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            color: #d97706;
+            font-weight: 600;
+            font-size: 12px;
+        }
+        .aggregator-response {
+            background: linear-gradient(135deg, var(--bg-tertiary) 0%, rgba(102, 126, 234, 0.1) 100%);
+            border: 2px solid var(--accent);
+        }
+        .stage-1 { border-color: #f59e0b; background: linear-gradient(135deg, var(--bg-tertiary) 0%, rgba(245, 158, 11, 0.1) 100%); }
+        .stage-2 { border-color: #06b6d4; background: linear-gradient(135deg, var(--bg-tertiary) 0%, rgba(6, 182, 212, 0.1) 100%); }
+        .stage-3 { border-color: #22c55e; background: linear-gradient(135deg, var(--bg-tertiary) 0%, rgba(34, 197, 94, 0.1) 100%); }
+        
+        .file-preview {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-top: 12px;
+        }
+        .export-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+            padding: 12px;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+        }
+        .export-btn {
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid var(--border);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            min-height: 40px;
+        }
+        .export-btn:hover { background: var(--accent); color: white; border-color: var(--accent); }
+        .export-btn.sparkle-btn {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.15), rgba(168, 85, 247, 0.15));
+            border-color: rgba(236, 72, 153, 0.3);
+            color: #db2777;
+        }
+        .export-btn.sparkle-btn:hover {
+            background: linear-gradient(135deg, #ec4899, #8b5cf6);
+            color: white;
+            border-color: transparent;
+        }
+        .toast { 
+            animation: slideIn 0.3s ease-out;
+            position: fixed;
+            bottom: 80px;
+            right: 16px;
+            z-index: 1000;
+            padding: 12px 20px;
+            border-radius: 10px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .provider-badge { font-size: 10px; padding: 3px 8px; border-radius: 6px; font-weight: 600; margin-bottom: 4px; display: inline-block; }
+        .provider-huggingface { background: rgba(255, 213, 0, 0.2); color: #ca8a04; }
+        .provider-openrouter { background: rgba(168, 85, 247, 0.2); color: #9333ea; }
+        .provider-groq { background: rgba(249, 115, 22, 0.2); color: #ea580c; }
+        .provider-together { background: rgba(34, 197, 94, 0.2); color: #16a34a; }
+        .provider-cerebras { background: rgba(99, 102, 241, 0.2); color: #6366f1; }
+        .provider-sambanova { background: rgba(14, 165, 233, 0.2); color: #0284c7; }
+        .provider-fireworks { background: rgba(239, 68, 68, 0.2); color: #dc2626; }
+        .provider-routeway { background: rgba(16, 185, 129, 0.2); color: #059669; }
+        .provider-mistral { background: rgba(251, 146, 60, 0.2); color: #ea580c; }
+        .provider-gemini { background: rgba(59, 130, 246, 0.2); color: #2563eb; }
+        .provider-longcat { background: rgba(139, 92, 246, 0.2); color: #7c3aed; }
+        .provider-ollama { background: rgba(75, 85, 99, 0.2); color: #374151; }
+        .provider-zenmusk { background: rgba(236, 72, 153, 0.2); color: #be185d; }
+        .provider-ionet { background: rgba(6, 182, 212, 0.2); color: #0891b2; }
+        .provider-nvidia { background: rgba(118, 185, 0, 0.2); color: #76b900; }
+        
+        .stage-btn {
+            padding: 4px 10px;
+            font-size: 11px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            transition: all 0.2s;
+            min-width: 32px;
+            text-align: center;
+        }
+        .stage-btn:hover { border-color: var(--accent); }
+        .stage-btn.active-1 { background: #f59e0b; color: white; border-color: #f59e0b; }
+        .stage-btn.active-2 { background: #06b6d4; color: white; border-color: #06b6d4; }
+        .stage-btn.active-3 { background: #22c55e; color: white; border-color: #22c55e; }
+        .fallback-indicator {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: rgba(249, 115, 22, 0.2);
+            color: #ea580c;
+        }
+        .model-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: var(--bg-secondary);
+        }
+        .model-card:hover { border-color: var(--accent); }
+        .model-card.selected { border-color: var(--accent); background: rgba(102, 126, 234, 0.1); }
+        
+        .sidebar { 
+            position: fixed; 
+            left: -100%; 
+            top: 0; 
+            bottom: 0; 
+            z-index: 100; 
+            width: 85%; 
+            max-width: 300px; 
+            transition: left 0.3s ease;
+            overflow-y: auto;
+        }
+        .sidebar.open { left: 0; }
+        .sidebar-overlay { 
+            display: none; 
+            position: fixed; 
+            inset: 0; 
+            background: rgba(0,0,0,0.5); 
+            z-index: 99; 
+        }
+        .sidebar-overlay.show { display: block; }
+        
+        .blur-content {
+            filter: blur(5px);
+            user-select: none;
+            pointer-events: none;
+        }
+
+        .context-meter { width: 32px; height: 32px; position: relative; }
+        .context-meter svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+        .context-meter circle { fill: none; stroke-width: 3; }
+        .context-bg { stroke: var(--border); }
+        .context-progress { stroke: var(--accent); stroke-dasharray: 100; stroke-dashoffset: 100; transition: stroke-dashoffset 0.5s; }
+        .tab-btn { @apply p-2 rounded-lg text-xs font-medium cursor-pointer hover:bg-[var(--bg-tertiary)]; }
+        .tab-btn.active { background: var(--accent); color: white; }
+        .source-card { @apply flex items-center gap-2 p-2 rounded-lg bg-[var(--bg-tertiary)] border border-[var(--border)] text-xs hover:border-[var(--accent)] transition-colors; }
+
+        @media (min-width: 768px) {
+            .sidebar { 
+                position: relative; 
+                left: 0; 
+                width: 280px; 
+            }
+            .sidebar-overlay { display: none !important; }
+        }
+        @media (max-width: 480px) {
+            .export-btn span { display: none; }
+            .export-btn { padding: 10px 12px; }
+        }
+    </style>
+</head>
+<body class="h-screen overflow-hidden">
+    <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+    
+    <div id="app" class="flex h-full">
+        <aside id="sidebar" class="sidebar flex flex-col border-r border-[var(--border)]">
+            <div class="p-4 border-b border-[var(--border)]">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#667eea] to-[#764ba2] flex items-center justify-center shadow-lg">
+                        <i class="fas fa-robot text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-lg gradient-text">SAHU 2.0</h1>
+                        <p class="text-xs text-[var(--text-secondary)]">Ultra AI Workbench</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- New SAHU 2.0 Tabs -->
+            <div class="flex p-2 gap-1 border-b border-[var(--border)] bg-[var(--bg-secondary)]">
+                <button onclick="sahu2.switchSidebarTab('chats')" id="tab-chats" class="tab-btn active flex-1 text-center"><i class="fas fa-comments"></i> Chat</button>
+                <button onclick="sahu2.switchSidebarTab('memory')" id="tab-memory" class="tab-btn flex-1 text-center"><i class="fas fa-brain"></i> Memory</button>
+                <button onclick="sahu2.switchSidebarTab('bench')" id="tab-bench" class="tab-btn flex-1 text-center"><i class="fas fa-chart-bar"></i> Bench</button>
+            </div>
+
+            <!-- CHAT VIEW (Original + Enhanced) -->
+            <div id="view-chats" class="flex-1 flex flex-col overflow-hidden">
+                <div class="p-3">
+                    <button onclick="newChat()" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white font-semibold flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-transform">
+                        <i class="fas fa-plus"></i>
+                        New Chat
+                    </button>
+                </div>
+
+                <!-- Chat History Search (Low 🔥🔥 Basic UX win) -->
+                <div class="px-3 pb-2">
+                    <div class="relative">
+                        <i class="fas fa-search absolute left-3 top-2.5 text-[var(--text-secondary)] text-xs"></i>
+                        <input type="text" id="history-search" placeholder="Search chats..." class="w-full pl-8 pr-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border)] rounded-xl text-xs outline-none focus:border-[var(--accent)]" oninput="sahu2.filterHistory(this.value)">
+                    </div>
+                </div>
+
+                <!-- SCROLLABLE PROVIDER LIST IMPLEMENTATION -->
+                <div class="px-3 pb-2">
+                    <label class="text-xs text-[var(--text-secondary)] mb-2 block font-medium">Active Providers</label>
+                    <!-- Added max-height, overflow-y-auto, and custom-scrollbar handling -->
+                    <div id="providerCheckboxes" class="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto scrollbar-thin pr-1">
+                        <!-- Provider Checkboxes will be rendered here by JS -->
+                    </div>
+                </div>
+
+                <div class="px-3 pb-3">
+                    <button onclick="openModelSelector()" class="w-full py-3 px-4 rounded-xl bg-[var(--bg-tertiary)] border border-[var(--border)] text-sm flex items-center justify-between active:scale-95 transition-transform">
+                        <span class="flex items-center gap-2">
+                            <i class="fas fa-cubes text-[var(--accent)]"></i>
+                            Configure Models
+                        </span>
+                        <span id="selectedModelCount" class="text-xs bg-[var(--accent)] text-white px-2 py-0.5 rounded-full">0</span>
+                    </button>
+                </div>
+
+                <div class="flex-1 overflow-y-auto scrollbar-thin px-3">
+                    <p class="text-xs text-[var(--text-secondary)] mb-2 font-medium">Recent Chats</p>
+                    <div id="chatHistory" class="space-y-1"></div>
+                </div>
+            </div>
+
+            <!-- MEMORY VIEW (New) -->
+            <div id="view-memory" class="flex-1 hidden overflow-y-auto p-3 space-y-4">
+                <div class="bg-[var(--bg-tertiary)] p-3 rounded-xl border border-[var(--border)]">
+                    <h3 class="font-bold text-sm mb-2 flex items-center gap-2"><i class="fas fa-user"></i> User Persona</h3>
+                    <div id="memory-list" class="space-y-2 text-xs"></div>
+                </div>
+                <button onclick="sahu2.clearMemory()" class="w-full py-2 text-xs text-red-500 border border-red-200 rounded-lg hover:bg-red-50">Clear All Memories</button>
+            </div>
+
+            <!-- BENCHMARK VIEW (New) -->
+            <div id="view-bench" class="flex-1 hidden overflow-y-auto p-3 space-y-4">
+                <div class="bg-gradient-to-br from-orange-100 to-red-100 dark:from-orange-900 dark:to-red-900 p-4 rounded-xl text-center">
+                    <i class="fas fa-trophy text-2xl text-orange-500 mb-2"></i>
+                    <h3 class="font-bold">Model Leaderboard</h3>
+                    <p class="text-xs opacity-75">Browser-based Eval</p>
+                </div>
+                <button onclick="sahu2.runBenchmarks()" class="w-full py-2 bg-[var(--accent)] text-white rounded-lg text-xs font-bold">Run MMLU (Lite)</button>
+                <div id="bench-results" class="text-xs space-y-2"></div>
+            </div>
+
+            <!-- Footer area -->
+            <div class="px-3 pb-3 space-y-2 border-t border-[var(--border)] pt-2">
+                <label class="flex items-center justify-between p-2 bg-[var(--bg-tertiary)] rounded-lg cursor-pointer">
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-shield-alt text-green-500"></i>
+                        <span class="text-xs">Auto Fallback</span>
+                    </div>
+                    <input type="checkbox" id="autoFallback" checked="" class="w-4 h-4 accent-[var(--accent)]" onchange="saveAutoFallback()">
+                </label>
+
+                <label class="flex items-center justify-between p-2 bg-[var(--bg-tertiary)] rounded-lg cursor-pointer">
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-user-shield text-blue-500"></i>
+                        <span class="text-xs">Shield Gemma</span>
+                    </div>
+                    <input type="checkbox" id="shieldGemmaCheck" class="w-4 h-4 accent-[var(--accent)]" onchange="saveShieldGemma()">
+                </label>
+            </div>
+
+            <div class="p-3 border-t border-[var(--border)] space-y-1">
+                <button onclick="openSettings()" class="w-full py-3 px-4 rounded-xl hover:bg-[var(--bg-tertiary)] flex items-center gap-3 transition-colors active:scale-95">
+                    <i class="fas fa-cog text-[var(--text-secondary)]"></i>
+                    <span class="text-sm">Settings</span>
+                </button>
+                <button onclick="toggleTheme()" class="w-full py-3 px-4 rounded-xl hover:bg-[var(--bg-tertiary)] flex items-center gap-3 transition-colors active:scale-95">
+                    <i id="themeIcon" class="fas fa-moon text-[var(--text-secondary)]"></i>
+                    <span class="text-sm" id="themeText">Dark Mode</span>
+                </button>
+            </div>
+        </aside>
+
+        <main class="flex-1 flex flex-col h-full min-w-0">
+            <header class="h-14 border-b border-[var(--border)] flex items-center justify-between px-4 bg-[var(--bg-secondary)]">
+                <div class="flex items-center gap-3">
+                    <button onclick="toggleSidebar()" class="p-2 rounded-lg hover:bg-[var(--bg-tertiary)] transition-colors active:scale-95">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-robot text-[var(--accent)]"></i>
+                        <span class="font-semibold text-sm hidden sm:inline">SAHU 2.0</span>
+                    </div>
+                    
+                    <!-- SAHU 2.0 Header Controls -->
+                    <div class="hidden md:flex items-center gap-2 ml-4 border-l border-[var(--border)] pl-4">
+                        <select id="preset-selector" onchange="sahu2.applyPreset(this.value)" class="text-xs bg-transparent border border-[var(--border)] rounded px-2 py-1 outline-none max-w-[120px] truncate">
+                            <option value="">⚡ Model Presets</option>
+                            <option value="coding">👨‍💻 Coding Experts</option>
+                            <option value="reasoning">🧠 Deep Reasoning</option>
+                            <option value="speed">🚀 Speed Run</option>
+                        </select>
+                        <select id="focus-mode" class="text-xs bg-transparent border border-[var(--border)] rounded px-2 py-1 outline-none max-w-[100px] truncate">
+                            <option value="all">🔍 Focus: All</option>
+                            <option value="academic">🎓 Academic</option>
+                            <option value="code">💻 Code</option>
+                            <option value="news">📰 News</option>
+                        </select>
+                        <select id="persona-selector" onchange="sahu2.setPersona(this.value)" class="text-xs bg-transparent border border-[var(--border)] rounded px-2 py-1 outline-none max-w-[100px] truncate">
+                            <option value="default">🤖 Default</option>
+                            <option value="teacher">🧑‍🏫 Teacher</option>
+                            <option value="dev">👨‍💻 Developer</option>
+                            <option value="exec">👔 Executive</option>
+                            <!-- Tutor Mode / SAT Prep Medium 🔥🔥🔥 -->
+                            <option value="tutor">📚 Tutor/SAT</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-3">
+                    <!-- Context Meter -->
+                    <div class="flex items-center gap-2" title="Context Usage">
+                        <div class="context-meter">
+                            <svg viewBox="0 0 36 36">
+                                <path class="context-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"></path>
+                                <path id="context-progress" class="context-progress" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"></path>
+                            </svg>
+                        </div>
+                        <span id="token-count" class="text-xs text-[var(--text-secondary)] font-mono">0k</span>
+                    </div>
+
+                    <div id="connectionStatus" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--bg-tertiary)]">
+                        <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                        <span class="text-xs hidden sm:inline">Ready</span>
+                    </div>
+                    
+                    <!-- COCKPIT BUTTON REMOVED AS REQUESTED -->
+                </div>
+            </header>
+
+            <div id="chatArea" class="flex-1 overflow-y-auto scrollbar-thin p-4 relative">
+                <div id="welcomeScreen" class="h-full flex flex-col items-center justify-center px-4">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#667eea] to-[#764ba2] flex items-center justify-center mb-6 shadow-xl">
+                        <i class="fas fa-robot text-2xl text-white"></i>
+                    </div>
+                    <h2 class="text-xl font-bold mb-2 gradient-text text-center">SAHU 2.0 Agents</h2>
+                    <p class="text-[var(--text-secondary)] mb-4 text-center text-sm max-w-md">
+                        <strong>50+ Models Parallel</strong> • Memory • Web Search • Generative UI
+                    </p>
+                    <div class="flex flex-wrap justify-center gap-2 mb-6">
+                        <!-- Original badges preserved -->
+                        <span class="provider-badge provider-huggingface">HuggingFace</span>
+                        <span class="provider-badge provider-openrouter">OpenRouter</span>
+                        <span class="provider-badge provider-groq">Groq</span>
+                        <span class="provider-badge provider-together">Together</span>
+                        <span class="provider-badge provider-cerebras">Cerebras</span>
+                        <span class="provider-badge provider-sambanova">SambaNova</span>
+                        <span class="provider-badge provider-fireworks">Fireworks</span>
+                        <span class="provider-badge provider-routeway">Routeway</span>
+                        <span class="provider-badge provider-mistral">Mistral</span>
+                        <span class="provider-badge provider-gemini">Gemini</span>
+                        <span class="provider-badge provider-longcat">LongCat</span>
+                        <span class="provider-badge provider-ollama">Ollama Cloud</span>
+                        <span class="provider-badge provider-zenmusk">ZenMusk</span>
+                        <span class="provider-badge provider-ionet">io.net</span>
+                        <span class="provider-badge provider-nvidia">Nvidia</span>
+                    </div>
+                    <div class="grid grid-cols-1 gap-3 w-full max-w-md">
+                        <button onclick="quickPrompt('Build a modern landing page with hero section')" class="p-4 rounded-xl bg-[var(--bg-tertiary)] hover:bg-[var(--border)] text-left transition-all active:scale-98">
+                            <i class="fas fa-globe text-[#667eea] mb-2"></i>
+                            <p class="text-sm font-medium">Landing Page</p>
+                            <p class="text-xs text-[var(--text-secondary)]">Generates HTML preview</p>
+                        </button>
+                        <button onclick="quickPrompt('Explain quantum computing simply')" class="p-4 rounded-xl bg-[var(--bg-tertiary)] hover:bg-[var(--border)] text-left transition-all active:scale-98">
+                            <i class="fas fa-atom text-yellow-500 mb-2"></i>
+                            <p class="text-sm font-medium">Explanation</p>
+                            <p class="text-xs text-[var(--text-secondary)]">Quantum computing basics</p>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="messagesContainer" class="hidden space-y-4 max-w-4xl mx-auto pb-32"></div>
+                
+                <!-- COCKPIT REMOVED AS REQUESTED -->
+            </div>
+
+            <div class="p-3 border-t border-[var(--border)] bg-[var(--bg-secondary)] safe-area-bottom">
+                <div class="max-w-3xl mx-auto">
+                    <div id="fileUploadPreview" class="hidden mb-3"></div>
+                    <div class="input-area rounded-2xl border p-3 shadow-sm relative">
+                        <div class="flex items-end gap-3">
+                            <button onclick="triggerFileUpload()" class="p-2 rounded-xl hover:bg-[var(--bg-tertiary)] text-[var(--text-secondary)] transition-colors active:scale-95" title="Upload file">
+                                <i class="fas fa-paperclip text-lg"></i>
+                            </button>
+                            <!-- Thinking Modes (Fast/Deep) -->
+                            <button onclick="toggleDeepThink()" id="deepThinkBtn" class="p-2 rounded-xl hover:bg-[var(--bg-tertiary)] text-[var(--text-secondary)] transition-colors active:scale-95" title="Toggle Deepthink (Fast vs Deep)">
+                                <i class="fas fa-trophy"></i>
+                            </button>
+                            <!-- Search Toggle -->
+                            <button onclick="sahu2.toggleSearch()" id="webSearchBtn" class="p-2 rounded-xl hover:bg-[var(--bg-tertiary)] text-[var(--text-secondary)] transition-colors active:scale-95" title="Search Web">
+                                <i class="fas fa-search"></i>
+                            </button>
+                            <input type="file" id="fileInput" class="hidden" accept=".txt,.pdf,.doc,.docx,.md,.json,.csv,.js,.py,.html,.css" onchange="handleFileUpload(event)">
+                            <textarea id="userInput" placeholder="Ask anything..." class="flex-1 bg-transparent resize-none outline-none max-h-32 text-base leading-relaxed" rows="1" onkeydown="handleKeyDown(event)" oninput="autoResize(this)"></textarea>
+                            <button onclick="sendMessage()" id="sendBtn" class="p-3 rounded-xl bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white transition-all disabled:opacity-50 active:scale-95 shadow-lg">
+                                <i class="fas fa-arrow-up"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <p class="text-xs text-center text-[var(--text-secondary)] mt-2">
+                        15 Providers • Auto Fallback • Extended Thinking • Generative UI
+                    </p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Original Settings & Model Modals (Preserved) -->
+    <div id="settingsModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-[var(--bg-secondary)] rounded-2xl w-full max-w-lg max-h-[85vh] overflow-hidden shadow-2xl flex flex-col">
+            <div class="flex items-center justify-between p-4 border-b border-[var(--border)]">
+                <h2 class="text-lg font-bold flex items-center gap-2">
+                    <i class="fas fa-cog text-[var(--accent)]"></i>
+                    API Keys
+                </h2>
+                <button onclick="closeSettings()" class="p-2 rounded-lg hover:bg-[var(--bg-tertiary)] transition-colors">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-2 bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 text-xs px-4 py-2">
+                <i class="fas fa-lock mr-1"></i> Keys are stored securely in your browser's LocalStorage. They are never sent to our servers, only to the respective AI providers.
+            </div>
+            <div class="p-4 space-y-3 overflow-y-auto flex-1" id="apiKeyInputs">
+                <!-- Dynamically populated -->
+            </div>
+            
+            <div class="p-4 border-t border-[var(--border)] bg-[var(--bg-tertiary)]">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-sm font-bold flex items-center gap-2"><i class="fas fa-code"></i> App Source Code</h3>
+                    <button onclick="copySourceCode()" class="text-xs bg-[var(--accent)] text-white px-2 py-1 rounded hover:bg-[var(--accent-hover)] transition-colors">Copy All</button>
+                </div>
+                <textarea id="sourceCodeViewer" readonly="" class="w-full h-24 p-2 text-xs font-mono bg-[var(--bg-secondary)] border border-[var(--border)] rounded-lg resize-none focus:outline-none" onclick="this.select()"></textarea>
+                <p class="text-[10px] text-[var(--text-secondary)] mt-1">This entire app is contained in a single HTML file.</p>
+            </div>
+
+            <div class="p-4 border-t border-[var(--border)] flex justify-end gap-3">
+                <button onclick="closeSettings()" class="px-4 py-2.5 rounded-xl hover:bg-[var(--bg-tertiary)] transition-colors text-sm">Cancel</button>
+                <button onclick="saveSettings()" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white font-medium text-sm active:scale-95">
+                    <i class="fas fa-save mr-2"></i>Save All
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modelSelectorModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-[var(--bg-secondary)] rounded-2xl w-full max-w-4xl max-h-[85vh] overflow-hidden shadow-2xl flex flex-col">
+            <div class="flex items-center justify-between p-4 border-b border-[var(--border)]">
+                <h2 class="text-lg font-bold flex items-center gap-2">
+                    <i class="fas fa-cubes text-[var(--accent)]"></i>
+                    Model Configuration
+                </h2>
+                <div class="flex gap-2">
+                    <button onclick="sahu2.applyPreset('speed')" class="px-3 py-1.5 text-xs border border-[var(--border)] rounded-lg hover:bg-[var(--bg-tertiary)] transition-colors">🚀 Speed</button>
+                    <button onclick="sahu2.applyPreset('coding')" class="px-3 py-1.5 text-xs border border-[var(--border)] rounded-lg hover:bg-[var(--bg-tertiary)] transition-colors">💻 Coding</button>
+                    <button onclick="sahu2.applyPreset('reasoning')" class="px-3 py-1.5 text-xs border border-[var(--border)] rounded-lg hover:bg-[var(--bg-tertiary)] transition-colors">🧠 Reasoning</button>
+                </div>
+                <button onclick="closeModelSelector()" class="p-2 rounded-lg hover:bg-[var(--bg-tertiary)] transition-colors">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-4 overflow-y-auto flex-1">
+                <p class="text-sm text-[var(--text-secondary)] mb-4">
+                    Select models and assign aggregator stages (1/2/3). "None" runs as parallel expert.
+                </p>
+                <div id="modelSelectorContent" class="space-y-4"></div>
+            </div>
+            <div class="p-4 border-t border-[var(--border)] flex justify-between items-center gap-3">
+                <div class="text-sm text-[var(--text-secondary)]">
+                    <span id="modalSelectedCount">0</span> selected
+                </div>
+                <div class="flex gap-3">
+                    <button onclick="closeModelSelector()" class="px-4 py-2.5 rounded-xl hover:bg-[var(--bg-tertiary)] transition-colors text-sm">Cancel</button>
+                    <button onclick="saveModelSelection()" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white font-medium text-sm active:scale-95">
+                        <i class="fas fa-check mr-2"></i>Apply
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const PROVIDERS = {
+            huggingface: {
+                name: 'HuggingFace',
+                endpoint: 'https://router.huggingface.co/v1/chat/completions',
+                keyName: 'sahu_huggingface_key',
+                color: 'huggingface',
+                icon: '🤗',
+                models: {
+                    'GLM-4.7': 'zai-org/GLM-4.7',
+                    'GLM-4.7-Flash': 'zai-org/GLM-4.7-Flash',
+                    'DeepSeek-R1': 'deepseek-ai/DeepSeek-R1',
+                    'Qwen3-Coder': 'Qwen/Qwen3-Coder-480B-A35B-Instruct',
+                    'Mistral-7B': 'mistralai/Mistral-7B-Instruct-v0.3',
+                    'Llama-3.3-70B': 'meta-llama/Llama-3.3-70B-Instruct'
+                }
+            },
+            openrouter: {
+                name: 'OpenRouter',
+                endpoint: 'https://openrouter.ai/api/v1/chat/completions',
+                keyName: 'sahu_openrouter_key',
+                color: 'openrouter',
+                icon: '🔀',
+                models: {
+                    'lfm-thinking': 'liquid/lfm-2.5-1.2b-thinking:free',
+                    'deepseek-r1': 'deepseek/deepseek-r1:free',
+                    'llama-3.1-405b': 'meta-llama/llama-3.1-405b-instruct:free'
+                }
+            },
+            groq: {
+                name: 'Groq',
+                endpoint: 'https://api.groq.com/openai/v1/chat/completions',
+                keyName: 'sahu_groq_key',
+                color: 'groq',
+                icon: '⚡',
+                models: {
+                    'llama-3.3-70b': 'llama-3.3-70b-versatile',
+                    'llama-3.1-8b': 'llama-3.1-8b-instant',
+                    'mixtral-8x7b': 'mixtral-8x7b-32768'
+                }
+            },
+            together: {
+                name: 'Together AI',
+                endpoint: 'https://api.together.xyz/v1/chat/completions',
+                keyName: 'sahu_together_key',
+                color: 'together',
+                icon: '🤝',
+                models: {
+                    'llama-3.1-405b': 'meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo',
+                    'qwen-2.5-72b': 'Qwen/Qwen2.5-72B-Instruct-Turbo'
+                }
+            },
+            cerebras: {
+                name: 'Cerebras',
+                endpoint: 'https://api.cerebras.ai/v1/chat/completions',
+                keyName: 'sahu_cerebras_key',
+                color: 'cerebras',
+                icon: '🧠',
+                models: {
+                    'llama-3.1-70b': 'llama3.1-70b',
+                    'llama-3.1-8b': 'llama3.1-8b'
+                }
+            },
+            sambanova: {
+                name: 'SambaNova',
+                endpoint: 'https://api.sambanova.ai/v1/chat/completions',
+                keyName: 'sahu_sambanova_key',
+                color: 'sambanova',
+                icon: '🌊',
+                models: {
+                    'llama-3.1-405b': 'Meta-Llama-3.1-405B-Instruct',
+                    'llama-3.1-70b': 'Meta-Llama-3.1-70B-Instruct'
+                }
+            },
+            fireworks: {
+                name: 'Fireworks AI',
+                endpoint: 'https://api.fireworks.ai/inference/v1/chat/completions',
+                keyName: 'sahu_fireworks_key',
+                color: 'fireworks',
+                icon: '🎆',
+                models: {
+                    'llama-3.1-405b': 'accounts/fireworks/models/llama-v3p1-405b-instruct',
+                    'qwen-2.5-72b': 'accounts/fireworks/models/qwen2p5-72b-instruct'
+                }
+            },
+            routeway: {
+                name: 'Routeway',
+                endpoint: 'https://api.routeway.ai/v1/chat/completions',
+                keyName: 'sahu_routeway_key',
+                color: 'routeway',
+                icon: '🛤️',
+                models: {
+                    'deepseek-r1': 'deepseek-r1:free',
+                    'llama-3.3-70b': 'llama-3.3-70b-instruct:free'
+                }
+            },
+            mistral: {
+                name: 'Mistral',
+                endpoint: 'https://api.mistral.ai/v1/agents/completions',
+                keyName: 'sahu_mistral_key',
+                color: 'mistral',
+                icon: '🌀',
+                models: {
+                    'mistral-large': 'mistral-large-latest',
+                    'codestral': 'codestral-latest'
+                }
+            },
+            gemini: {
+                name: 'Gemini',
+                endpoint: 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions',
+                keyName: 'sahu_gemini_key',
+                color: 'gemini',
+                icon: '✨',
+                models: {
+                    'gemini-1.5-pro': 'gemini-1.5-pro',
+                    'gemini-1.5-flash': 'gemini-1.5-flash'
+                }
+            },
+            longcat: {
+                name: 'LongCat',
+                endpoint: 'https://api.longcat.chat/openai/v1/chat/completions',
+                keyName: 'sahu_longcat_key',
+                color: 'longcat',
+                icon: '🐱',
+                models: {
+                    'longcat-flash': 'LongCat-Flash-Chat'
+                }
+            },
+            ollama: {
+                name: 'Ollama Cloud',
+                endpoint: 'https://api.ollama.cloud/v1/chat/completions',
+                keyName: 'sahu_ollama_key',
+                color: 'ollama',
+                icon: '🦙',
+                models: {
+                    'llama-3.1-405b': 'llama-3.1-405b',
+                    'gemma-2-27b': 'gemma2:27b'
+                }
+            },
+            zenmusk: {
+                name: 'ZenMusk',
+                endpoint: 'https://zenmux.ai/api/v1/chat/completions',
+                keyName: 'sahu_zenmusk_key',
+                color: 'zenmusk',
+                icon: '🚀',
+                models: {
+                    'gpt-4o': 'gpt-4o',
+                    'claude-3.5-sonnet': 'claude-3-5-sonnet-20240620'
+                }
+            },
+            ionet: {
+                name: 'io.net',
+                endpoint: 'https://api.io.net/v1/chat/completions',
+                keyName: 'sahu_ionet_key',
+                color: 'ionet',
+                icon: '☁️',
+                models: {
+                    'qwen-2.5-72b': 'Qwen/Qwen2.5-72B-Instruct'
+                }
+            },
+            nvidia: {
+                name: 'Nvidia',
+                endpoint: 'https://integrate.api.nvidia.com/v1/chat/completions',
+                keyName: 'sahu_nvidia_key',
+                color: 'nvidia',
+                icon: '🟢',
+                models: {
+                    'meta/llama-3.1-405b-instruct': 'meta/llama-3.1-405b-instruct',
+                    'meta/llama-3.1-70b-instruct': 'meta/llama-3.1-70b-instruct',
+                    'meta/llama-3.1-8b-instruct': 'meta/llama-3.1-8b-instruct',
+                    'mistralai/mixtral-8x22b-instruct-v0.1': 'mistralai/mixtral-8x22b-instruct-v0.1',
+                    'google/gemma-2-27b-it': 'google/gemma-2-27b-it',
+                    'google/gemma-2-9b-it': 'google/gemma-2-9b-it',
+                    'microsoft/phi-3-medium-4k-instruct': 'microsoft/phi-3-medium-4k-instruct',
+                    'snowflake/arctic': 'snowflake/arctic',
+                    'nvidia/nemotron-4-340b-instruct': 'nvidia/nemotron-4-340b-instruct',
+                    'qwen/qwen2-72b-instruct': 'qwen/qwen2-72b-instruct'
+                }
+            }
+        };
+
+        const AGGREGATOR_PROMPTS = {
+            stage1: `You are Stage 1 Aggregator hosted by Saksham Intelligence. Analyze all expert answers, identify consensus, disagreements, and errors. Create an initial synthesis. Think step by step in <think> tags.`,
+            stage2: `You are Stage 2 Aggregator hosted by Saksham Intelligence. Verify the Stage 1 synthesis, resolve contradictions, fill gaps. Think deeply in <think> tags.`,
+            stage3: `You are Stage 3 Final Aggregator hosted by Saksham Intelligence. Produce a clean, polished final answer. No meta-commentary. Complete and authoritative. Think briefly in <think> tags.`
+        };
+
+        let state = {
+            messages: [],
+            chatHistory: [],
+            currentChatId: null,
+            isProcessing: false,
+            theme: 'light',
+            uploadedFile: null,
+            uploadedFileContent: null,
+            activeProviders: ['nvidia'], 
+            selectedModels: [],
+            autoFallback: true,
+            shieldGemmaEnabled: false,
+            deepThinkEnabled: false
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSettings();
+            loadChatHistory();
+            initTheme();
+            renderProviderCheckboxes();
+            renderApiKeyInputs();
+            updateUI();
+            
+            // View Source Functionality
+            const viewer = document.getElementById('sourceCodeViewer');
+            if(viewer) viewer.value = document.documentElement.outerHTML;
+            
+            // SAHU 2.0 Init
+            if(window.sahu2) window.sahu2.init();
+        });
+        
+        function copySourceCode() {
+            const viewer = document.getElementById('sourceCodeViewer');
+            viewer.select();
+            navigator.clipboard.writeText(viewer.value).then(() => showToast('Source Code Copied!'));
+        }
+
+        function initTheme() {
+            const savedTheme = localStorage.getItem('sahu_theme') || 'light';
+            state.theme = savedTheme;
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                document.getElementById('themeIcon').className = 'fas fa-sun text-[var(--text-secondary)]';
+                document.getElementById('themeText').textContent = 'Light Mode';
+            }
+        }
+
+        function toggleTheme() {
+            state.theme = state.theme === 'light' ? 'dark' : 'light';
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('sahu_theme', state.theme);
+            const icon = document.getElementById('themeIcon');
+            const text = document.getElementById('themeText');
+            if (state.theme === 'dark') {
+                icon.className = 'fas fa-sun text-[var(--text-secondary)]';
+                text.textContent = 'Light Mode';
+            } else {
+                icon.className = 'fas fa-moon text-[var(--text-secondary)]';
+                text.textContent = 'Dark Mode';
+            }
+        }
+
+        function renderProviderCheckboxes() {
+            const container = document.getElementById('providerCheckboxes');
+            if (!container) return;
+            container.innerHTML = Object.entries(PROVIDERS).map(([key, provider]) => `
+                <label class="flex items-center gap-2 p-2 rounded-lg bg-[var(--bg-tertiary)] cursor-pointer hover:bg-[var(--border)] transition-colors ${state.activeProviders.includes(key) ? 'ring-2 ring-[var(--accent)]' : ''}">
+                    <input type="checkbox" class="w-4 h-4 accent-[var(--accent)]" 
+                        ${state.activeProviders.includes(key) ? 'checked' : ''} 
+                        onchange="toggleProvider('${key}', this.checked)">
+                    <span class="text-xs truncate">${provider.name}</span>
+                </label>
+            `).join('');
+        }
+
+        function toggleProvider(providerKey, enabled) {
+            if (enabled) {
+                if (!state.activeProviders.includes(providerKey)) state.activeProviders.push(providerKey);
+            } else {
+                state.activeProviders = state.activeProviders.filter(p => p !== providerKey);
+            }
+            localStorage.setItem('sahu_active_providers', JSON.stringify(state.activeProviders));
+            renderProviderCheckboxes();
+            updateUI();
+        }
+
+        function saveAutoFallback() {
+            state.autoFallback = document.getElementById('autoFallback').checked;
+            localStorage.setItem('sahu_auto_fallback', state.autoFallback);
+        }
+
+        function saveShieldGemma() {
+            state.shieldGemmaEnabled = document.getElementById('shieldGemmaCheck').checked;
+            localStorage.setItem('sahu_shield_gemma', state.shieldGemmaEnabled);
+        }
+
+        function openModelSelector() {
+            document.getElementById('modelSelectorModal').classList.remove('hidden');
+            renderModelSelector();
+        }
+
+        function closeModelSelector() {
+            document.getElementById('modelSelectorModal').classList.add('hidden');
+        }
+
+        function renderModelSelector() {
+            const container = document.getElementById('modelSelectorContent');
+            if (!container) return;
+            let html = '';
+            state.activeProviders.forEach(providerKey => {
+                const provider = PROVIDERS[providerKey];
+                if (!provider) return;
+                html += `<div class="border border-[var(--border)] rounded-xl overflow-hidden">
+                    <div class="bg-[var(--bg-tertiary)] p-3 flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span>${provider.icon}</span>
+                            <span class="font-semibold text-sm">${provider.name}</span>
+                            <span class="text-xs text-[var(--text-secondary)]">(${Object.keys(provider.models).length})</span>
+                        </div>
+                        <button onclick="toggleAllModels('${providerKey}')" class="text-xs px-2 py-1 bg-[var(--bg-secondary)] border border-[var(--border)] rounded hover:bg-[var(--accent)] hover:text-white transition-colors">Select All / None</button>
+                    </div>
+                    <div class="p-3 grid grid-cols-1 gap-2">
+                        ${Object.entries(provider.models).map(([modelKey, modelId]) => {
+                            const existing = state.selectedModels.find(m => m.provider === providerKey && m.modelKey === modelKey);
+                            const isSelected = !!existing;
+                            const stage = existing?.stage || 'none';
+                            return `<div class="model-card ${isSelected ? 'selected' : ''}">
+                                <input type="checkbox" class="w-4 h-4 accent-[var(--accent)]" ${isSelected ? 'checked' : ''} onchange="toggleModelSelection('${providerKey}', '${modelKey}', '${modelId}', this.checked)">
+                                <div class="flex-1 min-w-0">
+                                    <div class="text-sm font-medium truncate">${modelKey}</div>
+                                    <div class="text-[10px] text-[var(--text-secondary)] truncate">${modelId}</div>
+                                </div>
+                                <div class="flex gap-1">
+                                    <button class="stage-btn ${stage === '1' ? 'active-1' : ''}" onclick="setModelStage('${providerKey}', '${modelKey}', '${modelId}', '1', event)">1</button>
+                                    <button class="stage-btn ${stage === '2' ? 'active-2' : ''}" onclick="setModelStage('${providerKey}', '${modelKey}', '${modelId}', '2', event)">2</button>
+                                    <button class="stage-btn ${stage === '3' ? 'active-3' : ''}" onclick="setModelStage('${providerKey}', '${modelKey}', '${modelId}', '3', event)">3</button>
+                                </div>
+                            </div>`;
+                        }).join('')}
+                    </div>
+                </div>`;
+            });
+            if (state.activeProviders.length === 0) html = '<div class="text-center py-8 text-[var(--text-secondary)]">Select at least one provider from sidebar.</div>';
+            container.innerHTML = html;
+            updateModalSelectedCount();
+        }
+
+        function toggleAllModels(providerKey) {
+            const provider = PROVIDERS[providerKey];
+            if (!provider) return;
+            const allModels = Object.entries(provider.models);
+            const selectedCount = allModels.filter(([key]) => state.selectedModels.find(m => m.provider === providerKey && m.modelKey === key)).length;
+            const isAllSelected = selectedCount === allModels.length;
+
+            if (isAllSelected) {
+                state.selectedModels = state.selectedModels.filter(m => m.provider !== providerKey);
+            } else {
+                allModels.forEach(([modelKey, modelId]) => {
+                    if (!state.selectedModels.find(m => m.provider === providerKey && m.modelKey === modelKey)) {
+                        state.selectedModels.push({ provider: providerKey, modelKey, modelId, stage: 'none' });
+                    }
+                });
+            }
+            renderModelSelector();
+        }
+
+        function toggleModelSelection(provider, modelKey, modelId, selected) {
+            if (selected) {
+                if (!state.selectedModels.find(m => m.provider === provider && m.modelKey === modelKey)) {
+                    state.selectedModels.push({ provider, modelKey, modelId, stage: 'none' });
+                }
+            } else {
+                state.selectedModels = state.selectedModels.filter(m => !(m.provider === provider && m.modelKey === modelKey));
+            }
+            renderModelSelector();
+        }
+
+        function setModelStage(provider, modelKey, modelId, stage, event) {
+            event.stopPropagation();
+            let model = state.selectedModels.find(m => m.provider === provider && m.modelKey === modelKey);
+            if (!model) {
+                model = { provider, modelKey, modelId, stage: 'none' };
+                state.selectedModels.push(model);
+            }
+            if (model.stage === stage) {
+                model.stage = 'none';
+            } else {
+                state.selectedModels.forEach(m => { if (m.stage === stage) m.stage = 'none'; }); 
+                model.stage = stage;
+            }
+            renderModelSelector();
+        }
+
+        function updateModalSelectedCount() {
+            document.getElementById('modalSelectedCount').textContent = state.selectedModels.length;
+        }
+
+        function saveModelSelection() {
+            localStorage.setItem('sahu_selected_models', JSON.stringify(state.selectedModels));
+            closeModelSelector();
+            updateUI();
+            showToast(`${state.selectedModels.length} models configured`);
+        }
+
+        function updateUI() {
+            document.getElementById('selectedModelCount').textContent = state.selectedModels.length;
+        }
+
+        function renderApiKeyInputs() {
+            const container = document.getElementById('apiKeyInputs');
+            if (!container) return;
+            container.innerHTML = Object.entries(PROVIDERS).map(([key, provider]) => `
+                <div class="p-3 bg-[var(--bg-tertiary)] rounded-xl">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span>${provider.icon}</span>
+                        <span class="font-medium text-sm">${provider.name}</span>
+                    </div>
+                    <input type="password" id="key_${key}" placeholder="Paste API Key here (auto-saved)" class="w-full p-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border)] text-sm focus:border-[var(--accent)] focus:outline-none">
+                </div>
+            `).join('');
+            
+            Object.keys(PROVIDERS).forEach(key => {
+                const savedKey = localStorage.getItem(PROVIDERS[key].keyName);
+                const input = document.getElementById(`key_${key}`);
+                if (input && savedKey) input.value = savedKey;
+            });
+        }
+
+        function loadSettings() {
+            const savedProviders = localStorage.getItem('sahu_active_providers');
+            if (savedProviders) {
+                try {
+                    state.activeProviders = JSON.parse(savedProviders);
+                    state.activeProviders = state.activeProviders.filter(p => PROVIDERS[p]);
+                } catch(e) { console.error('Error loading providers', e); }
+            }
+            
+            const savedModels = localStorage.getItem('sahu_selected_models');
+            if (savedModels) {
+                try {
+                    state.selectedModels = JSON.parse(savedModels);
+                } catch(e) { console.error('Error loading models', e); }
+            }
+            
+            const savedFallback = localStorage.getItem('sahu_auto_fallback');
+            if (savedFallback !== null) state.autoFallback = savedFallback === 'true';
+            document.getElementById('autoFallback').checked = state.autoFallback;
+
+            const savedShield = localStorage.getItem('sahu_shield_gemma');
+            if (savedShield !== null) state.shieldGemmaEnabled = savedShield === 'true';
+            document.getElementById('shieldGemmaCheck').checked = state.shieldGemmaEnabled;
+        }
+
+        function saveSettings() {
+            Object.keys(PROVIDERS).forEach(key => {
+                const input = document.getElementById(`key_${key}`);
+                if (input) localStorage.setItem(PROVIDERS[key].keyName, input.value);
+            });
+            closeSettings();
+            showToast('API keys saved locally!');
+        }
+
+        function openSettings() {
+            document.getElementById('settingsModal').classList.remove('hidden');
+            renderApiKeyInputs();
+        }
+
+        function closeSettings() { document.getElementById('settingsModal').classList.add('hidden'); }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('sidebarOverlay').classList.toggle('show');
+        }
+
+        function autoResize(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = Math.min(textarea.scrollHeight, 128) + 'px';
+        }
+
+        function handleKeyDown(event) {
+            if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendMessage(); }
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type === 'error' ? 'bg-red-500' : 'bg-green-500'}`;
+            toast.innerHTML = `<i class="fas fa-${type === 'error' ? 'exclamation-circle' : 'check-circle'}"></i><span>${message}</span>`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        function quickPrompt(text) { document.getElementById('userInput').value = text; sendMessage(); }
+
+        function escapeHtml(text) { const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
+
+        function triggerFileUpload() { document.getElementById('fileInput').click(); }
+
+        async function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const content = await file.text();
+            state.uploadedFile = file;
+            state.uploadedFileContent = content.substring(0, 50000);
+            document.getElementById('fileUploadPreview').innerHTML = `
+                <div class="flex items-center gap-3 p-3 bg-[var(--bg-tertiary)] rounded-xl">
+                    <div class="w-10 h-10 bg-[var(--accent)] rounded-lg flex items-center justify-center text-white"><i class="fas fa-file"></i></div>
+                    <div class="flex-1 min-w-0">
+                        <div class="font-medium text-sm truncate">${escapeHtml(file.name)}</div>
+                        <div class="text-xs text-[var(--text-secondary)]">${(file.size / 1024).toFixed(1)} KB</div>
+                    </div>
+                    <button class="p-2 rounded-lg hover:bg-[var(--bg-secondary)]" onclick="removeFile()"><i class="fas fa-times text-[var(--text-secondary)]"></i></button>
+                </div>`;
+            document.getElementById('fileUploadPreview').classList.remove('hidden');
+        }
+
+        function removeFile() {
+            state.uploadedFile = null;
+            state.uploadedFileContent = null;
+            document.getElementById('fileUploadPreview').classList.add('hidden');
+            document.getElementById('fileInput').value = '';
+        }
+
+        function loadChatHistory() {
+            const saved = localStorage.getItem('sahu_chat_history');
+            if (saved) { state.chatHistory = JSON.parse(saved); renderChatHistory(); }
+        }
+
+        function renderChatHistory() {
+            const container = document.getElementById('chatHistory');
+            // Filter implementation
+            const query = document.getElementById('history-search') ? document.getElementById('history-search').value.toLowerCase() : '';
+            const filtered = state.chatHistory.filter(c => c.title.toLowerCase().includes(query));
+            
+            container.innerHTML = filtered.slice(0, 15).map(chat => `
+                <div onclick="loadChat('${chat.id}')" class="p-3 rounded-xl hover:bg-[var(--bg-tertiary)] cursor-pointer flex items-center gap-3 active:scale-98">
+                    <i class="fas fa-message text-[var(--text-secondary)]"></i>
+                    <span class="text-sm truncate flex-1">${escapeHtml(chat.title)}</span>
+                </div>
+            `).join('');
+        }
+
+        function newChat() {
+            state.currentChatId = null;
+            state.messages = [];
+            document.getElementById('messagesContainer').innerHTML = '';
+            document.getElementById('messagesContainer').classList.add('hidden');
+            const ws = document.getElementById('welcomeScreen');
+            if(ws) ws.classList.remove('hidden');
+            document.getElementById('userInput').value = '';
+            removeFile();
+            if(window.innerWidth < 768) toggleSidebar();
+        }
+
+        function loadChat(id) {
+            const chat = state.chatHistory.find(c => c.id === id);
+            if (chat) { state.currentChatId = id; state.messages = chat.messages || []; }
+            if(window.innerWidth < 768) toggleSidebar();
+        }
+
+        function toggleDeepThink() {
+            state.deepThinkEnabled = !state.deepThinkEnabled;
+            const btn = document.getElementById('deepThinkBtn');
+            if (state.deepThinkEnabled) {
+                document.body.classList.add('deepthink-active');
+                btn.classList.add('text-[var(--accent)]');
+                btn.classList.remove('text-[var(--text-secondary)]');
+                showToast('Deepthink Enabled (Deep)');
+            } else {
+                document.body.classList.remove('deepthink-active');
+                btn.classList.remove('text-[var(--accent)]');
+                btn.classList.add('text-[var(--text-secondary)]');
+                showToast('Deepthink Disabled (Fast)');
+            }
+        }
+
+        async function speakResponse() {
+            const text = window.lastAnswer;
+            if (!text) return showToast('No answer to read', 'error');
+            const apiKey = localStorage.getItem('sahu_gemini_key');
+            if (!apiKey) return showToast('Gemini API Key required for TTS', 'error');
+            const btn = document.getElementById('ttsBtn');
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+            btn.disabled = true;
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: text.substring(0, 4000) }] }],
+                        generationConfig: { responseModalities: ["AUDIO"], speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: "Fenrir" } } } }
+                    })
+                });
+                const data = await response.json();
+                const audioData = data.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
+                if (audioData) {
+                    const audio = new Audio("data:audio/wav;base64," + audioData);
+                    audio.play();
+                    showToast('Playing Audio 🔊');
+                }
+            } catch (e) { showToast('TTS Failed.', 'error'); } 
+            finally { btn.innerHTML = originalContent; btn.disabled = false; }
+        }
+
+        // --- CORE MODEL EXECUTION WITH PROXY FIX ---
+        async function callModelWithFallback(providerKey, modelId, messages, retryCount = 0) {
+            const provider = PROVIDERS[providerKey];
+            const apiKey = localStorage.getItem(provider.keyName);
+            if (!apiKey) throw new Error(`No API key for ${provider.name}`);
+
+            const headers = { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' };
+            if (providerKey === 'openrouter') {
+                headers['HTTP-Referer'] = window.location.href;
+                headers['X-Title'] = 'SAHU 2.0';
+            }
+            if (providerKey === 'gemini') {
+                headers['x-goog-api-key'] = apiKey;
+                delete headers['Authorization'];
+            }
+
+            let requestBody = { 
+                model: modelId, 
+                messages: messages, 
+                max_tokens: 4096, 
+                temperature: 0.7,
+                stream: false 
+            };
+            
+            if (providerKey === 'mistral') requestBody = { agent_id: modelId, messages: messages };
+            if (providerKey === 'nvidia') { requestBody.temperature = 0.5; requestBody.top_p = 1; }
+
+            let url = provider.endpoint;
+            // STRICT PROXY USAGE for Nvidia and Ollama Cloud as requested
+            if (providerKey === 'nvidia' || providerKey === 'ollama') {
+                url = 'https://corsproxy.io/?' + encodeURIComponent(provider.endpoint);
+            }
+
+            try {
+                const response = await fetch(url, { method: 'POST', headers, body: JSON.stringify(requestBody) });
+                if (!response.ok) {
+                    if ((response.status === 504 || response.status === 408) && retryCount < 1) {
+                        return await callModelWithFallback(providerKey, modelId, messages, retryCount + 1);
+                    }
+                    throw new Error(`${response.status}: ${await response.text()}`);
+                }
+                const data = await response.json();
+                const content = data.choices?.[0]?.message?.content || '';
+                let thinking = data.choices?.[0]?.message?.reasoning_content || '';
+                let answer = content;
+                const thinkMatch = content.match(/<think>([\s\S]*?)<\/think>/);
+                if (thinkMatch) { thinking = thinkMatch[1]; answer = content.replace(/<think>[\s\S]*?<\/think>/, '').trim(); }
+                return { content: answer, thinking, provider: providerKey };
+            } catch (error) {
+                if (state.autoFallback && retryCount === 0) {
+                    throw error; 
+                }
+                throw error;
+            }
+        }
+
+        async function sendMessage() {
+            if (window.sahu2) {
+                await window.sahu2.sendMessageV2();
+            } else {
+                alert("SAHU 2.0 System not initialized. Reload page.");
+            }
+        }
+
+        function updateExpertCard(idx, result, model, isSafe) {
+            const card = document.getElementById(`expert-${idx}`);
+            if(!card) return;
+            card.className = 'expert-card complete rounded-xl p-3';
+            card.innerHTML = `
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xs font-bold">${model.modelKey}</span>
+                    <i class="fas fa-check-circle text-green-500"></i>
+                </div>
+                ${result.thinking ? `<div class="thinking-block"><div class="thinking-header"><i class="fas fa-brain"></i> Thinking</div><div class="text-[var(--text-secondary)] text-xs whitespace-pre-wrap max-h-32 overflow-y-auto">${escapeHtml(result.thinking)}</div></div>` : ''}
+                <div class="text-sm max-h-48 overflow-y-auto">${formatMarkdown(result.content)}</div>`;
+        }
+
+        function updateExpertCardError(idx, error) {
+            const card = document.getElementById(`expert-${idx}`);
+            if(!card) return;
+            card.className = 'expert-card error rounded-xl p-3';
+            card.innerHTML = `<div class="text-red-500 text-xs font-bold mb-1">Error</div><div class="text-xs text-red-400">${error}</div>`;
+        }
+
+        function formatMarkdown(text) {
+            if (!text) return '';
+            let html = text
+                // Generative UI: HTML/SVG Preview Support
+                .replace(/```(html|xml|svg)\n([\s\S]*?)```/g, (match, type, code) => {
+                    const encoded = encodeURIComponent(code);
+                    return `<div class="file-preview">
+                        <div class="p-2 bg-[var(--bg-tertiary)] flex justify-between items-center">
+                            <span class="text-xs font-mono">${type.toUpperCase()} PREVIEW</span>
+                            <button onclick="sahu2.previewHtml('${encoded}')" class="text-xs bg-[var(--accent)] text-white px-2 py-1 rounded">
+                                <i class="fas fa-play"></i> Run / Preview
+                            </button>
+                        </div>
+                        <pre><code class="language-${type}">${escapeHtml(code)}</code></pre>
+                    </div>`;
+                })
+                // Standard Code Blocks
+                .replace(/```(\w+)?\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>')
+                .replace(/`([^`]+)`/g, '<code class="bg-[var(--bg-tertiary)] px-1 py-0.5 rounded text-xs">$1</code>')
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n/g, '<br>');
+            
+            // Code Runner Injection (JS/Python)
+            setTimeout(() => {
+                document.querySelectorAll('pre code').forEach(block => {
+                    if(!block.parentElement.querySelector('.run-btn') && !block.parentElement.parentElement.classList.contains('file-preview')) {
+                        const btn = document.createElement('button');
+                        btn.className = 'run-btn absolute top-2 right-2 text-[10px] bg-green-600 text-white px-2 py-1 rounded opacity-50 hover:opacity-100 transition-opacity';
+                        btn.innerText = 'Run JS';
+                        btn.onclick = () => window.sahu2.runCode(block.innerText);
+                        block.parentElement.style.position = 'relative';
+                        block.parentElement.appendChild(btn);
+                    }
+                });
+            }, 100);
+            return html;
+        }
+
+        function copyToClipboard() { navigator.clipboard.writeText(window.lastAnswer || '').then(() => showToast('Copied!')); }
+        function downloadTxt() { saveAs(new Blob([window.lastAnswer || ''], { type: 'text/plain' }), 'sahu-answer.txt'); }
+        function downloadPdf() { 
+            const doc = new window.jspdf.jsPDF(); 
+            const lines = doc.splitTextToSize(window.lastAnswer || '', 180);
+            doc.text(lines, 15, 20);
+            doc.save('sahu-answer.pdf'); 
+        }
+        function downloadDocx() {
+            const { Document, Packer, Paragraph, TextRun } = docx;
+            const doc = new Document({ sections: [{ children: [new Paragraph({ children: [new TextRun(window.lastAnswer || '')] })] }] });
+            Packer.toBlob(doc).then(blob => saveAs(blob, 'sahu-answer.docx'));
+        }
+
+        // ==========================================
+        // SAHU 2.0 SYSTEM CLASS
+        // ==========================================
+        class SAHU2_System {
+            constructor() {
+                this.store = {
+                    memory: JSON.parse(localStorage.getItem('sahu2_memory') || '[]'),
+                    searchEnabled: false,
+                    focusMode: 'all',
+                    persona: 'default',
+                    cockpitVisible: false
+                };
+            }
+
+            init() {
+                this.renderMemory();
+                this.updateTokenCounter(0);
+            }
+
+            // --- UI ACTIONS ---
+            toggleSearch() {
+                this.store.searchEnabled = !this.store.searchEnabled;
+                const btn = document.getElementById('webSearchBtn');
+                if (this.store.searchEnabled) {
+                    btn.classList.add('text-[var(--accent)]', 'bg-[var(--bg-tertiary)]');
+                    btn.classList.remove('text-[var(--text-secondary)]');
+                    showToast('Web Search Enabled 🔎');
+                } else {
+                    btn.classList.remove('text-[var(--accent)]');
+                    btn.classList.add('text-[var(--text-secondary)]');
+                    showToast('Web Search Disabled');
+                }
+            }
+
+            // Cockpit visibility toggle removed/disabled as per request
+            // toggleCockpit() { ... }
+            
+            filterHistory(query) {
+                const container = document.getElementById('chatHistory');
+                const filtered = state.chatHistory.filter(c => c.title.toLowerCase().includes(query.toLowerCase()));
+                container.innerHTML = filtered.slice(0, 15).map(chat => `
+                    <div onclick="loadChat('${chat.id}')" class="p-3 rounded-xl hover:bg-[var(--bg-tertiary)] cursor-pointer flex items-center gap-3 active:scale-98">
+                        <i class="fas fa-message text-[var(--text-secondary)]"></i>
+                        <span class="text-sm truncate flex-1">${escapeHtml(chat.title)}</span>
+                    </div>
+                `).join('');
+            }
+
+            switchSidebarTab(tabName) {
+                ['chats', 'memory', 'bench'].forEach(t => {
+                    document.getElementById(`view-${t}`).classList.add('hidden');
+                    document.getElementById(`tab-${t}`).classList.remove('active');
+                });
+                document.getElementById(`view-${tabName}`).classList.remove('hidden');
+                document.getElementById(`tab-${tabName}`).classList.add('active');
+            }
+
+            applyPreset(preset) {
+                if(!preset) return;
+                state.selectedModels = [];
+                // Presets using Nvidia proxy mostly for reliability if configured
+                if (preset === 'coding') {
+                    state.selectedModels.push(
+                        { provider: 'nvidia', modelKey: 'Meta Llama 3.1 70B', modelId: 'meta/llama-3.1-70b-instruct', stage: 'none' },
+                        { provider: 'nvidia', modelKey: 'Mistral Mixtral 8x22B', modelId: 'mistralai/mixtral-8x22b-instruct-v0.1', stage: 'none' }
+                    );
+                } else if (preset === 'reasoning') {
+                    state.selectedModels.push(
+                        { provider: 'nvidia', modelKey: 'Nemotron 4 340B', modelId: 'nvidia/nemotron-4-340b-instruct', stage: 'none' },
+                        { provider: 'nvidia', modelKey: 'Phi 3 Medium', modelId: 'microsoft/phi-3-medium-4k-instruct', stage: 'none' }
+                    );
+                } else if (preset === 'speed') {
+                    state.selectedModels.push(
+                        { provider: 'nvidia', modelKey: 'Llama 3.1 8B', modelId: 'meta/llama-3.1-8b-instruct', stage: 'none' },
+                        { provider: 'nvidia', modelKey: 'Gemma 2 9B', modelId: 'google/gemma-2-9b-it', stage: 'none' }
+                    );
+                }
+                saveModelSelection();
+                showToast(`Applied ${preset} preset`);
+            }
+
+            setPersona(val) { 
+                this.store.persona = val; 
+                showToast(`Persona set to ${val.charAt(0).toUpperCase() + val.slice(1)}`); 
+            }
+
+            // --- MEMORY SYSTEM ---
+            addMemory(text) {
+                if (!this.store.memory.includes(text)) {
+                    this.store.memory.push(text);
+                    localStorage.setItem('sahu2_memory', JSON.stringify(this.store.memory));
+                    this.renderMemory();
+                }
+            }
+
+            clearMemory() {
+                this.store.memory = [];
+                localStorage.setItem('sahu2_memory', '[]');
+                this.renderMemory();
+            }
+
+            renderMemory() {
+                const list = document.getElementById('memory-list');
+                if (!list) return;
+                list.innerHTML = this.store.memory.length ? 
+                    this.store.memory.map(m => `<div class="p-2 bg-white rounded border border-[var(--border)] shadow-sm">${m}</div>`).join('') :
+                    '<div class="text-center text-[var(--text-secondary)] italic">No memories yet.</div>';
+            }
+
+            // --- SEARCH SYSTEM (DuckDuckGo + CORS Proxy) ---
+            async performSearch(query) {
+                const focus = document.getElementById('focus-mode').value;
+                let searchQ = query;
+                if (focus === 'academic') searchQ += " site:.edu OR site:arxiv.org";
+                else if (focus === 'code') searchQ += " site:github.com OR site:stackoverflow.com";
+                else if (focus === 'news') searchQ += " news";
+                
+                try {
+                    const proxyUrl = 'https://corsproxy.io/?';
+                    const targetUrl = `https://html.duckduckgo.com/html/?q=${encodeURIComponent(searchQ)}`;
+                    const res = await fetch(proxyUrl + encodeURIComponent(targetUrl));
+                    const html = await res.text();
+                    const results = [];
+                    // Very basic scraping using regex for DuckDuckGo HTML
+                    const regex = /<a class="result__a" href="([^"]+)">([^<]+)<\/a>/g;
+                    let match;
+                    let count = 0;
+                    while ((match = regex.exec(html)) !== null && count < 5) {
+                        results.push({ link: match[1], title: match[2] });
+                        count++;
+                    }
+                    return results;
+                } catch (e) { return []; }
+            }
+
+            // --- GEN UI ---
+            previewHtml(encodedCode) {
+                const code = decodeURIComponent(encodedCode);
+                const win = window.open('', '_blank');
+                win.document.write(code);
+                win.document.close();
+            }
+
+            // --- EXECUTION LOGIC ---
+            async sendMessageV2() {
+                const input = document.getElementById('userInput');
+                let content = input.value.trim();
+                if (!content && !state.uploadedFile) return;
+                if (state.isProcessing) return;
+
+                state.isProcessing = true;
+                document.getElementById('sendBtn').disabled = true;
+                
+                if (state.uploadedFile && state.uploadedFileContent) {
+                    content += `\n\n[File: ${state.uploadedFile.name}]\n\`\`\`\n${state.uploadedFileContent}\n\`\`\``;
+                }
+
+                const ws = document.getElementById('welcomeScreen');
+                if(ws) ws.classList.add('hidden');
+                document.getElementById('messagesContainer').classList.remove('hidden');
+                const container = document.getElementById('messagesContainer');
+                container.innerHTML += `<div class="flex justify-end"><div class="message-user px-4 py-3 rounded-2xl max-w-[85%] shadow-lg"><p class="text-white text-sm whitespace-pre-wrap">${escapeHtml(content.substring(0, 300))}${content.length > 300 ? '...' : ''}</p></div></div>`;
+                input.value = '';
+                input.style.height = 'auto';
+                removeFile();
+
+                // Context Construction
+                let systemContext = `You are a helpful AI assistant. Persona: ${this.store.persona}.`;
+                if(this.store.persona === 'tutor') {
+                    systemContext += ` You are an expert SAT/Academic Tutor. Break down problems step-by-step. Don't just give answers, teach the concept.`;
+                }
+                if (this.store.memory.length > 0) systemContext += `\nUser Memories:\n- ${this.store.memory.join('\n- ')}`;
+                
+                let searchResults = [];
+                if (this.store.searchEnabled) {
+                    container.innerHTML += `<div class="text-xs text-[var(--text-secondary)] ml-4 mb-2"><i class="fas fa-search animate-pulse"></i> Searching web...</div>`;
+                    searchResults = await this.performSearch(content.substring(0, 100));
+                    if (searchResults.length > 0) {
+                        const contextStr = searchResults.map((r, i) => `[${i+1}] ${r.title}: ${r.link}`).join('\n');
+                        content += `\n\nWeb Search Results:\n${contextStr}\nCite these sources using [1], [2] format.`;
+                    }
+                }
+
+                const models = state.selectedModels;
+                if(models.length === 0) { showToast("No models selected!", "error"); state.isProcessing = false; document.getElementById('sendBtn').disabled = false; return; }
+
+                // Group models
+                const experts = models.filter(m => !m.stage || m.stage === 'none');
+                const agg1 = models.filter(m => m.stage === '1');
+                const agg2 = models.filter(m => m.stage === '2');
+                const agg3 = models.filter(m => m.stage === '3');
+
+                const expertGridId = 'expert-grid-' + Date.now();
+                container.innerHTML += `<div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="${expertGridId}"></div>`;
+                const expertGrid = document.getElementById(expertGridId);
+
+                // Render expert placeholders
+                experts.forEach((m) => {
+                    const idx = state.selectedModels.indexOf(m);
+                    expertGrid.innerHTML += `
+                    <div class="expert-card thinking rounded-xl p-3" id="expert-${idx}">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="text-xs font-bold">${m.modelKey}</span>
+                            <div class="typing-indicator flex gap-1"><span class="w-1 h-1 bg-gray-400 rounded-full"></span><span class="w-1 h-1 bg-gray-400 rounded-full"></span></div>
+                        </div>
+                        <div class="text-[10px] text-[var(--text-secondary)]">Queued...</div>
+                    </div>`;
+                });
+
+                // --- EXECUTE EXPERTS (Staggered) ---
+                const fastEx = experts.filter(m => m.modelId.includes('8b') || m.modelId.includes('7b'));
+                const slowEx = experts.filter(m => !fastEx.includes(m));
+                
+                let globalContext = content;
+                
+                const executeBatch = async (batch) => {
+                    const promises = batch.map(async (m) => {
+                        const idx = state.selectedModels.indexOf(m);
+                        const card = document.getElementById(`expert-${idx}`);
+                        if(card) card.querySelector('.text-\\[var\\(--text-secondary\\)\\]').innerText = "Running...";
+                        try {
+                            const res = await callModelWithFallback(m.provider, m.modelId, [{ role: 'system', content: systemContext }, { role: 'user', content: globalContext }]);
+                            updateExpertCard(idx, { ...res, success: true }, m, true);
+                            return res.content;
+                        } catch (e) {
+                            updateExpertCardError(idx, e.message);
+                            return "";
+                        }
+                    });
+                    return Promise.all(promises);
+                };
+
+                // Fast batch first
+                const fastResults = await executeBatch(fastEx);
+                if(fastResults.filter(r => r).length) globalContext += `\n\n[Expert Insights]:\n${fastResults.join('\n\n')}`;
+                
+                // Slow batch
+                const slowResults = await executeBatch(slowEx);
+                if(slowResults.filter(r => r).length) globalContext += `\n\n[Detailed Analysis]:\n${slowResults.join('\n\n')}`;
+
+                // --- EXECUTE AGGREGATORS (Sequential) ---
+                const runStage = async (stageModels, prompt, stageNum) => {
+                    if(stageModels.length === 0) return;
+                    
+                    const aggId = `stage-${stageNum}-${Date.now()}`;
+                    container.innerHTML += `
+                        <div class="aggregator-response stage-${stageNum} rounded-2xl p-4 mt-4" id="${aggId}">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-8 h-8 rounded-lg bg-blue-500 flex items-center justify-center text-white font-bold text-sm">${stageNum}</div>
+                                <div><span class="font-semibold text-sm">Aggregator Stage ${stageNum}</span></div>
+                            </div>
+                            <div class="typing-indicator flex gap-1 mb-2"><span class="w-1.5 h-1.5 bg-blue-500 rounded-full"></span></div>
+                        </div>`;
+                    container.scrollTop = container.scrollHeight;
+
+                    // Execute logic
+                    const m = stageModels[0]; // Primary aggregator
+                    try {
+                        const res = await callModelWithFallback(m.provider, m.modelId, [{ role: 'system', content: prompt }, { role: 'user', content: globalContext }]);
+                        document.getElementById(aggId).innerHTML = `
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-8 h-8 rounded-lg bg-blue-500 flex items-center justify-center text-white font-bold text-sm"><i class="fas fa-check"></i></div>
+                                <div class="flex-1"><span class="font-semibold text-sm">Aggregator Stage ${stageNum} (${m.modelKey})</span></div>
+                            </div>
+                            ${res.thinking ? `<div class="thinking-block"><div class="thinking-header"><i class="fas fa-brain"></i> Thinking</div><div class="text-[var(--text-secondary)] text-xs whitespace-pre-wrap">${escapeHtml(res.thinking)}</div></div>` : ''}
+                            <div class="prose max-w-none text-sm">${formatMarkdown(res.content)}</div>`;
+                        
+                        // Pass forward
+                        globalContext = res.content;
+                        window.lastAnswer = res.content;
+                    } catch(e) {
+                        document.getElementById(aggId).innerHTML += `<div class="text-red-500">Error: ${e.message}</div>`;
+                    }
+                };
+
+                await runStage(agg1, AGGREGATOR_PROMPTS.stage1, 1);
+                await runStage(agg2, AGGREGATOR_PROMPTS.stage2, 2);
+                await runStage(agg3, AGGREGATOR_PROMPTS.stage3, 3);
+
+                // Add export buttons to final output
+                container.innerHTML += `<div class="export-buttons">
+                        <button class="export-btn" onclick="copyToClipboard()"><i class="fas fa-copy"></i><span>Copy</span></button>
+                        <button class="export-btn" onclick="downloadTxt()"><i class="fas fa-file-alt"></i><span>TXT</span></button>
+                        <button class="export-btn" onclick="downloadPdf()"><i class="fas fa-file-pdf"></i><span>PDF</span></button>
+                        <button class="export-btn sparkle-btn" onclick="speakResponse()" id="ttsBtn"><i class="fas fa-volume-up"></i><span>Read Aloud</span></button>
+                    </div>`;
+
+                container.scrollTop = container.scrollHeight;
+                state.isProcessing = false;
+                document.getElementById('sendBtn').disabled = false;
+                
+                // Background Memory Update
+                this.updateMemoryBackground(content);
+            }
+
+            async updateMemoryBackground(text) {
+                try {
+                    const apiKey = localStorage.getItem('sahu_nvidia_key');
+                    if(!apiKey) return;
+                    const res = await fetch('https://corsproxy.io/?' + encodeURIComponent(PROVIDERS.nvidia.endpoint), {
+                        method: 'POST',
+                        headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            model: 'meta/llama-3.1-8b-instruct',
+                            messages: [{role: 'system', content: 'Extract 1 short fact about the user. Return "NONE" if none.'}, {role: 'user', content: text}],
+                            max_tokens: 50
+                        })
+                    });
+                    const data = await res.json();
+                    const fact = data.choices?.[0]?.message?.content;
+                    if(fact && !fact.includes("NONE")) this.addMemory(fact);
+                } catch(e) {}
+            }
+
+            runCode(code) {
+                const blob = new Blob([`onmessage = function(e) { try { const result = eval(e.data); postMessage({result: result}); } catch(err) { postMessage({error: err.toString()}); } }`], { type: "text/javascript" });
+                const worker = new Worker(URL.createObjectURL(blob));
+                worker.onmessage = function(e) {
+                    if(e.data.error) showToast("Code Error: " + e.data.error, "error");
+                    else showToast("Result: " + e.data.result);
+                    worker.terminate();
+                };
+                worker.postMessage(code);
+            }
+
+            async runBenchmarks() {
+                const resultsDiv = document.getElementById('bench-results');
+                resultsDiv.innerHTML = '<div class="text-center"><i class="fas fa-spinner fa-spin"></i> Running MMLU Lite...</div>';
+                
+                const questions = [
+                    { q: "What is the capital of France?", a: "Paris" },
+                    { q: "5 * 5 + 2 = ?", a: "27" },
+                    { q: "Boiling point of water in C?", a: "100" }
+                ];
+                
+                let score = 0;
+                let log = "";
+                
+                if(state.selectedModels.length === 0) { showToast("Select a model first!", "error"); return; }
+                const model = state.selectedModels[0]; // Benchmark first selected
+                
+                for(let q of questions) {
+                    try {
+                        const start = Date.now();
+                        const res = await callModelWithFallback(model.provider, model.modelId, [{role:'user', content: q.q}]);
+                        const duration = Date.now() - start;
+                        if (res.content.toLowerCase().includes(q.a.toLowerCase())) score++;
+                        log += `<div class="p-2 border-b border-[var(--border)] flex justify-between"><span>${q.q}</span> <span class="font-mono">${duration}ms</span></div>`;
+                    } catch(e) { log += `<div class="text-red-500">Error</div>`; }
+                }
+                
+                resultsDiv.innerHTML = `<div class="font-bold text-lg text-center mb-2">Score: ${score}/${questions.length}</div>` + log;
+            }
+
+            updateTokenCounter(n) {
+                const count = document.getElementById('token-count');
+                const progress = document.getElementById('context-progress');
+                if(count) count.innerText = n + 'k';
+                if(progress) {
+                    const offset = 100 - Math.min((n / 200) * 100, 100);
+                    progress.style.strokeDashoffset = offset;
+                }
+            }
+        }
+
+        // Initialize SAHU 2.0 Global
+        window.sahu2 = new SAHU2_System();
+
+    </script>
+</body>
+</html>
