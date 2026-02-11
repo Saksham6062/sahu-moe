@@ -1036,34 +1036,6 @@
             }
             renderModelSelector();
         }
-            let url = provider.endpoint;
-            // STRICT PROXY USAGE for Nvidia and Ollama Cloud as requested
-            if (providerKey === 'nvidia' || providerKey === 'ollama') {
-                url = 'https://corsproxy.io/?' + encodeURIComponent(provider.endpoint);
-            }
-
-            try {
-                const response = await fetch(url, { method: 'POST', headers, body: JSON.stringify(requestBody) });
-                if (!response.ok) {
-                    if ((response.status === 504 || response.status === 408) && retryCount < 1) {
-                        return await callModelWithFallback(providerKey, modelId, messages, retryCount + 1);
-                    }
-                    throw new Error(`${response.status}: ${await response.text()}`);
-                }
-                const data = await response.json();
-                const content = data.choices?.[0]?.message?.content || '';
-                let thinking = data.choices?.[0]?.message?.reasoning_content || '';
-                let answer = content;
-                const thinkMatch = content.match(/<think>([\s\S]*?)<\/think>/);
-                if (thinkMatch) { thinking = thinkMatch[1]; answer = content.replace(/<think>[\s\S]*?<\/think>/, '').trim(); }
-                return { content: answer, thinking, provider: providerKey };
-            } catch (error) {
-                if (state.autoFallback && retryCount === 0) {
-                    throw error; 
-                }
-                throw error;
-            } 
-
         function updateModalSelectedCount() {
             document.getElementById('modalSelectedCount').textContent = state.selectedModels.length;
         }
