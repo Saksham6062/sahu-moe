@@ -566,7 +566,7 @@
                     'thudm/chatglm3-6b': 'thudm/chatglm3-6b',
                     'nvidia/usdcode-llama-3.1-70b-instruct': 'nvidia/usdcode-llama-3.1-70b-instruct'
                 }
-            }
+            },
             huggingface: {
                 name: 'HuggingFace',
                 endpoint: 'https://router.huggingface.co/v1/chat/completions',
@@ -1062,8 +1062,7 @@
                     throw error; 
                 }
                 throw error;
-            }
-        }
+            } 
 
         function updateModalSelectedCount() {
             document.getElementById('modalSelectedCount').textContent = state.selectedModels.length;
