@@ -480,7 +480,93 @@
     </div>
 
     <script>
+        const MODEL_CONFIGS = {
+            // ~30000 Max Tokens
+            'sarvamai/sarvam-m': { max_tokens: 30000 },
+            'qwen/qwq-32b': { max_tokens: 30000 },
+            'qwen/qwen2.5-7b-instruct': { max_tokens: 30000 },
+            'mistralai/mamba-codestral-7b-v0.1': { max_tokens: 30000 },
+            'google/gemma-3-1b-it': { max_tokens: 30000 },
+            'google/gemma-3n-e4b-it': { max_tokens: 30000 },
+
+            // ~60000 Max Tokens
+            'ibm/granite-3.3-8b-instruct': { max_tokens: 60000 },
+            'microsoft/phi-4-mini-flash-reasoning': { max_tokens: 60000 },
+            'mistralai/mixtral-8x22b-instruct-v0.1': { max_tokens: 60000 },
+
+            // 8000 Max Tokens
+            'thudm/chatglm3-6b': { max_tokens: 8000 },
+            'google/gemma-7b': { max_tokens: 8000, noSystemRole: true },
+            'google/gemma-2-27b-it': { max_tokens: 8000, noSystemRole: true },
+
+            // 4000 Max Tokens
+            'nvidia/nemotron-4-mini-hindi-4b-instruct': { max_tokens: 4000 },
+            'microsoft/phi-3-medium-4k-instruct': { max_tokens: 4000 },
+
+            // Others
+            'google/shieldgemma-9b': { max_tokens: 1024 }
+        };
         const PROVIDERS = {
+            nvidia: {
+                name: 'Nvidia',
+                // Using the specific integration endpoint compatible with OpenAI SDK structure
+                endpoint: 'https://integrate.api.nvidia.com/v1/chat/completions',
+                keyName: 'sahu_nvidia_key',
+                color: 'nvidia',
+                icon: '🟢',
+                models: {
+                    'google/shieldgemma-9b': 'google/shieldgemma-9b',
+                    'minimaxai/minimax-m2.1': 'minimaxai/minimax-m2.1',
+                    'minimaxai/minimax-m2': 'minimaxai/minimax-m2',
+                    'Glm 4.7': 'z-ai/glm4.7',
+                    'ai21labs/jamba-1.5-mini-instruct': 'ai21labs/jamba-1.5-mini-instruct',
+                    'bytedance/seed-oss-36b-instruct': 'bytedance/seed-oss-36b-instruct',
+                    'deepseek-ai/deepseek-v3.2': 'deepseek-ai/deepseek-v3.2',
+                    'deepseek-ai/deepseek-v3.1': 'deepseek-ai/deepseek-v3.1',
+                    'deepseek-ai/deepseek-v3.1-terminus': 'deepseek-ai/deepseek-v3.1-terminus',
+                    'deepseek-ai/deepseek-r1-distill-qwen-32b': 'deepseek-ai/deepseek-r1-distill-qwen-32b',
+                    'deepseek-ai/deepseek-r1-distill-llama-8b': 'deepseek-ai/deepseek-r1-distill-llama-8b',
+                    'google/gemma-3n-e4b-it': 'google/gemma-3n-e4b-it',
+                    'google/gemma-3-27b-it': 'google/gemma-3-27b-it',
+                    'Gemman 3-1b': 'google/gemma-3-1b-it',
+                    'google/gemma-2-27b-it': 'google/gemma-2-27b-it',
+                    'google/gemma-7b': 'google/gemma-7b',
+                    'ibm/granite-3.3-8b-instruct': 'ibm/granite-3.3-8b-instruct',
+                    'phi-4-multimodal': 'microsoft/phi-4-multimodal-instruct',
+                    'microsoft/phi-4-mini-flash-reasoning': 'microsoft/phi-4-mini-flash-reasoning',
+                    'microsoft/phi-3-medium-4k-instruct': 'microsoft/phi-3-medium-4k-instruct',
+                    'meta/llama-4-maverick-17b-128e-instruct': 'meta/llama-4-maverick-17b-128e-instruct',
+                    'meta/llama-4-scout-17b-16e-instruct': 'meta/llama-4-scout-17b-16e-instruct',
+                    'meta/llama-3.3-70b-instruct': 'meta/llama-3.3-70b-instruct',
+                    'meta/llama-3.2-3b-instruct': 'meta/llama-3.2-3b-instruct',
+                    'moonshotai/kimi-k2.5': 'moonshotai/kimi-k2.5',
+                    'moonshotai/kimi-k2-thinking': 'moonshotai/kimi-k2-thinking',
+                    'moonshotai/kimi-k2-instruct': 'moonshotai/kimi-k2-instruct',
+                    'mistralai/devstral-2-123b-instruct-2512': 'mistralai/devstral-2-123b-instruct-2512',
+                    'mistralai/mistral-large-3-675b-instruct-2512': 'mistralai/mistral-large-3-675b-instruct-2512',
+                    'mistralai/ministral-14b-instruct-2512': 'mistralai/ministral-14b-instruct-2512',
+                    'mistralai/magistral-small-2506': 'mistralai/magistral-small-2506',
+                    'Mixtral 8x22b': 'mistralai/mixtral-8x22b-instruct-v0.1',
+                    'mistralai/mamba-codestral-7b-v0.1': 'mistralai/mamba-codestral-7b-v0.1',
+                    'stepfun-ai/step-3.5-flash': 'stepfun-ai/step-3.5-flash',
+                    'openai/gpt-oss-120b': 'openai/gpt-oss-120b',
+                    'openai/gpt-oss-20b': 'openai/gpt-oss-20b',
+                    'sarvamai/sarvam-m': 'sarvamai/sarvam-m',
+                    'qwen/qwen3-next-80b-a3b-instruct': 'qwen/qwen3-next-80b-a3b-instruct',
+                    'qwen/qwen3-next-80b-a3b-thinking': 'qwen/qwen3-next-80b-a3b-thinking',
+                    'qwen/qwen3-coder-480b-a35b-instruct': 'qwen/qwen3-coder-480b-a35b-instruct',
+                    'qwen/qwen3-235b-a22b': 'qwen/qwen3-235b-a22b',
+                    'qwen/qwq-32b': 'qwen/qwq-32b',
+                    'qwen/qwen2.5-7b-instruct': 'qwen/qwen2.5-7b-instruct',
+                    'nvidia/nemotron-4-mini-hindi-4b-instruct': 'nvidia/nemotron-4-mini-hindi-4b-instruct',
+                    'nvidia/nemotron-3-nano-30b-a3b': 'nvidia/nemotron-3-nano-30b-a3b',
+                    'Nemotron 12b VL': 'nvidia/nemotron-nano-12b-v2-vl',
+                    'Nemotron nano 9 b': 'nvidia/nvidia-nemotron-nano-9b-v2',
+                    'nvidia/llama-3.3-nemotron-super-49b-v1.5': 'nvidia/llama-3.3-nemotron-super-49b-v1.5',
+                    'thudm/chatglm3-6b': 'thudm/chatglm3-6b',
+                    'nvidia/usdcode-llama-3.1-70b-instruct': 'nvidia/usdcode-llama-3.1-70b-instruct'
+                }
+            }
             huggingface: {
                 name: 'HuggingFace',
                 endpoint: 'https://router.huggingface.co/v1/chat/completions',
@@ -949,6 +1035,34 @@
                 model.stage = stage;
             }
             renderModelSelector();
+        }
+            let url = provider.endpoint;
+            // STRICT PROXY USAGE for Nvidia and Ollama Cloud as requested
+            if (providerKey === 'nvidia' || providerKey === 'ollama') {
+                url = 'https://corsproxy.io/?' + encodeURIComponent(provider.endpoint);
+            }
+
+            try {
+                const response = await fetch(url, { method: 'POST', headers, body: JSON.stringify(requestBody) });
+                if (!response.ok) {
+                    if ((response.status === 504 || response.status === 408) && retryCount < 1) {
+                        return await callModelWithFallback(providerKey, modelId, messages, retryCount + 1);
+                    }
+                    throw new Error(`${response.status}: ${await response.text()}`);
+                }
+                const data = await response.json();
+                const content = data.choices?.[0]?.message?.content || '';
+                let thinking = data.choices?.[0]?.message?.reasoning_content || '';
+                let answer = content;
+                const thinkMatch = content.match(/<think>([\s\S]*?)<\/think>/);
+                if (thinkMatch) { thinking = thinkMatch[1]; answer = content.replace(/<think>[\s\S]*?<\/think>/, '').trim(); }
+                return { content: answer, thinking, provider: providerKey };
+            } catch (error) {
+                if (state.autoFallback && retryCount === 0) {
+                    throw error; 
+                }
+                throw error;
+            }
         }
 
         function updateModalSelectedCount() {
