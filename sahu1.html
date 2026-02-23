@@ -1,0 +1,4706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#667eea">
+    <meta name="description" content="SahuAI Agent v5.0 - Official Saksham Intelligence AI Models Chat - 57+ models, 15+ providers, consensus-powered AI">
+    <meta name="author" content="Saksham Intelligence">
+    <title>SahuAI Agent v5.0 - Official Saksham Intelligence AI Models Chat</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="./manifest.json">
+    <link rel="icon" type="image/png" href="./icon-512.png">
+    <link rel="apple-touch-icon" href="./icon-192.png">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Export Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/docx@8.2.0/build/index.umd.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    
+    <!-- File Creation Libraries -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    
+    <!-- SAHU 2.0 Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/string-similarity@4.0.4/umd/string-similarity.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lz-string@1.5.0/libs/lz-string.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas-pro"></script>
+
+    <style>
+        /* ============================================
+           ROOT CSS VARIABLES - THEME CONFIGURATION
+           ============================================ */
+        :root {
+            /* Light Mode Colors */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f8f8;
+            --bg-tertiary: #efefef;
+            --text-primary: #1a1a1a;
+            --text-secondary: #525252;
+            --text-muted: #888888;
+            --accent: #667eea;
+            --accent-hover: #5a6fd6;
+            --accent-light: rgba(102, 126, 234, 0.1);
+            --border: #e0e0e0;
+            --border-light: #f0f0f0;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            
+            /* Status Colors */
+            --success: #22c55e;
+            --success-light: rgba(34, 197, 94, 0.1);
+            --warning: #f59e0b;
+            --warning-light: rgba(245, 158, 11, 0.1);
+            --error: #ef4444;
+            --error-light: rgba(239, 68, 68, 0.1);
+            --info: #3b82f6;
+            --info-light: rgba(59, 130, 246, 0.1);
+            
+            /* Provider Colors */
+            --provider-nvidia: #76b900;
+            --provider-sambanova: #0284c7;
+            --provider-huggingface: #ca8a04;
+            --provider-openrouter: #9333ea;
+            --provider-groq: #ea580c;
+            --provider-together: #16a34a;
+            --provider-cerebras: #6366f1;
+            --provider-fireworks: #dc2626;
+            --provider-routeway: #059669;
+            --provider-mistral: #ea580c;
+            --provider-gemini: #2563eb;
+            --provider-longcat: #7c3aed;
+            --provider-ollama: #374151;
+            --provider-zenmusk: #be185d;
+            --provider-ionet: #0891b2;
+            
+            /* Typography */
+            --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            --font-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, monospace;
+            
+            /* Spacing */
+            --sidebar-width: 280px;
+            --sidebar-width-mobile: 85%;
+            --header-height: 56px;
+            
+            /* Transitions */
+            --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* Dark Mode Colors */
+        .dark-mode {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #141414;
+            --bg-tertiary: #1e1e1e;
+            --text-primary: #e5e5e5;
+            --text-secondary: #a3a3a3;
+            --text-muted: #666666;
+            --accent: #667eea;
+            --accent-hover: #7c8ff0;
+            --accent-light: rgba(102, 126, 234, 0.15);
+            --border: #2a2a2a;
+            --border-light: #1a1a1a;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
+        }
+        
+        /* ============================================
+           BASE STYLES & RESET
+           ============================================ */
+        * {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+        
+        html {
+            font-size: 16px;
+            line-height: 1.5;
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            transition: background-color var(--transition-normal), color var(--transition-normal);
+        }
+        
+        /* Selection Colors */
+        ::selection {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        ::-moz-selection {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+            transition: background var(--transition-fast);
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+        
+        /* Custom Scrollbar Class */
+        .scrollbar-thin::-webkit-scrollbar {
+            width: 5px;
+        }
+        
+        .scrollbar-thin::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+        
+        .scrollbar-thin::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+        
+        /* ============================================
+           TYPOGRAPHY
+           ============================================ */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 600;
+            line-height: 1.3;
+            color: var(--text-primary);
+        }
+        
+        h1 { font-size: 2rem; }
+        h2 { font-size: 1.5rem; }
+        h3 { font-size: 1.25rem; }
+        h4 { font-size: 1.125rem; }
+        h5 { font-size: 1rem; }
+        h6 { font-size: 0.875rem; }
+        
+        p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+        
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: color var(--transition-fast);
+        }
+        
+        a:hover {
+            color: var(--accent-hover);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* ============================================
+           LAYOUT COMPONENTS
+           ============================================ */
+        #app {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+        }
+        
+        /* ============================================
+           SIDEBAR STYLES
+           ============================================ */
+        .sidebar {
+            position: fixed;
+            left: -100%;
+            top: 0;
+            bottom: 0;
+            z-index: 100;
+            width: 85%;
+            max-width: 300px;
+            background-color: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            transition: left var(--transition-normal);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar.open {
+            left: 0;
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 99;
+            backdrop-filter: blur(4px);
+            transition: opacity var(--transition-normal);
+        }
+        
+        .sidebar-overlay.show {
+            display: block;
+            opacity: 1;
+        }
+        
+        .sidebar-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .sidebar-logo {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 0.75rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .sidebar-logo i {
+            color: white;
+            font-size: 1.25rem;
+        }
+        
+        .sidebar-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+        }
+        
+        .sidebar-version {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        .sidebar-content {
+            flex: 1;
+            padding: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .sidebar-footer {
+            padding: 0.75rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        /* ============================================
+           BUTTON STYLES
+           ============================================ */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.625rem 1rem;
+            border-radius: 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            border: 1px solid transparent;
+            white-space: nowrap;
+        }
+        
+        .btn:active {
+            transform: scale(0.95);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .btn-secondary {
+            background-color: var(--bg-tertiary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+        
+        .btn-secondary:hover:not(:disabled) {
+            background-color: var(--border);
+        }
+        
+        .btn-ghost {
+            background-color: transparent;
+            color: var(--text-secondary);
+        }
+        
+        .btn-ghost:hover:not(:disabled) {
+            background-color: var(--bg-tertiary);
+        }
+        
+        .btn-icon {
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+        }
+        
+        .btn-block {
+            width: 100%;
+        }
+        
+        /* ============================================
+           INPUT STYLES
+           ============================================ */
+        .input {
+            width: 100%;
+            padding: 0.625rem 0.875rem;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            transition: all var(--transition-fast);
+        }
+        
+        .input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-light);
+        }
+        
+        .input::placeholder {
+            color: var(--text-muted);
+        }
+        
+        textarea.input {
+            resize: vertical;
+            min-height: 2.75rem;
+            max-height: 8rem;
+        }
+        
+        /* ============================================
+           TOGGLE SWITCH STYLES
+           ============================================ */
+        .toggle-container {
+            position: relative;
+            display: inline-block;
+            width: 2rem;
+            height: 1rem;
+        }
+        
+        .toggle-checkbox {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-label {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--border);
+            transition: all var(--transition-fast);
+            border-radius: 1rem;
+        }
+        
+        .toggle-label::before {
+            position: absolute;
+            content: "";
+            height: 0.75rem;
+            width: 0.75rem;
+            left: 0.125rem;
+            bottom: 0.125rem;
+            background-color: white;
+            transition: all var(--transition-fast);
+            border-radius: 50%;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: var(--success);
+        }
+        
+        .toggle-checkbox:checked + .toggle-label::before {
+            transform: translateX(1rem);
+        }
+        
+        /* ============================================
+           MAIN CONTENT AREA
+           ============================================ */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+            transition: margin-left var(--transition-normal);
+        }
+        
+        /* ============================================
+           HEADER STYLES
+           ============================================ */
+        .header {
+            height: var(--header-height);
+            border-bottom: 1px solid var(--border);
+            background-color: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1rem;
+            flex-shrink: 0;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .header-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .header-title i {
+            color: var(--accent);
+        }
+        
+        /* ============================================
+           METRICS DISPLAY
+           ============================================ */
+        .metrics-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.25rem 0.5rem;
+            background-color: var(--bg-tertiary);
+            border-radius: 0.5rem;
+            border: 1px solid var(--border);
+            font-size: 0.625rem;
+            color: var(--text-secondary);
+        }
+        
+        .metric-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .metric-item:not(:last-child) {
+            padding-right: 0.5rem;
+            border-right: 1px solid var(--border);
+        }
+        
+        .metric-item i {
+            font-size: 0.5rem;
+        }
+        
+        /* ============================================
+           TOKEN COUNTER
+           ============================================ */
+        .token-counter {
+            padding: 0 0.5rem;
+            height: 2rem;
+            border-radius: 1rem;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.625rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            background-color: var(--bg-tertiary);
+            gap: 0.375rem;
+            min-width: 5rem;
+            transition: all var(--transition-fast);
+        }
+        
+        .token-counter i {
+            color: #eab308;
+        }
+        
+        /* ============================================
+           MODE SELECTOR
+           ============================================ */
+        .mode-selector {
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 0.375rem 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        
+        .mode-selector:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        
+        /* ============================================
+           CHAT AREA
+           ============================================ */
+        .chat-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-container {
+            max-width: 56rem;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        /* ============================================
+           WELCOME SCREEN
+           ============================================ */
+        .welcome-screen {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .welcome-logo {
+            width: 4rem;
+            height: 4rem;
+            border-radius: 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .welcome-logo i {
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .welcome-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .welcome-subtitle {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            max-width: 28rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .provider-badges {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .provider-badge {
+            font-size: 0.625rem;
+            padding: 0.1875rem 0.5rem;
+            border-radius: 0.375rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .provider-nvidia { background: rgba(118, 185, 0, 0.2); color: #76b900; }
+        .provider-sambanova { background: rgba(2, 132, 199, 0.2); color: #0284c7; }
+        .provider-huggingface { background: rgba(202, 138, 4, 0.2); color: #ca8a04; }
+        .provider-openrouter { background: rgba(147, 51, 234, 0.2); color: #9333ea; }
+        .provider-groq { background: rgba(234, 88, 12, 0.2); color: #ea580c; }
+        .provider-together { background: rgba(22, 163, 74, 0.2); color: #16a34a; }
+        .provider-cerebras { background: rgba(99, 102, 241, 0.2); color: #6366f1; }
+        .provider-fireworks { background: rgba(220, 38, 38, 0.2); color: #dc2626; }
+        .provider-routeway { background: rgba(5, 150, 105, 0.2); color: #059669; }
+        .provider-mistral { background: rgba(234, 88, 12, 0.2); color: #ea580c; }
+        .provider-gemini { background: rgba(37, 99, 235, 0.2); color: #2563eb; }
+        .provider-longcat { background: rgba(124, 58, 237, 0.2); color: #7c3aed; }
+        .provider-ollama { background: rgba(55, 65, 81, 0.2); color: #374151; }
+        .provider-zenmusk { background: rgba(190, 24, 93, 0.2); color: #be185d; }
+        .provider-ionet { background: rgba(8, 145, 178, 0.2); color: #0891b2; }
+        
+        .quick-prompts {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+            width: 100%;
+            max-width: 28rem;
+        }
+        
+        .quick-prompt-card {
+            padding: 1rem;
+            border-radius: 0.75rem;
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            text-align: left;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        
+        .quick-prompt-card:hover {
+            background-color: var(--border);
+            transform: translateY(-2px);
+        }
+        
+        .quick-prompt-card i {
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+        
+        .quick-prompt-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .quick-prompt-desc {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        /* ============================================
+           DISCOVERY FEED (Search Mode)
+           ============================================ */
+        .discovery-grid {
+            display: none;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-top: 1.25rem;
+            width: 100%;
+            max-width: 56rem;
+        }
+        
+        .discovery-card {
+            background-color: var(--bg-tertiary);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            transition: all var(--transition-fast);
+        }
+        
+        .discovery-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--accent);
+        }
+        
+        .discovery-source {
+            font-size: 0.625rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+        }
+        
+        .discovery-source img {
+            width: 0.75rem;
+            height: 0.75rem;
+            border-radius: 0.25rem;
+        }
+        
+        .discovery-title {
+            font-weight: 600;
+            font-size: 0.875rem;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .discovery-snippet {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        /* ============================================
+           MESSAGE STYLES
+           ============================================ */
+        .message-container {
+            display: flex;
+            margin-bottom: 1rem;
+            width: 100%;
+        }
+        
+        .message-user {
+            justify-content: flex-end;
+        }
+        
+        .message-assistant {
+            justify-content: flex-start;
+        }
+        
+        .message-bubble {
+            max-width: 85%;
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+        
+        .message-user .message-bubble {
+            background: linear-gradient(135deg, var(--accent) 0%, #764ba2 100%);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .message-assistant .message-bubble {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .message-content {
+            white-space: pre-wrap;
+        }
+        
+        .message-meta {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.25rem;
+            font-size: 0.625rem;
+            opacity: 0.7;
+        }
+        
+        /* ============================================
+           THINKING BLOCK
+           ============================================ */
+        .thinking-block {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
+            font-size: 0.8125rem;
+        }
+        
+        .thinking-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            color: #d97706;
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+        
+        .thinking-content {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            max-height: 10rem;
+            overflow-y: auto;
+        }
+        
+        /* ============================================
+           EXPERT CARDS (Multi-Model)
+           ============================================ */
+        .expert-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        
+        .expert-card {
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 0.75rem;
+            transition: all var(--transition-normal);
+        }
+        
+        .expert-card.thinking {
+            border-color: var(--warning);
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.15);
+        }
+        
+        .expert-card.complete {
+            border-color: var(--success);
+        }
+        
+        .expert-card.error {
+            border-color: var(--error);
+        }
+        
+        .expert-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .expert-icon {
+            font-size: 1.25rem;
+        }
+        
+        .expert-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .expert-name {
+            font-size: 0.875rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .expert-provider {
+            font-size: 0.625rem;
+            color: var(--text-secondary);
+        }
+        
+        .typing-indicator {
+            display: flex;
+            gap: 0.25rem;
+        }
+        
+        .typing-indicator span {
+            width: 0.375rem;
+            height: 0.375rem;
+            background-color: #fbbf24;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+        
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+                opacity: 0.5;
+            }
+            30% {
+                transform: translateY(-6px);
+                opacity: 1;
+            }
+        }
+        
+        .expert-status {
+            font-size: 0.625rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .expert-stream {
+            font-size: 0.625rem;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            white-space: pre-wrap;
+            max-height: 8rem;
+            overflow-y: auto;
+        }
+        
+        /* ============================================
+           CONSENSUS PANEL
+           ============================================ */
+        .consensus-panel {
+            margin-top: 0.75rem;
+            padding: 0.625rem;
+            background-color: rgba(102, 126, 234, 0.05);
+            border: 1px solid var(--accent);
+            border-radius: 0.5rem;
+        }
+        
+        .consensus-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+        
+        .agreement-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.6875rem;
+        }
+        
+        .agreement-table th,
+        .agreement-table td {
+            padding: 0.375rem;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+        
+        .agreement-table th {
+            background-color: var(--bg-tertiary);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        
+        .agreement-table td.text-center {
+            text-align: center;
+        }
+        
+        .agreement-legend {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+            font-size: 0.5rem;
+            color: var(--text-secondary);
+        }
+        
+        .agreement-legend span {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .agreement-legend i {
+            font-size: 0.375rem;
+        }
+        
+        /* ============================================
+           AGGREGATOR RESPONSE
+           ============================================ */
+        .aggregator-response {
+            background: linear-gradient(135deg, var(--bg-tertiary) 0%, rgba(102, 126, 234, 0.1) 100%);
+            border: 2px solid var(--accent);
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .aggregator-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .aggregator-stage {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.875rem;
+            color: white;
+        }
+        
+        .aggregator-stage.stage-1 { background-color: #f59e0b; }
+        .aggregator-stage.stage-2 { background-color: #06b6d4; }
+        .aggregator-stage.stage-3 { background-color: #22c55e; }
+        
+        .aggregator-info {
+            flex: 1;
+        }
+        
+        .aggregator-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+        
+        .aggregator-model {
+            font-size: 0.625rem;
+            color: var(--text-secondary);
+        }
+        
+        /* ============================================
+           CITATION STYLES
+           ============================================ */
+        .citation {
+            vertical-align: super;
+            font-size: 0.7em;
+            color: var(--accent);
+            cursor: pointer;
+            margin: 0 1px;
+            font-weight: 700;
+            text-decoration: none;
+            padding: 0 2px;
+            border-radius: 3px;
+            background-color: rgba(102, 126, 234, 0.1);
+            transition: all var(--transition-fast);
+        }
+        
+        .citation:hover {
+            text-decoration: none;
+            background-color: rgba(102, 126, 234, 0.2);
+        }
+        
+        .citation-tooltip {
+            visibility: hidden;
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            text-align: left;
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            position: absolute;
+            z-index: 50;
+            width: 15.625rem;
+            box-shadow: var(--shadow-lg);
+            font-size: 0.6875rem;
+            bottom: 120%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity var(--transition-fast);
+        }
+        
+        .citation:hover .citation-tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        .citation-tooltip-title {
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .citation-tooltip-snippet {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 0.25rem;
+        }
+        
+        .citation-tooltip-link {
+            font-size: 0.5625rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        /* ============================================
+           SOURCES PANEL
+           ============================================ */
+        .sources-panel {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 0.625rem;
+            padding: 0.75rem;
+            margin-top: 0.625rem;
+        }
+        
+        .sources-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+        }
+        
+        .sources-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+        
+        .sources-icon {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            background-color: #dbeafe;
+            color: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .sources-count {
+            font-size: 0.625rem;
+            color: var(--text-secondary);
+        }
+        
+        .sources-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+        }
+        
+        .source-card {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+            padding: 0.625rem;
+            border-radius: 0.5rem;
+            background-color: var(--bg-tertiary);
+            font-size: 0.75rem;
+            text-decoration: none;
+            color: var(--text-primary);
+            border: 1px solid transparent;
+            transition: all var(--transition-fast);
+        }
+        
+        .source-card:hover {
+            border-color: var(--accent);
+            transform: translateX(2px);
+        }
+        
+        .source-favicon {
+            width: 1rem;
+            height: 1rem;
+            border-radius: 0.25rem;
+            opacity: 0.7;
+        }
+        
+        .source-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .source-provider {
+            font-size: 0.625rem;
+            color: #2563eb;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .source-index {
+            background-color: #e5e7eb;
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+            font-size: 0.5rem;
+            font-weight: 700;
+        }
+        
+        .source-title {
+            font-size: 0.75rem;
+            font-weight: 500;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.3;
+        }
+        
+        .source-snippet {
+            font-size: 0.625rem;
+            color: var(--text-secondary);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        /* ============================================
+           ARTIFACT / CODE STYLES
+           ============================================ */
+        .artifact-container {
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            margin-top: 0.625rem;
+            overflow: hidden;
+            background-color: var(--bg-primary);
+        }
+        
+        .artifact-header {
+            background-color: var(--bg-tertiary);
+            padding: 0.5rem 0.75rem;
+            font-size: 0.6875rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            font-family: var(--font-mono);
+            color: var(--text-secondary);
+        }
+        
+        .artifact-actions {
+            display: flex;
+            gap: 0.5rem;
+            font-size: 0.625rem;
+        }
+        
+        .artifact-action {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            cursor: pointer;
+            transition: color var(--transition-fast);
+        }
+        
+        .artifact-action:hover {
+            color: var(--accent);
+        }
+        
+        .artifact-content {
+            padding: 0;
+            margin: 0;
+        }
+        
+        .artifact-content pre {
+            margin: 0;
+            border-radius: 0;
+        }
+        
+        .artifact-content code {
+            display: block;
+            padding: 0.75rem;
+            background-color: #1a1a1a;
+            border-radius: 0;
+            overflow-x: auto;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            line-height: 1.5;
+            color: #e5e5e5;
+        }
+        
+        .render-btn {
+            font-size: 0.6875rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            background-color: #ecfdf5;
+            color: #047857;
+            border: 1px solid #059669;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            margin-top: 0.5rem;
+            transition: all var(--transition-fast);
+        }
+        
+        .render-btn:hover {
+            background-color: #d1fae5;
+        }
+        
+        /* ============================================
+           EXPORT BUTTONS
+           ============================================ */
+        .export-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+            padding: 0.75rem;
+            background-color: var(--bg-tertiary);
+            border-radius: 0.625rem;
+        }
+        
+        .export-btn {
+            padding: 0.5rem 0.875rem;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            border: 1px solid var(--border);
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            min-height: 2.5rem;
+        }
+        
+        .export-btn:hover {
+            background-color: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+        
+        /* ============================================
+           INPUT AREA
+           ============================================ */
+        .input-area-container {
+            padding: 0.75rem;
+            border-top: 1px solid var(--border);
+            background-color: var(--bg-secondary);
+        }
+        
+        .input-wrapper {
+            max-width: 48rem;
+            margin: 0 auto;
+        }
+        
+        .file-preview {
+            display: none;
+            margin-bottom: 0.75rem;
+        }
+        
+        .file-preview.show {
+            display: block;
+        }
+        
+        .file-preview-card {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background-color: var(--bg-tertiary);
+            border-radius: 0.75rem;
+        }
+        
+        .file-preview-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            background-color: var(--accent);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .file-preview-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .file-preview-name {
+            font-size: 0.875rem;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .file-preview-size {
+            font-size: 0.625rem;
+            color: var(--text-secondary);
+        }
+        
+        .file-preview-remove {
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color var(--transition-fast);
+        }
+        
+        .file-preview-remove:hover {
+            background-color: var(--bg-secondary);
+        }
+        
+        .input-box {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 0.5rem;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+        }
+        
+        .input-box-inner {
+            display: flex;
+            align-items: flex-end;
+            gap: 0.75rem;
+        }
+        
+        .tools-btn {
+            padding: 0.5rem;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            font-size: 1rem;
+        }
+        
+        .tools-btn:hover {
+            background-color: var(--bg-tertiary);
+        }
+        
+        .task-type-btn {
+            padding: 0.5rem;
+            border-radius: 0.75rem;
+            transition: all var(--transition-fast);
+            font-weight: 700;
+            font-size: 0.625rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .task-btn-vibe {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+        }
+        
+        .task-btn-agentic {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            border: none;
+        }
+        
+        .task-btn-file {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+        }
+        
+        .input-textarea {
+            flex: 1;
+            background-color: transparent;
+            resize: none;
+            outline: none;
+            font-size: 1rem;
+            line-height: 1.5;
+            padding: 0.5rem 0;
+            color: var(--text-primary);
+            min-height: 2.75rem;
+            max-height: 7.5rem;
+        }
+        
+        .input-textarea::placeholder {
+            color: var(--text-muted);
+        }
+        
+        .send-btn {
+            padding: 0.75rem;
+            border-radius: 0.75rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transition: all var(--transition-fast);
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .send-btn:hover:not(:disabled) {
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .input-hint {
+            font-size: 0.625rem;
+            text-align: center;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+        
+        /* ============================================
+           TOOLS MENU POPOVER
+           ============================================ */
+        .tools-popover {
+            display: none;
+            position: absolute;
+            bottom: 5rem;
+            left: 1rem;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            box-shadow: var(--shadow-xl);
+            padding: 0.75rem;
+            width: 16rem;
+            z-index: 50;
+        }
+        
+        .tools-popover.show {
+            display: block;
+        }
+        
+        .tools-popover-title {
+            font-size: 0.625rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .tools-popover-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color var(--transition-fast);
+        }
+        
+        .tools-popover-item:hover {
+            background-color: var(--bg-tertiary);
+        }
+        
+        .tools-popover-item-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+        
+        /* ============================================
+           LANGUAGE CARD POPOVER
+           ============================================ */
+        .language-popover {
+            display: none;
+            position: absolute;
+            bottom: 5rem;
+            left: 1rem;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            box-shadow: var(--shadow-xl);
+            padding: 0.75rem;
+            width: 18rem;
+            z-index: 50;
+        }
+        
+        .language-popover.show {
+            display: block;
+        }
+        
+        .language-popover-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        
+        .language-popover-title {
+            font-size: 0.625rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+        }
+        
+        .language-popover-close {
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: color var(--transition-fast);
+        }
+        
+        .language-popover-close:hover {
+            color: var(--accent);
+        }
+        
+        .language-search {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0.5rem;
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            font-size: 0.75rem;
+            color: var(--text-primary);
+        }
+        
+        .language-search:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        
+        .language-list {
+            max-height: 12rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        
+        .language-item {
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: background-color var(--transition-fast);
+        }
+        
+        .language-item:hover {
+            background-color: var(--bg-tertiary);
+        }
+        
+        .language-item-code {
+            font-size: 0.625rem;
+            color: var(--text-secondary);
+        }
+        
+        /* ============================================
+           TRANSLATION PANEL (Search Mode Only)
+           ============================================ */
+        .translation-panel {
+            display: none;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 0.625rem;
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .translation-panel.show {
+            display: block;
+        }
+        
+        .translation-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+        
+        .translation-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .translation-select {
+            flex: 1;
+            padding: 0.375rem 0.5rem;
+            border-radius: 0.375rem;
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            font-size: 0.75rem;
+            color: var(--text-primary);
+        }
+        
+        .translation-select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        
+        /* ============================================
+           SEARCH MODE SPECIFIC STYLES
+           ============================================ */
+        body.mode-search-ui .sources-panel {
+            display: none;
+        }
+        
+        body.mode-search-ui .expert-card {
+            display: none !important;
+        }
+        
+        body.mode-search-ui .consensus-panel {
+            display: none !important;
+        }
+        
+        body.mode-search-ui .thinking-block {
+            display: none !important;
+        }
+        
+        body.mode-search-ui .aggregator-response {
+            border: none;
+            background: transparent;
+            padding: 0;
+        }
+        
+        body.mode-search-ui .stage-btn {
+            display: none;
+        }
+        
+        body.mode-search-ui .sahu-search-header {
+            display: block;
+        }
+        
+        body.mode-search-ui .discovery-grid {
+            display: grid;
+        }
+        
+        body.mode-search-ui #defaultWelcomeContent {
+            display: none;
+        }
+        
+        /* ============================================
+           SEARCH HEADER (Animated)
+           ============================================ */
+        .sahu-search-header {
+            font-family: 'Google Sans', Roboto, sans-serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            text-align: center;
+            cursor: pointer;
+            transition: transform var(--transition-fast);
+        }
+        
+        .sahu-search-header:hover {
+            transform: scale(1.02);
+        }
+        
+        .shine-text {
+            background: linear-gradient(to right, #ef4444, #f59e0b, #10b981, #3b82f6, #6366f1, #8b5cf6, #ec4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            background-size: 200% auto;
+            animation: shine 4s linear infinite;
+        }
+        
+        @keyframes shine {
+            to {
+                background-position: 200% center;
+            }
+        }
+        
+        /* ============================================
+           MODAL STYLES
+           ============================================ */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 50;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            transition: opacity var(--transition-normal);
+        }
+        
+        .modal-overlay.show {
+            display: flex;
+        }
+        
+        .modal-container {
+            background-color: var(--bg-secondary);
+            border-radius: 1rem;
+            width: 100%;
+            max-width: 32rem;
+            max-height: 85vh;
+            overflow: hidden;
+            box-shadow: var(--shadow-2xl);
+            display: flex;
+            flex-direction: column;
+            transition: all var(--transition-normal);
+        }
+        
+        .modal-container.large {
+            max-width: 56rem;
+        }
+        
+        .modal-container.xlarge {
+            max-width: 64rem;
+        }
+        
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .modal-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .modal-title i {
+            color: var(--accent);
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .modal-back-btn {
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color var(--transition-fast);
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .modal-back-btn:hover {
+            background-color: var(--bg-tertiary);
+        }
+        
+        .modal-close-btn {
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color var(--transition-fast);
+        }
+        
+        .modal-close-btn:hover {
+            background-color: var(--bg-tertiary);
+        }
+        
+        .modal-body {
+            padding: 1rem;
+            overflow-y: auto;
+            flex: 1;
+        }
+        
+        .modal-footer {
+            padding: 1rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+        }
+        
+        /* ============================================
+           SETTINGS VIEWS
+           ============================================ */
+        .settings-view {
+            display: none;
+        }
+        
+        .settings-view.active {
+            display: block;
+        }
+        
+        .settings-section {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .settings-card {
+            padding: 1rem;
+            border-radius: 0.75rem;
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        
+        .settings-card:hover {
+            background-color: var(--border);
+        }
+        
+        .settings-card-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .settings-card-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .settings-card-icon {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+        
+        .settings-card-icon.orange { background-color: #ffedd5; color: #ea580c; }
+        .settings-card-icon.pink { background-color: #fce7f3; color: #db2777; }
+        .settings-card-icon.blue { background-color: #dbeafe; color: #2563eb; }
+        .settings-card-icon.green { background-color: #dcfce7; color: #16a34a; }
+        .settings-card-icon.indigo { background-color: #e0e7ff; color: #4f46e5; }
+        .settings-card-icon.purple { background-color: #f3e8ff; color: #9333ea; }
+        .settings-card-icon.teal { background-color: #ccfbf1; color: #0d9488; }
+        .settings-card-icon.yellow { background-color: #fef9c3; color: #ca8a04; }
+        .settings-card-icon.red { background-color: #fee2e2; color: #dc2626; }
+        
+        .settings-card-title {
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .settings-card-desc {
+            font-size: 0.625rem;
+            color: var(--text-secondary);
+        }
+        
+        .settings-card-chevron {
+            color: var(--text-secondary);
+        }
+        
+        /* ============================================
+           SAFETY MODELS SECTION
+           ============================================ */
+        .safety-models-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+        }
+        
+        .safety-model-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background-color: var(--bg-secondary);
+            border-radius: 0.5rem;
+        }
+        
+        .safety-model-checkbox {
+            width: 1.25rem;
+            height: 1.25rem;
+            accent-color: var(--accent);
+        }
+        
+        .safety-model-info {
+            flex: 1;
+        }
+        
+        .safety-model-name {
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .safety-model-desc {
+            font-size: 0.625rem;
+            color: var(--text-secondary);
+        }
+        
+        .safety-model-hint {
+            font-size: 0.625rem;
+            color: var(--text-secondary);
+            margin-top: 0.75rem;
+        }
+        
+        /* ============================================
+           ADVANCED FEATURES TOGGLES
+           ============================================ */
+        .features-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem;
+            border-radius: 0.75rem;
+            background-color: var(--bg-tertiary);
+            cursor: pointer;
+            transition: background-color var(--transition-fast);
+        }
+        
+        .feature-item:hover {
+            background-color: var(--border);
+        }
+        
+        .feature-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+        
+        .feature-hint {
+            font-size: 0.625rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+        
+        /* ============================================
+           VOICE SETTINGS
+           ============================================ */
+        .voice-setting-card {
+            padding: 1rem;
+            border-radius: 0.75rem;
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border);
+        }
+        
+        .voice-setting-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+        
+        .voice-setting-select {
+            width: 100%;
+            padding: 0.625rem;
+            border-radius: 0.5rem;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border);
+            font-size: 0.875rem;
+            color: var(--text-primary);
+        }
+        
+        .voice-setting-select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        
+        /* ============================================
+           CONFIGURATION (Research Stages)
+           ============================================ */
+        .config-section {
+            margin-bottom: 0.75rem;
+        }
+        
+        .config-section-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+        
+        .config-role-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        
+        .config-role-item {
+            padding-left: 0.5rem;
+            border-left: 2px solid var(--border);
+            margin-bottom: 0.5rem;
+        }
+        
+        .config-role-label {
+            display: block;
+            font-size: 0.625rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .config-role-select {
+            width: 100%;
+            padding: 0.375rem;
+            border-radius: 0.375rem;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border);
+            font-size: 0.625rem;
+            color: var(--text-primary);
+        }
+        
+        .config-role-select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        
+        /* ============================================
+           SEARCH ENGINES LIST
+           ============================================ */
+        .search-engines-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        
+        .search-engines-hint {
+            font-size: 0.625rem;
+            color: var(--text-secondary);
+        }
+        
+        .search-engines-select-all {
+            font-size: 0.625rem;
+            background-color: var(--accent);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            transition: background-color var(--transition-fast);
+        }
+        
+        .search-engines-select-all:hover {
+            background-color: var(--accent-hover);
+        }
+        
+        .search-engines-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+            max-height: 15rem;
+            overflow-y: auto;
+        }
+        
+        .search-engine-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            background-color: var(--bg-tertiary);
+            cursor: pointer;
+            transition: background-color var(--transition-fast);
+        }
+        
+        .search-engine-item:hover {
+            background-color: var(--border);
+        }
+        
+        .search-engine-checkbox {
+            width: 1rem;
+            height: 1rem;
+            accent-color: var(--accent);
+        }
+        
+        .search-engine-info {
+            flex: 1;
+        }
+        
+        .search-engine-name {
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .search-engine-type {
+            font-size: 0.5rem;
+            color: var(--text-secondary);
+        }
+        
+        /* ============================================
+           PROVIDERS LIST
+           ============================================ */
+        .providers-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+        }
+        
+        .provider-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            border-radius: 0.75rem;
+            background-color: var(--bg-tertiary);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            border: 1px solid transparent;
+        }
+        
+        .provider-item:hover {
+            background-color: var(--border);
+        }
+        
+        .provider-item.active {
+            border-color: var(--accent);
+            background-color: var(--accent-light);
+        }
+        
+        .provider-checkbox {
+            width: 1.25rem;
+            height: 1.25rem;
+            accent-color: var(--accent);
+        }
+        
+        .provider-info {
+            flex: 1;
+        }
+        
+        .provider-name {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .provider-icon {
+            font-size: 1rem;
+        }
+        
+        /* ============================================
+           API KEYS SECTION
+           ============================================ */
+        .api-keys-hint {
+            padding: 0.75rem;
+            border-radius: 0.75rem;
+            background-color: #fef9c3;
+            color: #854d0e;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .dark-mode .api-keys-hint {
+            background-color: rgba(113, 63, 18, 0.3);
+            color: #fde68a;
+        }
+        
+        .api-keys-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .api-key-item {
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border);
+        }
+        
+        .api-key-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .api-key-provider {
+            font-size: 0.875rem;
+        }
+        
+        .api-key-input {
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border);
+            font-size: 0.75rem;
+            color: var(--text-primary);
+        }
+        
+        .api-key-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        
+        /* ============================================
+           CUSTOMIZE SECTION (Merged Appearance + Instructions)
+           ============================================ */
+        .customize-section {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .customize-card {
+            padding: 1rem;
+            border-radius: 0.75rem;
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border);
+        }
+        
+        .customize-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+        
+        .customize-textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            font-size: 0.75rem;
+            color: var(--text-primary);
+            resize: vertical;
+            min-height: 6rem;
+        }
+        
+        .customize-textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        
+        .customize-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+        
+        .customize-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        
+        .customize-input-label {
+            font-size: 0.625rem;
+            color: var(--text-secondary);
+        }
+        
+        .customize-input {
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            font-size: 0.75rem;
+            color: var(--text-primary);
+        }
+        
+        .customize-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        
+        /* ============================================
+           SINGLE MODEL MODE
+           ============================================ */
+        .single-model-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem;
+            border-radius: 0.75rem;
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            margin-bottom: 0.75rem;
+        }
+        
+        .single-model-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .single-model-select {
+            width: 100%;
+            padding: 0.625rem;
+            border-radius: 0.5rem;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border);
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            margin-top: 0.5rem;
+        }
+        
+        .single-model-select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        
+        .single-model-hint {
+            font-size: 0.625rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+        
+        /* ============================================
+           PIPELINE STRATEGY
+           ============================================ */
+        .pipeline-section {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .pipeline-label {
+            display: block;
+            font-size: 0.625rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .pipeline-select {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.75rem;
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            font-size: 0.875rem;
+            color: var(--text-primary);
+        }
+        
+        .pipeline-select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        
+        .pipeline-toggles {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        /* ============================================
+           PROMPT REFINER PANEL
+           ============================================ */
+        .prompt-refiner-panel {
+            display: none;
+            margin-top: 0.75rem;
+            padding: 0.75rem;
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+        }
+        
+        .prompt-refiner-panel.show {
+            display: block;
+        }
+        
+        .prompt-refiner-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        
+        .prompt-refiner-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+        }
+        
+        .prompt-refiner-toggle {
+            font-size: 0.625rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: color var(--transition-fast);
+        }
+        
+        .prompt-refiner-toggle:hover {
+            color: var(--accent);
+        }
+        
+        .prompt-refiner-content {
+            font-size: 0.6875rem;
+            line-height: 1.5;
+        }
+        
+        .prompt-refiner-original {
+            margin-bottom: 0.5rem;
+            padding: 0.5rem;
+            background-color: var(--bg-secondary);
+            border-radius: 0.375rem;
+            border-left: 2px solid var(--border);
+        }
+        
+        .prompt-refiner-original-label {
+            font-size: 0.5625rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+        }
+        
+        .prompt-refiner-refined {
+            padding: 0.5rem;
+            background-color: var(--accent-light);
+            border-radius: 0.375rem;
+            border-left: 2px solid var(--accent);
+        }
+        
+        .prompt-refiner-refined-label {
+            font-size: 0.5625rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+        }
+        
+        .prompt-refiner-meta {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+            font-size: 0.5625rem;
+            color: var(--text-secondary);
+        }
+        
+        /* ============================================
+           MODEL SELECTOR MODAL
+           ============================================ */
+        .model-selector-hint {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+        
+        .model-selector-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .model-provider-section {
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            overflow: hidden;
+        }
+        
+        .model-provider-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem;
+            background-color: var(--bg-tertiary);
+        }
+        
+        .model-provider-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .model-provider-icon {
+            font-size: 1rem;
+        }
+        
+        .model-provider-name {
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+        
+        .model-provider-count {
+            font-size: 0.625rem;
+            color: var(--text-secondary);
+        }
+        
+        .model-provider-select-all {
+            font-size: 0.625rem;
+            padding: 0.25rem 0.5rem;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 0.25rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        
+        .model-provider-select-all:hover {
+            background-color: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+        
+        .model-provider-list {
+            padding: 0.75rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+        }
+        
+        .model-card {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+            padding: 0.625rem 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 0.625rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            background-color: var(--bg-secondary);
+        }
+        
+        .model-card:hover {
+            border-color: var(--accent);
+        }
+        
+        .model-card.selected {
+            border-color: var(--accent);
+            background-color: var(--accent-light);
+        }
+        
+        .model-checkbox {
+            width: 1rem;
+            height: 1rem;
+            accent-color: var(--accent);
+        }
+        
+        .model-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .model-name {
+            font-size: 0.875rem;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .model-stages {
+            display: flex;
+            gap: 0.25rem;
+        }
+        
+        .stage-btn {
+            padding: 0.25rem 0.625rem;
+            font-size: 0.6875rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background-color: var(--bg-secondary);
+            color: var(--text-secondary);
+            transition: all var(--transition-fast);
+            min-width: 2rem;
+            text-align: center;
+        }
+        
+        .stage-btn:hover {
+            border-color: var(--accent);
+        }
+        
+        .stage-btn.active-1 {
+            background-color: #f59e0b;
+            color: white;
+            border-color: #f59e0b;
+        }
+        
+        .stage-btn.active-2 {
+            background-color: #06b6d4;
+            color: white;
+            border-color: #06b6d4;
+        }
+        
+        .stage-btn.active-3 {
+            background-color: #22c55e;
+            color: white;
+            border-color: #22c55e;
+        }
+        
+        .model-selector-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .model-selector-count {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        /* ============================================
+           CANVAS / ARTIFACT MODAL
+           ============================================ */
+        .canvas-container {
+            display: flex;
+            flex-direction: column;
+            height: 85vh;
+            background-color: var(--bg-secondary);
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: var(--shadow-2xl);
+        }
+        
+        .canvas-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1.25rem;
+            background-color: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .canvas-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+        
+        .canvas-title i {
+            color: var(--accent);
+        }
+        
+        .canvas-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .canvas-tabs {
+            display: flex;
+            gap: 0.25rem;
+            background-color: var(--bg-secondary);
+            padding: 0.25rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border);
+        }
+        
+        .canvas-tab {
+            padding: 0.375rem 0.75rem;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        
+        .canvas-tab.active {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        .canvas-body {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .canvas-editor,
+        .canvas-preview {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+        }
+        
+        .canvas-editor.active,
+        .canvas-preview.active {
+            display: block;
+        }
+        
+        .canvas-editor textarea {
+            width: 100%;
+            height: 100%;
+            padding: 1.25rem;
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            font-family: var(--font-mono);
+            font-size: 0.8125rem;
+            line-height: 1.6;
+            border: none;
+            resize: none;
+            outline: none;
+        }
+        
+        .preview-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background-color: white;
+        }
+        
+        /* ============================================
+           SOURCE CODE MODAL
+           ============================================ */
+        .source-code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        
+        .source-code-hint {
+            font-size: 0.625rem;
+            color: var(--text-secondary);
+        }
+        
+        .source-code-copy {
+            font-size: 0.625rem;
+            background-color: var(--accent);
+            color: white;
+            padding: 0.375rem 0.75rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: background-color var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .source-code-copy:hover {
+            background-color: var(--accent-hover);
+        }
+        
+        .source-code-viewer {
+            width: 100%;
+            flex: 1;
+            padding: 0.75rem;
+            font-size: 0.625rem;
+            font-family: var(--font-mono);
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            resize: none;
+            color: var(--text-primary);
+        }
+        
+        .source-code-viewer:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        
+        /* ============================================
+           TOAST NOTIFICATIONS
+           ============================================ */
+        .toast {
+            animation: slideIn 0.3s ease-out;
+            position: fixed;
+            bottom: 5rem;
+            right: 1rem;
+            z-index: 1000;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.625rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+            font-size: 0.875rem;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .toast.success {
+            background-color: #22c55e;
+        }
+        
+        .toast.error {
+            background-color: #ef4444;
+        }
+        
+        .toast.warning {
+            background-color: #f59e0b;
+        }
+        
+        .toast.info {
+            background-color: #3b82f6;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        /* ============================================
+           TYPING ANIMATION
+           ============================================ */
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+                opacity: 0.5;
+            }
+            30% {
+                transform: translateY(-6px);
+                opacity: 1;
+            }
+        }
+        
+        /* ============================================
+           PINNED MESSAGES
+           ============================================ */
+        .pinned-section {
+            display: none;
+            padding: 0.5rem 0.75rem 0.5rem;
+        }
+        
+        .pinned-section.show {
+            display: block;
+        }
+        
+        .pinned-label {
+            font-size: 0.625rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .pinned-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        
+        .pinned-item {
+            padding: 0.5rem;
+            background-color: var(--bg-tertiary);
+            border-radius: 0.5rem;
+            font-size: 0.625rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: pointer;
+            transition: background-color var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+        }
+        
+        .pinned-item:hover {
+            background-color: var(--border);
+        }
+        
+        .pinned-item i {
+            color: #eab308;
+        }
+        
+        /* ============================================
+           CHAT HISTORY SEARCH
+           ============================================ */
+        .history-search-container {
+            margin-bottom: 0.5rem;
+            margin-top: 0.5rem;
+            position: relative;
+        }
+        
+        .history-search-input {
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            font-size: 0.625rem;
+            color: var(--text-primary);
+        }
+        
+        .history-search-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .history-item {
+            padding: 0.75rem;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: background-color var(--transition-fast);
+        }
+        
+        .history-item:hover {
+            background-color: var(--bg-tertiary);
+        }
+        
+        .history-item:active {
+            transform: scale(0.98);
+        }
+        
+        .history-item i {
+            color: var(--text-secondary);
+        }
+        
+        .history-item-title {
+            font-size: 0.875rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex: 1;
+        }
+        
+        /* ============================================
+           MODE BADGES
+           ============================================ */
+        .mode-badge {
+            font-size: 0.625rem;
+            text-transform: uppercase;
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+            margin-left: 0.375rem;
+            font-weight: 700;
+        }
+        
+        .mode-standard {
+            background-color: #e0f2fe;
+            color: #0369a1;
+        }
+        
+        .mode-research {
+            background-color: #fef9c3;
+            color: #a16207;
+        }
+        
+        .mode-task {
+            background-color: #f3e8ff;
+            color: #7e22ce;
+        }
+        
+        .mode-search {
+            background-color: #dcfce7;
+            color: #15803d;
+        }
+        
+        /* ============================================
+           CONNECTION STATUS
+           ============================================ */
+        .connection-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.375rem 0.75rem;
+            border-radius: 0.5rem;
+            background-color: var(--bg-tertiary);
+        }
+        
+        .connection-indicator {
+            width: 0.5rem;
+            height: 0.5rem;
+            border-radius: 50%;
+            background-color: #22c55e;
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        .connection-status-text {
+            font-size: 0.625rem;
+        }
+        
+        @keyframes pulse {
+            50% {
+                opacity: 0.5;
+            }
+        }
+        
+        /* ============================================
+           RESPONSIVE BREAKPOINTS
+           ============================================ */
+        @media (min-width: 768px) {
+            .sidebar {
+                position: relative;
+                left: 0;
+                width: var(--sidebar-width);
+            }
+            
+            .sidebar-overlay {
+                display: none !important;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .quick-prompts {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .sources-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .expert-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .search-engines-list {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .model-provider-list {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .export-btn span {
+                display: none;
+            }
+            
+            .export-btn {
+                padding: 0.625rem 0.75rem;
+            }
+            
+            .metrics-container {
+                display: none;
+            }
+            
+            .header-title span {
+                display: none;
+            }
+            
+            .sidebar {
+                width: var(--sidebar-width-mobile);
+            }
+        }
+        
+        /* ============================================
+           DESKTOP ONLY / MOBILE ONLY CLASSES
+           ============================================ */
+        @media (max-width: 768px) {
+            .desktop-only {
+                display: none !important;
+            }
+        }
+        
+        @media (min-width: 769px) {
+            .mobile-only {
+                display: none !important;
+            }
+        }
+        
+        /* ============================================
+           ACCESSIBILITY
+           ============================================ */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+        
+        /* Focus visible for keyboard navigation */
+        :focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+        
+        /* Skip link for screen readers */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--accent);
+            color: white;
+            padding: 8px;
+            z-index: 100;
+            transition: top 0.3s;
+        }
+        
+        .skip-link:focus {
+            top: 0;
+        }
+        
+        /* ============================================
+           PRINT STYLES
+           ============================================ */
+        @media print {
+            .sidebar,
+            .header,
+            .input-area-container,
+            .export-buttons,
+            .tools-popover,
+            .language-popover {
+                display: none !important;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .chat-area {
+                overflow: visible;
+            }
+            
+            .message-bubble {
+                break-inside: avoid;
+            }
+        }
+        
+        /* ============================================
+           LOADING STATES
+           ============================================ */
+        .loading-skeleton {
+            background: linear-gradient(90deg, var(--bg-tertiary) 25%, var(--border) 50%, var(--bg-tertiary) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 0.25rem;
+        }
+        
+        @keyframes loading {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+        
+        /* ============================================
+           BLUR CONTENT (For modals)
+           ============================================ */
+        .blur-content {
+            filter: blur(5px);
+            user-select: none;
+            pointer-events: none;
+        }
+        
+        /* ============================================
+           SAFE AREA (for mobile notches)
+           ============================================ */
+        .safe-area-bottom {
+            padding-bottom: env(safe-area-inset-bottom, 0);
+        }
+        
+        /* ============================================
+           COLOR SCHEME SUPPORT
+           ============================================ */
+        @media (prefers-color-scheme: dark) {
+            :root:not(.light-mode) {
+                --bg-primary: #0a0a0a;
+                --bg-secondary: #141414;
+                --bg-tertiary: #1e1e1e;
+                --text-primary: #e5e5e5;
+                --text-secondary: #a3a3a3;
+                --text-muted: #666666;
+                --border: #2a2a2a;
+                --border-light: #1a1a1a;
+            }
+        }
+    </style>
+</head>
+<body class="h-screen overflow-hidden">
+    <!-- Skip Link for Accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <!-- Sidebar Overlay -->
+    <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+    
+    <!-- Main App Container -->
+    <div id="app">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar">
+            <!-- Sidebar Header -->
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div>
+                    <h1 class="sidebar-title gradient-text" id="header-title">SahuAI Agent</h1>
+                    <p class="sidebar-version">Version 5.0</p>
+                </div>
+            </div>
+            
+            <!-- Sidebar Content -->
+            <div class="sidebar-content">
+                <!-- New Chat Button -->
+                <button onclick="newChat()" id="btn-new-chat" class="btn btn-primary btn-block">
+                    <i class="fas fa-plus"></i>
+                    <span>New Chat</span>
+                </button>
+                
+                <!-- Pinned Messages Section -->
+                <div id="pinnedSection" class="pinned-section">
+                    <label class="pinned-label">Pinned</label>
+                    <div id="pinnedList" class="pinned-list"></div>
+                </div>
+                
+                <!-- History Search -->
+                <div class="history-search-container">
+                    <input type="text" id="historySearch" placeholder="Search chats..." class="history-search-input" oninput="filterHistory(this.value)">
+                </div>
+                
+                <!-- Chat History List -->
+                <div id="chatHistory" class="history-list"></div>
+            </div>
+            
+            <!-- Sidebar Footer -->
+            <div class="sidebar-footer">
+                <!-- Settings Button -->
+                <button onclick="openSettings()" id="btn-settings" class="btn btn-secondary btn-block">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </button>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content" id="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <button onclick="toggleSidebar()" class="btn btn-ghost btn-icon mobile-only">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="header-title">
+                        <i class="fas fa-robot"></i>
+                        <span>SahuAI Agent v5.0</span>
+                    </div>
+                </div>
+                
+                <div class="header-right">
+                    <!-- Real-time Metrics (Desktop Only) -->
+                    <div id="liveMetrics" class="metrics-container desktop-only">
+                        <span class="metric-item">
+                            <i class="fas fa-clock"></i>
+                            <span id="metricTime">0s</span>
+                        </span>
+                        <span class="metric-item">
+                            <i class="fas fa-bolt"></i>
+                            <span id="metricSpeed">0 t/s</span>
+                        </span>
+                        <span class="metric-item">
+                            <i class="fas fa-coins"></i>
+                            <span id="metricTotal">0 tok</span>
+                        </span>
+                    </div>
+                    
+                    <!-- Token Counter -->
+                    <div id="tokenCounter" class="token-counter" title="Session Tokens">
+                        <i class="fas fa-coins"></i>
+                        <span id="totalTokensVal">0</span>
+                    </div>
+                    
+                    <!-- Mode Selector -->
+                    <select id="modeSelector" class="mode-selector" onchange="updateMode(this.value)">
+                        <option value="standard">⚡ Standard</option>
+                        <option value="task">🛠️ Task / Code</option>
+                        <option value="research">🧠 Research</option>
+                        <option value="search">🔍 SahuAI Search</option>
+                    </select>
+                    
+                    <!-- Share Button -->
+                    <button onclick="generateShareLink()" class="btn btn-ghost btn-icon" title="Share Conversation">
+                        <i class="fas fa-share-alt"></i>
+                    </button>
+                    
+                    <!-- Connection Status -->
+                    <div id="connectionStatus" class="connection-status">
+                        <div class="connection-indicator"></div>
+                        <span class="connection-status-text">Ready</span>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Chat Area -->
+            <div id="chatArea" class="chat-area">
+                <div class="chat-container">
+                    <!-- Welcome Screen -->
+                    <div id="welcomeScreen" class="welcome-screen">
+                        <!-- SahuAI Search Header (Only visible in search mode) -->
+                        <div id="sahuSearchHeader" class="sahu-search-header shine-text">SahuAI Search</div>
+                        
+                        <!-- Default Welcome Content -->
+                        <div id="defaultWelcomeContent">
+                            <div class="welcome-logo">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <h2 class="welcome-title gradient-text">SahuAI Agent v5.0</h2>
+                            <p class="welcome-subtitle">Official Saksham Intelligence AI Models Chat</p>
+                            
+                            <!-- Provider Badges -->
+                            <div class="provider-badges">
+                                <span class="provider-badge provider-nvidia">Saksham Intelligence</span>
+                                <span class="provider-badge provider-sambanova">SambaNova</span>
+                                <span class="provider-badge provider-huggingface">HuggingFace</span>
+                                <span class="provider-badge provider-openrouter">OpenRouter</span>
+                                <span class="provider-badge provider-groq">Groq</span>
+                                <span class="provider-badge provider-together">Together</span>
+                                <span class="provider-badge provider-cerebras">Cerebras</span>
+                                <span class="provider-badge provider-fireworks">Fireworks</span>
+                                <span class="provider-badge provider-routeway">Routeway</span>
+                                <span class="provider-badge provider-mistral">Mistral</span>
+                                <span class="provider-badge provider-gemini">Gemini</span>
+                                <span class="provider-badge provider-longcat">LongCat</span>
+                                <span class="provider-badge provider-ollama">Ollama Cloud</span>
+                                <span class="provider-badge provider-zenmusk">ZenMusk</span>
+                                <span class="provider-badge provider-ionet">io.net</span>
+                            </div>
+                            
+                            <!-- Quick Prompts -->
+                            <div class="quick-prompts">
+                                <button onclick="quickPrompt('Build a modern landing page with hero section')" class="quick-prompt-card">
+                                    <i class="fas fa-code text-[#667eea]"></i>
+                                    <p class="quick-prompt-title">Task: Landing Page</p>
+                                    <p class="quick-prompt-desc">Generates Vibe Code &amp; Agentic Code</p>
+                                </button>
+                                <button onclick="quickPrompt('Research the latest breakthroughs in Fusion Energy')" class="quick-prompt-card">
+                                    <i class="fas fa-brain text-yellow-500"></i>
+                                    <p class="quick-prompt-title">Research</p>
+                                    <p class="quick-prompt-desc">Multi-step autonomous investigation</p>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Search Discovery Feed -->
+                        <div id="discoveryFeed" class="discovery-grid"></div>
+                    </div>
+                    
+                    <!-- Messages Container -->
+                    <div id="messagesContainer" class="hidden"></div>
+                </div>
+            </div>
+            
+            <!-- Input Area -->
+            <div class="input-area-container">
+                <div class="input-wrapper">
+                    <!-- File Upload Preview -->
+                    <div id="fileUploadPreview" class="file-preview">
+                        <!-- Dynamically populated -->
+                    </div>
+                    
+                    <!-- Translation Panel (Search Mode Only) -->
+                    <div id="translationPanel" class="translation-panel">
+                        <div class="translation-header">
+                            <i class="fas fa-language"></i>
+                            <span>Translate Response</span>
+                        </div>
+                        <div class="translation-controls">
+                            <select id="translationSource" class="translation-select">
+                                <option value="auto">Detect Language</option>
+                                <!-- Populated dynamically -->
+                            </select>
+                            <select id="translationTarget" class="translation-select">
+                                <!-- Populated dynamically -->
+                            </select>
+                            <button onclick="translateResponse()" class="btn btn-primary">
+                                <i class="fas fa-exchange-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Tools Menu Popover -->
+                    <div id="toolsMenu" class="tools-popover">
+                        <div class="tools-popover-title">Tools &amp; Config</div>
+                        <div class="space-y-2">
+                            <label class="tools-popover-item">
+                                <span class="tools-popover-item-label">
+                                    <i class="fas fa-brain text-purple-500"></i>
+                                    <span>DeepThink</span>
+                                </span>
+                                <div class="toggle-container">
+                                    <input type="checkbox" id="toolDeepThink" class="toggle-checkbox" onchange="toggleDeepThinkFromMenu(this.checked)">
+                                    <label for="toolDeepThink" class="toggle-label"></label>
+                                </div>
+                            </label>
+                            <label class="tools-popover-item">
+                                <span class="tools-popover-item-label">
+                                    <i class="fas fa-globe text-blue-500"></i>
+                                    <span>Web Search</span>
+                                </span>
+                                <div class="toggle-container">
+                                    <input type="checkbox" id="toolWebSearch" class="toggle-checkbox" onchange="toggleWebSearchFromMenu(this.checked)">
+                                    <label for="toolWebSearch" class="toggle-label"></label>
+                                </div>
+                            </label>
+                            <label class="tools-popover-item" id="toolTranslateContainer">
+                                <span class="tools-popover-item-label">
+                                    <i class="fas fa-language text-green-500"></i>
+                                    <span>Translate</span>
+                                </span>
+                                <div class="toggle-container">
+                                    <input type="checkbox" id="toolTranslate" class="toggle-checkbox" onchange="toggleTranslateFromMenu(this.checked)">
+                                    <label for="toolTranslate" class="toggle-label"></label>
+                                </div>
+                            </label>
+                            <button onclick="triggerFileUpload()" class="tools-popover-item">
+                                <span class="tools-popover-item-label">
+                                    <i class="fas fa-paperclip text-gray-500"></i>
+                                    <span>Attach File</span>
+                                </span>
+                            </button>
+                            <button onclick="startVoiceInput()" class="tools-popover-item">
+                                <span class="tools-popover-item-label">
+                                    <i class="fas fa-microphone text-red-500"></i>
+                                    <span>Voice Input</span>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Language Selection Card -->
+                    <div id="languageCard" class="language-popover">
+                        <div class="language-popover-header">
+                            <div class="language-popover-title">Select Language</div>
+                            <button onclick="toggleLanguageCard(false)" class="language-popover-close">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <input type="text" id="langSearch" placeholder="Search 2000+ languages..." class="language-search" oninput="filterLanguages(this.value)">
+                        <div id="langList" class="language-list"></div>
+                    </div>
+                    
+                    <!-- Input Box -->
+                    <div class="input-box">
+                        <div class="input-box-inner">
+                            <!-- Tools Button -->
+                            <button onclick="toggleToolsMenu()" id="toolsBtn" class="tools-btn" title="Tools">
+                                🎛️
+                            </button>
+                            
+                            <!-- Task Type Button -->
+                            <button onclick="toggleTaskType()" id="taskTypeBtn" class="task-type-btn task-btn-vibe hidden" title="Toggle Code Mode">
+                                <i class="fas fa-laptop-code"></i>
+                                <span id="taskTypeLabel">VIBE</span>
+                            </button>
+                            
+                            <!-- File Input (Hidden) -->
+                            <input type="file" id="fileInput" class="hidden" accept=".txt,.pdf,.doc,.docx,.md,.json,.csv,.js,.py,.html,.css,.png,.jpg,.jpeg" onchange="handleFileUpload(event)">
+                            
+                            <!-- Text Input -->
+                            <textarea id="userInput" placeholder="Ask anything..." class="input-textarea" rows="1" onkeydown="handleKeyDown(event)" oninput="autoResize(this)"></textarea>
+                            
+                            <!-- Send Button -->
+                            <button onclick="sendMessage()" id="sendBtn" class="send-btn">
+                                <i class="fas fa-arrow-up"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Input Hint -->
+                    <p class="input-hint">
+                        Parallel Execution • Default Web Search • Deep Research
+                    </p>
+                    
+                    <!-- Prompt Refiner Panel -->
+                    <div id="promptRefinerPanel" class="prompt-refiner-panel">
+                        <div class="prompt-refiner-header">
+                            <div class="prompt-refiner-title">
+                                <i class="fas fa-wand-magic-sparkles"></i>
+                                <span>Prompt Refiner Preview</span>
+                            </div>
+                            <button onclick="togglePromptRefinerPanel()" class="prompt-refiner-toggle">
+                                <i class="fas fa-chevron-up"></i>
+                            </button>
+                        </div>
+                        <div class="prompt-refiner-content">
+                            <div class="prompt-refiner-original">
+                                <div class="prompt-refiner-original-label">Original</div>
+                                <div id="promptRefinerOriginal"></div>
+                            </div>
+                            <div class="prompt-refiner-refined">
+                                <div class="prompt-refiner-refined-label">Refined</div>
+                                <div id="promptRefinerRefined"></div>
+                            </div>
+                            <div class="prompt-refiner-meta">
+                                <span id="promptRefinerMode"></span>
+                                <span id="promptRefinerModels"></span>
+                                <span id="promptRefinerStage"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal-overlay">
+        <div class="modal-container">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h2 class="modal-title" id="settingsTitle">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </h2>
+                <div class="modal-actions">
+                    <button onclick="navigateSettings('main')" id="settingsBackBtn" class="modal-back-btn hidden">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Back</span>
+                    </button>
+                    <button onclick="closeSettings()" class="modal-close-btn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <!-- Main Settings Menu -->
+                <div id="settings-main" class="settings-view active">
+                    <div class="settings-section">
+                        <!-- Advanced Features -->
+                        <button onclick="navigateSettings('advanced')" class="settings-card">
+                            <div class="settings-card-content">
+                                <div class="settings-card-left">
+                                    <div class="settings-card-icon orange">
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <div>
+                                        <div class="settings-card-title">Advanced Features</div>
+                                        <div class="settings-card-desc">Enable/Disable Advanced Capabilities</div>
+                                    </div>
+                                </div>
+                                <i class="fas fa-chevron-right settings-card-chevron"></i>
+                            </div>
+                        </button>
+                        
+                        <!-- Voice & Speech -->
+                        <button onclick="navigateSettings('voice')" class="settings-card">
+                            <div class="settings-card-content">
+                                <div class="settings-card-left">
+                                    <div class="settings-card-icon pink">
+                                        <i class="fas fa-microphone"></i>
+                                    </div>
+                                    <div>
+                                        <div class="settings-card-title">Voice &amp; Speech</div>
+                                        <div class="settings-card-desc">ASR &amp; TTS Models</div>
+                                    </div>
+                                </div>
+                                <i class="fas fa-chevron-right settings-card-chevron"></i>
+                            </div>
+                        </button>
+                        
+                        <!-- Customize (Merged Appearance + Instructions) -->
+                        <button onclick="navigateSettings('customize')" class="settings-card">
+                            <div class="settings-card-content">
+                                <div class="settings-card-left">
+                                    <div class="settings-card-icon blue">
+                                        <i class="fas fa-paint-brush"></i>
+                                    </div>
+                                    <div>
+                                        <div class="settings-card-title">Customize</div>
+                                        <div class="settings-card-desc">Theme, Language, UI, Instructions</div>
+                                    </div>
+                                </div>
+                                <i class="fas fa-chevron-right settings-card-chevron"></i>
+                            </div>
+                        </button>
+                        
+                        <!-- Safety -->
+                        <button onclick="navigateSettings('safety')" class="settings-card">
+                            <div class="settings-card-content">
+                                <div class="settings-card-left">
+                                    <div class="settings-card-icon green">
+                                        <i class="fas fa-shield-alt"></i>
+                                    </div>
+                                    <div>
+                                        <div class="settings-card-title">Safety</div>
+                                        <div class="settings-card-desc">Content Moderation Models</div>
+                                    </div>
+                                </div>
+                                <i class="fas fa-chevron-right settings-card-chevron"></i>
+                            </div>
+                        </button>
+                        
+                        <!-- Search Engines -->
+                        <button onclick="navigateSettings('search')" class="settings-card">
+                            <div class="settings-card-content">
+                                <div class="settings-card-left">
+                                    <div class="settings-card-icon indigo">
+                                        <i class="fas fa-search"></i>
+                                    </div>
+                                    <div>
+                                        <div class="settings-card-title">Search Engines</div>
+                                        <div class="settings-card-desc">Sources &amp; Fallback</div>
+                                    </div>
+                                </div>
+                                <i class="fas fa-chevron-right settings-card-chevron"></i>
+                            </div>
+                        </button>
+                        
+                        <!-- Pipeline Strategy -->
+                        <button onclick="navigateSettings('pipeline')" class="settings-card">
+                            <div class="settings-card-content">
+                                <div class="settings-card-left">
+                                    <div class="settings-card-icon purple">
+                                        <i class="fas fa-sliders-h"></i>
+                                    </div>
+                                    <div>
+                                        <div class="settings-card-title">Pipeline Strategy</div>
+                                        <div class="settings-card-desc">Consensus, Fallback, Prompt Refiner</div>
+                                    </div>
+                                </div>
+                                <i class="fas fa-chevron-right settings-card-chevron"></i>
+                            </div>
+                        </button>
+                        
+                        <!-- Configuration (Research) -->
+                        <button onclick="navigateSettings('configuration')" class="settings-card">
+                            <div class="settings-card-content">
+                                <div class="settings-card-left">
+                                    <div class="settings-card-icon teal">
+                                        <i class="fas fa-flask"></i>
+                                    </div>
+                                    <div>
+                                        <div class="settings-card-title">Configuration</div>
+                                        <div class="settings-card-desc">Stages, Models &amp; Budgets</div>
+                                    </div>
+                                </div>
+                                <i class="fas fa-chevron-right settings-card-chevron"></i>
+                            </div>
+                        </button>
+                        
+                        <!-- Active Providers -->
+                        <button onclick="navigateSettings('providers')" class="settings-card">
+                            <div class="settings-card-content">
+                                <div class="settings-card-left">
+                                    <div class="settings-card-icon green">
+                                        <i class="fas fa-network-wired"></i>
+                                    </div>
+                                    <div>
+                                        <div class="settings-card-title">Active Providers</div>
+                                        <div class="settings-card-desc">Toggle AI Services</div>
+                                    </div>
+                                </div>
+                                <i class="fas fa-chevron-right settings-card-chevron"></i>
+                            </div>
+                        </button>
+                        
+                        <!-- API Keys -->
+                        <button onclick="navigateSettings('keys')" class="settings-card">
+                            <div class="settings-card-content">
+                                <div class="settings-card-left">
+                                    <div class="settings-card-icon yellow">
+                                        <i class="fas fa-key"></i>
+                                    </div>
+                                    <div>
+                                        <div class="settings-card-title">API Keys</div>
+                                        <div class="settings-card-desc">Manage your credentials</div>
+                                    </div>
+                                </div>
+                                <i class="fas fa-chevron-right settings-card-chevron"></i>
+                            </div>
+                        </button>
+                        
+                        <!-- Documentation -->
+                        <button onclick="openDocs()" class="settings-card">
+                            <div class="settings-card-content">
+                                <div class="settings-card-left">
+                                    <div class="settings-card-icon blue">
+                                        <i class="fas fa-book"></i>
+                                    </div>
+                                    <div>
+                                        <div class="settings-card-title">Documentation</div>
+                                        <div class="settings-card-desc">How to use SahuAI</div>
+                                    </div>
+                                </div>
+                                <i class="fas fa-chevron-right settings-card-chevron"></i>
+                            </div>
+                        </button>
+                        
+                        <!-- View Source Code -->
+                        <button onclick="openSourceCode()" class="settings-card">
+                            <div class="settings-card-content">
+                                <div class="settings-card-left">
+                                    <div class="settings-card-icon purple">
+                                        <i class="fas fa-code"></i>
+                                    </div>
+                                    <div>
+                                        <div class="settings-card-title">View Source Code</div>
+                                        <div class="settings-card-desc">Inspect the application</div>
+                                    </div>
+                                </div>
+                                <i class="fas fa-chevron-right settings-card-chevron"></i>
+                            </div>
+                        </button>
+                        
+                        <!-- Install Android App -->
+                        <a href="./sahu-moe.apk" download="" class="settings-card" style="text-decoration: none;">
+                            <div class="settings-card-content">
+                                <div class="settings-card-left">
+                                    <div class="settings-card-icon green">
+                                        <i class="fab fa-android"></i>
+                                    </div>
+                                    <div>
+                                        <div class="settings-card-title">Install Android App</div>
+                                        <div class="settings-card-desc">Download mobile app</div>
+                                    </div>
+                                </div>
+                                <i class="fas fa-chevron-right settings-card-chevron"></i>
+                            </div>
+                        </a>
+                        
+                        <!-- Configure Models -->
+                        <button onclick="openModelSelector()" class="settings-card">
+                            <div class="settings-card-content">
+                                <div class="settings-card-left">
+                                    <div class="settings-card-icon indigo">
+                                        <i class="fas fa-cubes"></i>
+                                    </div>
+                                    <div>
+                                        <div class="settings-card-title">Configure Models</div>
+                                        <div class="settings-card-desc">Select and manage models</div>
+                                    </div>
+                                </div>
+                                <i class="fas fa-chevron-right settings-card-chevron"></i>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Advanced Features View -->
+                <div id="settings-advanced" class="settings-view">
+                    <div class="features-list">
+                        <label class="feature-item">
+                            <span class="feature-label">
+                                <i class="fas fa-brain text-orange-500"></i>
+                                <span>Neural Consensus</span>
+                            </span>
+                            <div class="toggle-container">
+                                <input type="checkbox" id="neuralConsensusCheck" class="toggle-checkbox" checked>
+                                <label for="neuralConsensusCheck" class="toggle-label"></label>
+                            </div>
+                        </label>
+                        <label class="feature-item">
+                            <span class="feature-label">
+                                <i class="fas fa-balance-scale text-purple-500"></i>
+                                <span>Debate Mode</span>
+                            </span>
+                            <div class="toggle-container">
+                                <input type="checkbox" id="debateModeCheck" class="toggle-checkbox" checked>
+                                <label for="debateModeCheck" class="toggle-label"></label>
+                            </div>
+                        </label>
+                        <label class="feature-item">
+                            <span class="feature-label">
+                                <i class="fas fa-history text-blue-500"></i>
+                                <span>Temporal Reasoning</span>
+                            </span>
+                            <div class="toggle-container">
+                                <input type="checkbox" id="temporalReasoningCheck" class="toggle-checkbox" checked>
+                                <label for="temporalReasoningCheck" class="toggle-label"></label>
+                            </div>
+                        </label>
+                        <label class="feature-item">
+                            <span class="feature-label">
+                                <i class="fas fa-lightbulb text-yellow-500"></i>
+                                <span>Adaptive Reasoning</span>
+                            </span>
+                            <div class="toggle-container">
+                                <input type="checkbox" id="adaptiveReasoningCheck" class="toggle-checkbox" checked>
+                                <label for="adaptiveReasoningCheck" class="toggle-label"></label>
+                            </div>
+                        </label>
+                        <label class="feature-item">
+                            <span class="feature-label">
+                                <i class="fas fa-shield-alt text-green-500"></i>
+                                <span>Uncertainty Badge</span>
+                            </span>
+                            <div class="toggle-container">
+                                <input type="checkbox" id="uncertaintyBadgeCheck" class="toggle-checkbox" checked>
+                                <label for="uncertaintyBadgeCheck" class="toggle-label"></label>
+                            </div>
+                        </label>
+                        <label class="feature-item">
+                            <span class="feature-label">
+                                <i class="fas fa-chart-line text-blue-500"></i>
+                                <span>Token Estimator</span>
+                            </span>
+                            <div class="toggle-container">
+                                <input type="checkbox" id="tokenEstimatorCheck" class="toggle-checkbox" checked>
+                                <label for="tokenEstimatorCheck" class="toggle-label"></label>
+                            </div>
+                        </label>
+                        <label class="feature-item">
+                            <span class="feature-label">
+                                <i class="fas fa-thumbs-up text-pink-500"></i>
+                                <span>Response Rating</span>
+                            </span>
+                            <div class="toggle-container">
+                                <input type="checkbox" id="responseRatingCheck" class="toggle-checkbox" checked>
+                                <label for="responseRatingCheck" class="toggle-label"></label>
+                            </div>
+                        </label>
+                        <label class="feature-item">
+                            <span class="feature-label">
+                                <i class="fas fa-memory text-indigo-500"></i>
+                                <span>Three-Tier Memory</span>
+                            </span>
+                            <div class="toggle-container">
+                                <input type="checkbox" id="threeTierMemoryCheck" class="toggle-checkbox" checked>
+                                <label for="threeTierMemoryCheck" class="toggle-label"></label>
+                            </div>
+                        </label>
+                        <label class="feature-item">
+                            <span class="feature-label">
+                                <i class="fas fa-bug text-red-500"></i>
+                                <span>Self-Correcting Code</span>
+                            </span>
+                            <div class="toggle-container">
+                                <input type="checkbox" id="selfCorrectingCodeCheck" class="toggle-checkbox" checked>
+                                <label for="selfCorrectingCodeCheck" class="toggle-label"></label>
+                            </div>
+                        </label>
+                        <label class="feature-item">
+                            <span class="feature-label">
+                                <i class="fas fa-chart-pie text-teal-500"></i>
+                                <span>Usage Analytics</span>
+                            </span>
+                            <div class="toggle-container">
+                                <input type="checkbox" id="usageAnalyticsCheck" class="toggle-checkbox" checked>
+                                <label for="usageAnalyticsCheck" class="toggle-label"></label>
+                            </div>
+                        </label>
+                        <label class="feature-item">
+                            <span class="feature-label">
+                                <i class="fas fa-users text-cyan-500"></i>
+                                <span>Agent Swarm</span>
+                            </span>
+                            <div class="toggle-container">
+                                <input type="checkbox" id="agentSwarmCheck" class="toggle-checkbox" checked>
+                                <label for="agentSwarmCheck" class="toggle-label"></label>
+                            </div>
+                        </label>
+                        <label class="feature-item">
+                            <span class="feature-label">
+                                <i class="fas fa-bolt text-yellow-500"></i>
+                                <span>Rapid Learning</span>
+                            </span>
+                            <div class="toggle-container">
+                                <input type="checkbox" id="rapidLearningCheck" class="toggle-checkbox" checked>
+                                <label for="rapidLearningCheck" class="toggle-label"></label>
+                            </div>
+                        </label>
+                        <label class="feature-item">
+                            <span class="feature-label">
+                                <i class="fas fa-robot text-gray-500"></i>
+                                <span>Physical Integration</span>
+                            </span>
+                            <div class="toggle-container">
+                                <input type="checkbox" id="physicalIntegrationCheck" class="toggle-checkbox" checked>
+                                <label for="physicalIntegrationCheck" class="toggle-label"></label>
+                            </div>
+                        </label>
+                        <label class="feature-item">
+                            <span class="feature-label">
+                                <i class="fas fa-balance-scale text-teal-500"></i>
+                                <span>Constitutional Safety</span>
+                            </span>
+                            <div class="toggle-container">
+                                <input type="checkbox" id="constitutionalSafetyCheck" class="toggle-checkbox" checked>
+                                <label for="constitutionalSafetyCheck" class="toggle-label"></label>
+                            </div>
+                        </label>
+                    </div>
+                    <p class="feature-hint">Enable specific features to enhance the AI's capabilities. Debate Mode will force models to argue different viewpoints in Standard and Research modes.</p>
+                </div>
+                
+                <!-- Voice Settings View -->
+                <div id="settings-voice" class="settings-view">
+                    <div class="voice-setting-card">
+                        <label class="voice-setting-label">ASR Model (Speech-to-Text)</label>
+                        <select id="asrModelSelect" class="voice-setting-select">
+                            <option value="openai/whisper-large-v3" selected>OpenAI Whisper Large v3</option>
+                            <option value="browser">Browser Default (Web Speech API)</option>
+                            <option value="nvidia/parakeet-ctc-1.1b-asr">Nvidia Parakeet CTC 1.1B</option>
+                            <option value="nvidia/parakeet-ctc-0.6b-asr">Nvidia Parakeet CTC 0.6B</option>
+                            <option value="nvidia/parakeet-ctc-0.6b-zh-tw">Nvidia Parakeet CTC 0.6B (ZH-TW)</option>
+                        </select>
+                    </div>
+                    <div class="voice-setting-card">
+                        <label class="voice-setting-label">TTS Model (Text-to-Speech)</label>
+                        <select id="ttsModelSelect" class="voice-setting-select">
+                            <option value="nvidia/magpie-tts-multilingual" selected>Nvidia Magpie TTS Multilingual</option>
+                            <option value="browser">Browser Default (SpeechSynthesis)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Customize View (Merged Appearance + Instructions) -->
+                <div id="settings-customize" class="settings-view">
+                    <div class="customize-section">
+                        <!-- Single Model Mode -->
+                        <div class="single-model-toggle">
+                            <span class="single-model-label">
+                                <i class="fas fa-crosshairs text-purple-500"></i>
+                                <span>Single Model Mode</span>
+                            </span>
+                            <div class="toggle-container">
+                                <input type="checkbox" id="singleModelCheck" class="toggle-checkbox" onchange="toggleSingleModelMode(this.checked)">
+                                <label for="singleModelCheck" class="toggle-label"></label>
+                            </div>
+                        </div>
+                        <div id="singleModelSelectContainer" class="hidden">
+                            <select id="singleModelSelect" class="single-model-select">
+                                <option value="minimaxai/minimax-m2.1" selected>MiniMax M2.1 (Default)</option>
+                                <!-- Populated dynamically with all models -->
+                            </select>
+                            <p class="single-model-hint">When enabled, only the selected model will respond to queries.</p>
+                        </div>
+                        
+                        <!-- Language Selector -->
+                        <div class="customize-card">
+                            <label class="customize-label">Interface &amp; Response Language</label>
+                            <select id="languageSelector" class="customize-input" onchange="updateLanguage(this.value)">
+                                <option value="en" selected="">English</option>
+                                <option value="es">Spanish</option>
+                                <option value="fr">French</option>
+                                <option value="de">German</option>
+                                <option value="it">Italian</option>
+                                <option value="pt">Portuguese</option>
+                                <option value="zh">Chinese</option>
+                                <option value="ja">Japanese</option>
+                                <option value="ko">Korean</option>
+                                <option value="ru">Russian</option>
+                                <option value="hi">Hindi</option>
+                                <option value="ar">Arabic</option>
+                                <option value="bn">Bengali</option>
+                                <option value="pa">Punjabi</option>
+                                <option value="jv">Javanese</option>
+                                <option value="vi">Vietnamese</option>
+                                <option value="te">Telugu</option>
+                                <option value="mr">Marathi</option>
+                                <option value="ta">Tamil</option>
+                                <option value="ur">Urdu</option>
+                                <option value="tr">Turkish</option>
+                                <option value="fa">Persian</option>
+                                <option value="gu">Gujarati</option>
+                                <option value="pl">Polish</option>
+                                <option value="uk">Ukrainian</option>
+                                <option value="ro">Romanian</option>
+                                <option value="nl">Dutch</option>
+                                <option value="el">Greek</option>
+                                <option value="hu">Hungarian</option>
+                                <option value="sv">Swedish</option>
+                                <option value="cs">Czech</option>
+                                <option value="th">Thai</option>
+                                <option value="id">Indonesian</option>
+                                <option value="ms">Malay</option>
+                                <option value="da">Danish</option>
+                                <option value="fi">Finnish</option>
+                                <option value="no">Norwegian</option>
+                                <option value="he">Hebrew</option>
+                                <option value="bg">Bulgarian</option>
+                                <option value="hr">Croatian</option>
+                                <option value="sr">Serbian</option>
+                                <option value="sk">Slovak</option>
+                                <option value="sl">Slovenian</option>
+                                <option value="et">Estonian</option>
+                                <option value="lv">Latvian</option>
+                                <option value="lt">Lithuanian</option>
+                                <option value="af">Afrikaans</option>
+                                <option value="sw">Swahili</option>
+                                <option value="ca">Catalan</option>
+                                <option value="eu">Basque</option>
+                                <option value="gl">Galician</option>
+                                <option value="is">Icelandic</option>
+                                <option value="ga">Irish</option>
+                                <option value="sq">Albanian</option>
+                                <option value="mk">Macedonian</option>
+                                <option value="bs">Bosnian</option>
+                                <option value="cy">Welsh</option>
+                                <option value="hy">Armenian</option>
+                                <option value="ka">Georgian</option>
+                                <option value="be">Belarusian</option>
+                                <option value="az">Azerbaijani</option>
+                                <option value="kk">Kazakh</option>
+                                <option value="ky">Kyrgyz</option>
+                                <option value="uz">Uzbek</option>
+                                <option value="tk">Turkmen</option>
+                                <option value="tg">Tajik</option>
+                                <option value="mn">Mongolian</option>
+                                <option value="ne">Nepali</option>
+                                <option value="si">Sinhala</option>
+                                <option value="my">Burmese</option>
+                                <option value="km">Khmer</option>
+                                <option value="lo">Lao</option>
+                                <option value="am">Amharic</option>
+                                <option value="so">Somali</option>
+                                <option value="yo">Yoruba</option>
+                                <option value="ig">Igbo</option>
+                                <option value="ha">Hausa</option>
+                                <option value="zu">Zulu</option>
+                                <option value="xh">Xhosa</option>
+                                <option value="st">Sotho</option>
+                                <option value="fil">Filipino</option>
+                                <option value="mg">Malagasy</option>
+                                <option value="ny">Chichewa</option>
+                                <option value="sn">Shona</option>
+                                <option value="co">Corsican</option>
+                                <option value="fy">Frisian</option>
+                                <option value="gd">Scots Gaelic</option>
+                                <option value="ht">Haitian Creole</option>
+                                <option value="haw">Hawaiian</option>
+                                <option value="hmn">Hmong</option>
+                                <option value="jw">Javanese</option>
+                                <option value="kn">Kannada</option>
+                                <option value="ku">Kurdish</option>
+                                <option value="lb">Luxembourgish</option>
+                                <option value="mi">Maori</option>
+                                <option value="ml">Malayalam</option>
+                                <option value="mt">Maltese</option>
+                                <option value="ps">Pashto</option>
+                                <option value="sd">Sindhi</option>
+                                <option value="sm">Samoan</option>
+                                <option value="su">Sundanese</option>
+                                <option value="yi">Yiddish</option>
+                            </select>
+                            <p class="safety-model-hint">Changes UI text and instructs models to respond in this language.</p>
+                        </div>
+                        
+                        <!-- Theme Toggle -->
+                        <button onclick="toggleTheme()" class="settings-card">
+                            <div class="settings-card-content">
+                                <div class="settings-card-left">
+                                    <div class="settings-card-icon blue">
+                                        <i class="fas fa-paint-brush"></i>
+                                    </div>
+                                    <div>
+                                        <div class="settings-card-title">Toggle Dark Mode</div>
+                                        <div class="settings-card-desc" id="themeText">Light</div>
+                                    </div>
+                                </div>
+                                <i class="fas fa-moon" id="themeIcon"></i>
+                            </div>
+                        </button>
+                        
+                        <!-- User Info -->
+                        <div class="customize-card">
+                            <label class="customize-label">User Info</label>
+                            <textarea id="customInstructionsUser" placeholder="What should SAHU know about you?" class="customize-textarea"></textarea>
+                        </div>
+                        
+                        <!-- Response Style -->
+                        <div class="customize-card">
+                            <label class="customize-label">Response Style</label>
+                            <textarea id="customInstructionsResp" placeholder="How should SAHU respond?" class="customize-textarea"></textarea>
+                        </div>
+                        
+                        <!-- Temperature & Max Tokens -->
+                        <div class="customize-grid">
+                            <div class="customize-input-group">
+                                <label class="customize-input-label">Temperature</label>
+                                <input type="number" id="settingTemp" step="0.1" min="0" max="2" value="0.7" class="customize-input">
+                            </div>
+                            <div class="customize-input-group">
+                                <label class="customize-input-label">Default Max Tokens</label>
+                                <input type="number" id="settingMaxTokens" step="1000" min="1000" value="8000" class="customize-input">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Safety View -->
+                <div id="settings-safety" class="settings-view">
+                    <div class="customize-card">
+                        <label class="customize-label">Safety Models (Content Moderation)</label>
+                        <div class="safety-models-list">
+                            <label class="safety-model-item">
+                                <input type="checkbox" class="safety-model-checkbox" id="safetyGraniteCheck" checked>
+                                <div class="safety-model-info">
+                                    <div class="safety-model-name">Granite Guardian</div>
+                                    <div class="safety-model-desc">IBM's content safety model</div>
+                                </div>
+                            </label>
+                            <label class="safety-model-item">
+                                <input type="checkbox" class="safety-model-checkbox" id="safetyShieldGemmaCheck" checked>
+                                <div class="safety-model-info">
+                                    <div class="safety-model-name">ShieldGemma</div>
+                                    <div class="safety-model-desc">Google's safety model</div>
+                                </div>
+                            </label>
+                            <label class="safety-model-item">
+                                <input type="checkbox" class="safety-model-checkbox" id="safetyLlamaGuardCheck" checked>
+                                <div class="safety-model-info">
+                                    <div class="safety-model-name">Llama Guard 4</div>
+                                    <div class="safety-model-desc">Meta's safety model</div>
+                                </div>
+                            </label>
+                        </div>
+                        <p class="safety-model-hint">These models work together to ensure content safety and moderation across all interactions.</p>
+                    </div>
+                </div>
+                
+                <!-- Pipeline Strategy View -->
+                <div id="settings-pipeline" class="settings-view">
+                    <div class="pipeline-section">
+                        <label class="pipeline-label">Consensus Strategy</label>
+                        <select id="stageSelector" class="pipeline-select">
+                            <option value="none">Experts Only (Parallel)</option>
+                            <option value="1" selected="">Direct Synthesis (Fast)</option>
+                            <option value="2">Deep Synthesis (2-Step)</option>
+                            <option value="3">Full Chain (3-Step)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="pipeline-toggles">
+                        <label class="feature-item">
+                            <span class="feature-label">
+                                <i class="fas fa-shield-alt text-green-500"></i>
+                                <span>Auto Fallback</span>
+                            </span>
+                            <div class="toggle-container">
+                                <input type="checkbox" id="autoFallback" class="toggle-checkbox" checked>
+                                <label for="autoFallback" class="toggle-label"></label>
+                            </div>
+                        </label>
+                        <label class="feature-item">
+                            <span class="feature-label">
+                                <i class="fas fa-wand-magic-sparkles text-purple-500"></i>
+                                <span>Prompt Refiner</span>
+                            </span>
+                            <div class="toggle-container">
+                                <input type="checkbox" id="promptRefinerCheck" class="toggle-checkbox" checked onchange="togglePromptRefinerSetting(this.checked)">
+                                <label for="promptRefinerCheck" class="toggle-label"></label>
+                            </div>
+                        </label>
+                    </div>
+                    
+                    <!-- Prompt Refiner Panel Preview -->
+                    <div id="pipelinePromptRefinerPanel" class="prompt-refiner-panel show">
+                        <div class="prompt-refiner-header">
+                            <div class="prompt-refiner-title">
+                                <i class="fas fa-wand-magic-sparkles"></i>
+                                <span>Prompt Refiner Preview</span>
+                            </div>
+                        </div>
+                        <div class="prompt-refiner-content">
+                            <div class="prompt-refiner-original">
+                                <div class="prompt-refiner-original-label">Original</div>
+                                <div>Example user query...</div>
+                            </div>
+                            <div class="prompt-refiner-refined">
+                                <div class="prompt-refiner-refined-label">Refined</div>
+                                <div>Optimized query with context, structure, and mode-specific formatting...</div>
+                            </div>
+                            <div class="prompt-refiner-meta">
+                                <span>Mode: Standard</span>
+                                <span>Models: 3 selected</span>
+                                <span>Stage: Aggregation</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Configuration View (Research Stages) -->
+                <div id="settings-configuration" class="settings-view">
+                    <div class="config-section">
+                        <label class="pipeline-label">Thinking Budget</label>
+                        <select id="thinkingBudget" class="pipeline-select">
+                            <option value="original">Original (Model Native)</option>
+                            <option value="fast">Fast (Original + Medium)</option>
+                            <option value="balanced" selected="">Balanced (Original + High)</option>
+                            <option value="ultra">Ultra (Original + X-High)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="config-section">
+                        <label class="pipeline-label">Aggregation Style</label>
+                        <select id="aggregationStyle" class="pipeline-select">
+                            <option value="synthesis" selected="">Synthesis (Best Logic)</option>
+                            <option value="majority">Majority Vote</option>
+                            <option value="weighted">Weighted Consensus</option>
+                            <option value="critical">Critical Review</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Research Stages Config -->
+                    <div id="researchStagesConfig" class="config-role-list">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+                
+                <!-- Search Engines View -->
+                <div id="settings-search" class="settings-view">
+                    <div class="search-engines-header">
+                        <p class="search-engines-hint">Enable independent search sources.</p>
+                        <button onclick="toggleAllSearchEngines()" class="search-engines-select-all">Select All</button>
+                    </div>
+                    <div id="searchEngineList" class="search-engines-list">
+                        <!-- Dynamically populated -->
+                    </div>
+                    
+                    <!-- Add Custom Search Engine -->
+                    <div class="customize-card" style="margin-top: 1rem;">
+                        <label class="customize-label">Add Custom Search Engine</label>
+                        <div class="customize-input-group" style="margin-bottom: 0.5rem;">
+                            <input type="text" id="customEngineName" placeholder="Engine Name" class="customize-input">
+                        </div>
+                        <div class="customize-input-group" style="margin-bottom: 0.5rem;">
+                            <input type="text" id="customEngineUrl" placeholder="Search URL" class="customize-input">
+                        </div>
+                        <div class="customize-input-group" style="margin-bottom: 0.5rem;">
+                            <input type="text" id="customEngineKey" placeholder="API Key (optional)" class="customize-input">
+                        </div>
+                        <div class="customize-input-group" style="margin-bottom: 0.5rem;">
+                            <select id="customEngineType" class="customize-input">
+                                <option value="api">API</option>
+                                <option value="searx">SearXNG</option>
+                            </select>
+                        </div>
+                        <button onclick="addCustomSearchEngine()" class="btn btn-primary btn-block">
+                            <i class="fas fa-plus"></i>
+                            <span>Add Engine</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Providers View -->
+                <div id="settings-providers" class="settings-view">
+                    <div id="providerCheckboxes" class="providers-list">
+                        <!-- Dynamically populated -->
+                    </div>
+                    
+                    <!-- Add Custom Provider -->
+                    <div class="customize-card" style="margin-top: 1rem;">
+                        <label class="customize-label">Add Custom Provider</label>
+                        <div class="customize-input-group" style="margin-bottom: 0.5rem;">
+                            <input type="text" id="customProviderName" placeholder="Provider Name" class="customize-input">
+                        </div>
+                        <div class="customize-input-group" style="margin-bottom: 0.5rem;">
+                            <input type="text" id="customProviderEndpoint" placeholder="Endpoint URL" class="customize-input">
+                        </div>
+                        <div class="customize-input-group" style="margin-bottom: 0.5rem;">
+                            <input type="text" id="customProviderKey" placeholder="API Key" class="customize-input">
+                        </div>
+                        <div class="customize-input-group" style="margin-bottom: 0.5rem;">
+                            <input type="text" id="customProviderModelId" placeholder="Model ID" class="customize-input">
+                        </div>
+                        <div class="customize-input-group" style="margin-bottom: 0.5rem;">
+                            <input type="text" id="customProviderModelName" placeholder="Model Name (optional)" class="customize-input">
+                        </div>
+                        <button onclick="addCustomProvider()" class="btn btn-primary btn-block">
+                            <i class="fas fa-plus"></i>
+                            <span>Add Provider</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- API Keys View -->
+                <div id="settings-keys" class="settings-view">
+                    <div class="api-keys-hint">
+                        <i class="fas fa-lock"></i>
+                        <span>Keys are stored locally in your browser.</span>
+                    </div>
+                    <div id="apiKeyInputs" class="api-keys-list">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button onclick="closeSettings()" class="btn btn-secondary">Cancel</button>
+                <button onclick="saveSettings()" class="btn btn-primary">
+                    <i class="fas fa-save"></i>
+                    <span>Save All</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Documentation Modal -->
+    <div id="docsModal" class="modal-overlay">
+        <div class="modal-container large">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i class="fas fa-book"></i>
+                    <span>Documentation</span>
+                </h2>
+                <button onclick="closeDocs()" class="modal-close-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Documentation Content (Version 5.0) -->
+                <div class="prose max-w-none">
+                    <h1 class="gradient-text">🤖 SahuAI Agent – Official Saksham Intelligence AI Models Chat</h1>
+                    <h3><em>Version 5.0 | Powered by Saksham Intelligence</em></h3>
+                    
+                    <hr style="margin: 1.5rem 0; border: 0; border-top: 1px solid var(--border);">
+                    
+                    <h2>📋 Executive Summary</h2>
+                    <p><strong>SahuAI Agent</strong> is a revolutionary, all-in-one AI orchestration platform that aggregates <strong>57+ cutting-edge AI models</strong> from <strong>15+ global providers</strong> into a single, intuitive interface. Built and led by <strong>Saksham Sahu</strong> under <strong>Saksham Intelligence</strong>, SahuAI Agent delivers <strong>truly unlimited access</strong> to premium AI capabilities without requiring users to manage multiple API keys, subscriptions, or complex configurations.</p>
+                    
+                    <p>Unlike traditional single-model chatbots, SahuAI Agent functions as an <strong>intelligent consensus engine</strong>—routing your queries through parallel expert models, synthesizing their outputs through advanced reasoning pipelines, and delivering responses that are more accurate, balanced, and contextually aware than any single provider could achieve alone.</p>
+                    
+                    <!-- Additional documentation content continues... -->
+                    <!-- Full Version 5.0 docs as provided in your specification -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Source Code Modal -->
+    <div id="sourceCodeModal" class="modal-overlay">
+        <div class="modal-container xlarge">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i class="fas fa-code"></i>
+                    <span>App Source Code</span>
+                </h2>
+                <button onclick="closeSourceCode()" class="modal-close-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="source-code-header">
+                    <p class="source-code-hint">Single file application.</p>
+                    <button onclick="copySourceCode()" class="source-code-copy">
+                        <i class="fas fa-copy"></i>
+                        <span>Copy All</span>
+                    </button>
+                </div>
+                <textarea id="sourceCodeViewer" readonly class="source-code-viewer" onclick="this.select()"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button onclick="closeSourceCode()" class="btn btn-primary">Close</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Model Selector Modal -->
+    <div id="modelSelectorModal" class="modal-overlay">
+        <div class="modal-container xlarge">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i class="fas fa-cubes"></i>
+                    <span>Model Configuration</span>
+                </h2>
+                <button onclick="closeModelSelector()" class="modal-close-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="model-selector-hint">Select models and assign aggregator stages (1/2/3). Use "Select All" to quickly select active provider models.</p>
+                <div id="modelSelectorContent" class="model-selector-content">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="model-selector-footer">
+                    <span class="model-selector-count"><span id="modalSelectedCount">0</span> selected</span>
+                    <div style="display: flex; gap: 0.75rem;">
+                        <button onclick="closeModelSelector()" class="btn btn-secondary">Cancel</button>
+                        <button onclick="saveModelSelection()" class="btn btn-primary">
+                            <i class="fas fa-check"></i>
+                            <span>Apply</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Canvas / Artifact Modal -->
+    <div id="artifactModal" class="modal-overlay">
+        <div class="canvas-container">
+            <div class="canvas-header">
+                <div class="canvas-title">
+                    <i class="fas fa-code"></i>
+                    <span>Artifact Preview</span>
+                </div>
+                <div class="canvas-actions">
+                    <div class="canvas-tabs">
+                        <div class="canvas-tab" id="tab-code" onclick="switchCanvasTab('code')">Code</div>
+                        <div class="canvas-tab active" id="tab-preview" onclick="switchCanvasTab('preview')">Preview</div>
+                    </div>
+                    <button onclick="closeArtifact()" class="modal-close-btn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="canvas-body">
+                <div id="canvas-editor" class="canvas-editor">
+                    <textarea id="canvas-code-area" spellcheck="false"></textarea>
+                </div>
+                <div id="canvas-preview" class="canvas-preview active">
+                    <iframe id="canvas-frame" class="preview-frame" sandbox="allow-scripts allow-forms allow-same-origin allow-modals"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- JavaScript Function Stubs (Implementation in index.js) -->
+    <script>
+        // ============================================
+        // FUNCTION STUBS - IMPLEMENT IN index.js
+        // ============================================
+        
+        // UI Functions
+        function toggleSidebar() {}
+        function toggleDeepThink() {}
+        function toggleDeepThinkFromMenu(checked) {}
+        function toggleWebSearchFromMenu(checked) {}
+        function toggleTranslateFromMenu(checked) {}
+        function updateMode(mode) {}
+        function toggleTaskType() {}
+        function updateTaskTypeLabel() {}
+        function openSettings() {}
+        function closeSettings() {}
+        function navigateSettings(view) {}
+        function openSourceCode() {}
+        function closeSourceCode() {}
+        function copySourceCode() {}
+        function toggleTheme() {}
+        function openDocs() {}
+        function closeDocs() {}
+        function toggleToolsMenu() {}
+        function toggleLanguageCard(show) {}
+        function filterLanguages(query) {}
+        function selectLanguage(code) {}
+        function renderLanguageList() {}
+        function updateLanguage(langCode) {}
+        function togglePromptRefinerPanel() {}
+        function togglePromptRefinerSetting(checked) {}
+        function toggleSingleModelMode(checked) {}
+        
+        // Research Config
+        function renderResearchConfig() {}
+        function updateResearchStageConfig(key, val) {}
+        
+        // Settings
+        function saveSettings() {}
+        function toggleProvider(key, checked) {}
+        function renderProviderCheckboxes() {}
+        function renderApiKeyInputs() {}
+        function renderLanguageSelector() {}
+        function renderSearchEngines() {}
+        function toggleSearchEngine(key, checked) {}
+        function toggleAllSearchEngines() {}
+        function addCustomSearchEngine() {}
+        function addCustomProvider() {}
+        
+        // Model Selector
+        function openModelSelector() {}
+        function closeModelSelector() {}
+        function toggleAllModels(providerKey) {}
+        function toggleModelSelection(provider, modelKey, modelId, selected) {}
+        function setModelStage(provider, modelKey, modelId, stage, event) {}
+        function saveModelSelection() {}
+        function renderModelSelector() {}
+        
+        // Chat Management
+        function newChat() {}
+        function triggerFileUpload() {}
+        function handleFileUpload(event) {}
+        function removeFile() {}
+        function handleKeyDown(event) {}
+        function autoResize(textarea) {}
+        function quickPrompt(text) {}
+        function generateShareLink() {}
+        function loadChat(id) {}
+        function filterHistory(query) {}
+        function renderChatHistory() {}
+        function loadChatHistory() {}
+        function renderPinned() {}
+        function togglePin(text) {}
+        function updateTokenCounter() {}
+        function updateUI() {}
+        
+        // Artifacts
+        function openArtifact(code, type) {}
+        function closeArtifact() {}
+        function switchCanvasTab(tab) {}
+        
+        // Voice
+        function startVoiceInput() {}
+        
+        // Translation
+        function translateResponse() {}
+        
+        // Toast Notifications
+        function showToast(message, type) {}
+        
+        // Utilities
+        function escapeHtml(text) {}
+        
+        // Initialization
+        function loadSettings() {}
+        function initTheme() {}
+        
+        // Core AI Functions (to be implemented in index.js)
+        function sendMessage() {}
+        function searchWeb(query) {}
+        function executeTool(cmd) {}
+        function renderDiscovery() {}
+        function callModelWithFallback(providerKey, modelId, messages, retryCount, onToken) {}
+        function runDeepResearch(content, container, chatId) {}
+        function formatMarkdown(text) {}
+        function copyToClipboard() {}
+        function downloadTxt() {}
+        function downloadPdf() {}
+        function downloadDocx() {}
+        function downloadMarkdown() {}
+        function openPreview() {}
+        
+        // Prompt Refiner
+        function updatePromptRefinerPreview() {}
+        
+        // Identity Response
+        function checkIdentityQuery(query) {}
+        function displayIdentityResponse() {}
+        
+        // Safety Models
+        function checkSafety(content) {}
+        
+        console.log('✅ SahuAI Agent v5.0 HTML/CSS Loaded - JavaScript implementation expected in index.js');
+    </script>
+    
+    <!-- Link to JavaScript File -->
+    <script src="./index.js"></script>
+</body>
+</html>
