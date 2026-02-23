@@ -4875,27 +4875,27 @@ const UI_TRANSLATIONS = {
  * Model-specific configurations
  */
 const MODEL_CONFIGS = {
-    'sarvamai/sarvam-m': { max_tokens: 30000 },
-    'qwen/qwq-32b': { max_tokens: 30000 },
-    'qwen/qwen2.5-7b-instruct': { max_tokens: 30000 },
-    'mistralai/mamba-codestral-7b-v0.1': { max_tokens: 30000 },
-    'google/gemma-3-1b-it': { max_tokens: 30000 },
-    'google/gemma-3n-e4b-it': { max_tokens: 30000 },
-    'microsoft/phi-4-mini-flash-reasoning': { max_tokens: 60000 },
-    'mistralai/mixtral-8x22b-instruct-v0.1': { max_tokens: 60000 },
-    'google/shieldgemma-9b': { max_tokens: 1000 },
-    'google/gemma-7b': { max_tokens: 6000, noSystemRole: true },
-    'google/gemma-2-27b-it': { max_tokens: 6000, noSystemRole: true },
-    'thudm/chatglm3-6b': { max_tokens: 6000 },
-    'nvidia/nemotron-4-mini-hindi-4b-instruct': { max_tokens: 3000 },
-    'microsoft/phi-3-medium-4k-instruct': { max_tokens: 3000 },
+    'sarvamai/sarvam-m': { max_tokens: 20000 },
+    'qwen/qwq-32b': { max_tokens: 20000 },
+    'qwen/qwen2.5-7b-instruct': { max_tokens: 20000 },
+    'mistralai/mamba-codestral-7b-v0.1': { max_tokens: 20000 },
+    'google/gemma-3-1b-it': { max_tokens: 20000 },
+    'google/gemma-3n-e4b-it': { max_tokens: 20000 },
+    'microsoft/phi-4-mini-flash-reasoning': { max_tokens: 50000 },
+    'mistralai/mixtral-8x22b-instruct-v0.1': { max_tokens: 50000 },
+    'google/shieldgemma-9b': { max_tokens: 500 },
+    'google/gemma-7b': { max_tokens: 5000, noSystemRole: true },
+    'google/gemma-2-27b-it': { max_tokens: 5000, noSystemRole: true },
+    'thudm/chatglm3-6b': { max_tokens: 5000 },
+    'nvidia/nemotron-4-mini-hindi-4b-instruct': { max_tokens: 2048 },
+    'microsoft/phi-3-medium-4k-instruct': { max_tokens: 2048 },
     'deepseek-ai/deepseek-r1-distill-qwen-32b': { noStream: true, max_tokens: 30000 },
     'deepseek-ai/deepseek-r1-distill-llama-8b': { noStream: true, max_tokens: 30000 },
     'ibm/granite-3.3-8b-instruct': { noStream: true, max_tokens: 30000 },
     'ibm/granite-guardian-3.0-8b': { noStream: true, max_tokens: 30000 },
     'meta/llama-guard-4-12b': { noStream: true, max_tokens: 30000 },
     'z-ai/glm4.7': { noStream: true, max_tokens: 30000 },
-    'nvidia/cosmos-reason2-8b': { max_tokens: 4000 },
+    'nvidia/cosmos-reason2-8b': { max_tokens: 3000 },
     'stockmark/stockmark-2-100b-instruct': { max_tokens: 30000 },
     'minimaxai/minimax-m2.1': { max_tokens: 30000 },
     'minimaxai/minimax-m2.5': { max_tokens: 30000 },
@@ -4944,7 +4944,7 @@ const PROVIDERS = {
         color: 'nvidia',
         icon: '🟢',
         models: {
-            'Qwen 3.5 397B': 'qwen/qwen3.5-397b',
+            'Qwen 3.5 397B': 'qwen/qwen3.5-397b-a17b',
             'Phi 3.5 Vision': 'microsoft/phi-3.5-vision-instruct',
             'Stockmark 2 100B': 'stockmark/stockmark-2-100b-instruct',
             'Cosmos Reason 2 8B': 'nvidia/cosmos-reason2-8b',
@@ -5120,7 +5120,7 @@ const PROVIDERS = {
         color: 'together',
         icon: '🤝',
         models: {
-            'GLM 5': 'z-ai/glm-5',
+            'GLM 5': 'zai-org/GLM-5', 
             'MiniMax M2.5': 'minimaxai/MiniMax-M2.5',
             'GLM 4.7': 'zai-org/GLM-4.7',
             'Llama 4 Maverick': 'meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8',
@@ -5183,6 +5183,8 @@ const PROVIDERS = {
         color: 'routeway',
         icon: '🛤️',
         models: {
+            'Claude Opus 4.6': 'claude-opus-4-6',
+            'Claude Opus 4.6 Free': 'claude-opus-4-6:free'
             'Opus 4.5': 'claude-opus-4.5',
             'Sonnet 4.5': 'claude-sonnet-4.5',
             'Haiku 4.5': 'claude-haiku-4.5',
@@ -5208,8 +5210,6 @@ const PROVIDERS = {
             'Llama 3.3 70B': 'llama-3.3-70b-instruct:free',
             'Llama 3.1 8B': 'llama-3.1-8b-instruct:free',
             'Llama 3.2 1B': 'llama-3.2-1b-instruct:free',
-            'Claude Opus 4.6': 'claude-opus-4-6',
-            'Claude Opus 4.6 Free': 'claude-opus-4-6:free'
         }
     },
     mistral: {
@@ -5291,8 +5291,8 @@ const PROVIDERS = {
         color: 'zenmusk',
         icon: '🚀',
         models: {
-            'GLM 5': 'z-ai/glm-5',
-            'GLM 5 Flash': 'z-ai/glm-5-flash',
+            'GLM 5': 'z-ai/glm-5-free',
+            'GLM 5 Free': 'z-ai/glm-5',
             'Claude Opus 4.6': 'anthropic/claude-opus-4.6',
             'Step 3.5 Flash': 'stepfun/step-3.5-flash-free',
             'MiniMax M2 Her': 'minimax/minimax-m2-her',
@@ -5425,12 +5425,427 @@ const IDENTITY_PATTERNS = [
  * Exact identity response text
  */
 const IDENTITY_RESPONSE = `I'm SahuAI Agent, an AI assistant built by Saksham intelligence to help you explore ideas, answer questions, and tackle tasks with clear, reliable info.
+# 🤖 SahuAI Agent – Official Saksham Intelligence AI Models Chat
+### *Version 4.6 | Powered by Saksham Intelligence*
+
+---
+
+## 📋 Executive Summary
+
+**SahuAI Agent** is a revolutionary, all-in-one AI orchestration platform that aggregates **57+ cutting-edge AI models** from **15+ global providers** into a single, intuitive interface. Built and led by **Saksham Sahu** under **Saksham Intelligence**, SahuAI Agent delivers **truly unlimited access** to premium AI capabilities without requiring users to manage multiple API keys, subscriptions, or complex configurations.
+
+Unlike traditional single-model chatbots, SahuAI Agent functions as an **intelligent consensus engine**—routing your queries through parallel expert models, synthesizing their outputs through advanced reasoning pipelines, and delivering responses that are more accurate, balanced, and contextually aware than any single provider could achieve alone.
+
+---
+
+# 🔍 One-by-One Provider Comparisons
+
+---
+
+## 🆚 SahuAI Agent vs. Perplexity AI
+
+| Feature | SahuAI Agent | Perplexity AI | Winner |
+|---------|-------------|---------------|--------|
+| **Model Access** | ✅ 57+ models from 15+ providers | ❌ Proprietary + limited open models | 🏆 SahuAI |
+| **Consensus Engine** | ✅ Neural voting with confidence scores | ❌ Single-model answers | 🏆 SahuAI |
+| **Search Sources** | ✅ 40+ engines (Google, Bing, Wikipedia, NCERT, Reddit, etc.) | ⚠️ ~5-10 sources (primarily web) | 🏆 SahuAI |
+| **Research Pipeline** | ✅ 5-stage autonomous investigation | ⚠️ Search + summarize only | 🏆 SahuAI |
+| **Free Tier Limits** | ✅ Truly unlimited for Saksham native models | ❌ Pro required for advanced features | 🏆 SahuAI |
+| **Code Execution** | ✅ Live HTML/JS preview + sandbox | ❌ Code display only | 🏆 SahuAI |
+| **Export Options** | ✅ PDF, DOCX, XLSX, PPTX, ZIP | ⚠️ Limited export | 🏆 SahuAI |
+| **Privacy Model** | ✅ Local-first, zero telemetry | ❌ Query logging for improvement | 🏆 SahuAI |
+| **Language Support** | ✅ 40+ UI + response languages | ⚠️ ~10 languages | 🏆 SahuAI |
+| **Mobile App** | ✅ Android APK + PWA | ✅ Polished native apps | 🥈 Perplexity |
+| **UX Polish** | ⚠️ Functional, community-driven | ✅ Highly refined interface | 🥈 Perplexity |
+
+**🎯 When to Choose SahuAI**: You need multi-source verification, consensus-backed answers, or unlimited free access to diverse models.  
+**🎯 When to Choose Perplexity**: You prioritize speed, polished UX, and simple Q&A with citations.
+
+---
+
+## 🆚 SahuAI Agent vs. ChatGPT (OpenAI)
+
+| Feature | SahuAI Agent | ChatGPT (OpenAI) | Winner |
+|---------|-------------|-----------------|--------|
+| **Model Diversity** | ✅ 57+ models across providers | ❌ GPT-4o/mini only | 🏆 SahuAI |
+| **Consensus Capability** | ✅ Multi-model voting & disagreement detection | ❌ Single-model output | 🏆 SahuAI |
+| **Free Access** | ✅ Unlimited Saksham native models | ❌ Limited free tier, GPT-4 behind paywall | 🏆 SahuAI |
+| **API Key Requirement** | ✅ None for core features | ❌ Required for API; account required for web | 🏆 SahuAI |
+| **Privacy** | ✅ Local storage, zero data collection | ❌ Cloud processing, data may be retained | 🏆 SahuAI |
+| **Code Tools** | ✅ Live preview, self-correcting, exportable | ✅ Advanced Code Interpreter (paid) | 🤝 Tie |
+| **Multimodal** | ⚠️ Image/PDF upload + vision models | ✅ Deeply integrated vision/audio (GPT-4o) | 🥈 ChatGPT |
+| **Research Mode** | ✅ 5-stage pipeline with citations | ⚠️ Basic web search (paid) | 🏆 SahuAI |
+| **Language UI** | ✅ 40+ localized interfaces | ⚠️ ~10 languages | 🏆 SahuAI |
+| **Enterprise Support** | ❌ Community-first (enterprise planned) | ✅ Dedicated SLAs, support, compliance | 🥈 ChatGPT |
+| **Fine-Tuning** | ❌ Aggregation-focused | ✅ Custom model training available | 🥈 ChatGPT |
+
+**🎯 When to Choose SahuAI**: You want free, unlimited, privacy-first access to diverse models with consensus validation.  
+**🎯 When to Choose ChatGPT**: You need enterprise-grade reliability, cutting-edge multimodal, or custom model fine-tuning.
+
+---
+
+## 🆚 SahuAI Agent vs. Claude (Anthropic)
+
+| Feature | SahuAI Agent | Claude (Anthropic) | Winner |
+|---------|-------------|-------------------|--------|
+| **Model Options** | ✅ 57+ models from multiple providers | ❌ Claude 3.5 family only | 🏆 SahuAI |
+| **Consensus Engine** | ✅ Neural voting across models | ❌ Single-model reasoning | 🏆 SahuAI |
+| **Free Tier** | ✅ Unlimited Saksham native access | ❌ Very limited free messages | 🏆 SahuAI |
+| **Long Context** | ✅ Up to 128K via aggregated models | ✅ Industry-leading 200K context | 🥈 Claude |
+| **Reasoning Depth** | ✅ Multi-stage research pipeline | ✅ Exceptional single-model reasoning | 🤝 Tie |
+| **Code Generation** | ✅ Live preview + execution | ✅ Strong code understanding | 🤝 Tie |
+| **Safety & Alignment** | ✅ Constitutional checks + uncertainty flags | ✅ Industry-leading safety training | 🥈 Claude |
+| **Privacy** | ✅ Local-first, zero telemetry | ❌ Cloud processing, data policies apply | 🏆 SahuAI |
+| **File Analysis** | ✅ PDF, DOCX, CSV, images, code | ✅ Excellent document understanding | 🤝 Tie |
+| **API Access** | ✅ Optional local keys; none required for core | ❌ API key + strict rate limits | 🏆 SahuAI |
+| **Mobile Experience** | ✅ Android APK + responsive web | ✅ Polished native apps | 🥈 Claude |
+
+**🎯 When to Choose SahuAI**: You need model diversity, consensus validation, or unlimited free access with local privacy.  
+**🎯 When to Choose Claude**: You prioritize exceptional long-context reasoning, safety alignment, or enterprise compliance.
+
+---
+
+## 🆚 SahuAI Agent vs. Gemini (Google)
+
+| Feature | SahuAI Agent | Gemini (Google) | Winner |
+|---------|-------------|-----------------|--------|
+| **Model Ecosystem** | ✅ 57+ models across 15+ providers | ❌ Gemini 1.5 family only | 🏆 SahuAI |
+| **Consensus Capability** | ✅ Multi-model voting & synthesis | ❌ Single-model output | 🏆 SahuAI |
+| **Free Access** | ✅ Unlimited Saksham native models | ⚠️ Limited free quota; Gemini Advanced paid | 🏆 SahuAI |
+| **Multimodal Native** | ⚠️ Image/PDF + vision models via aggregation | ✅ Deeply integrated vision/audio/video | 🥈 Gemini |
+| **Google Integration** | ❌ Independent platform | ✅ Seamless with Workspace, Drive, Gmail | 🥈 Gemini |
+| **Research Tools** | ✅ 5-stage pipeline + 40+ search sources | ⚠️ Google Search + summarize | 🏆 SahuAI |
+| **Code Execution** | ✅ Live preview + sandbox | ⚠️ Code via Colab links | 🏆 SahuAI |
+| **Privacy Control** | ✅ Local-first, zero data collection | ❌ Google data policies apply | 🏆 SahuAI |
+| **Language Support** | ✅ 40+ UI + response languages | ✅ ~40+ response languages | 🤝 Tie |
+| **Offline Capability** | ✅ PWA + cached models | ❌ Cloud-dependent | 🏆 SahuAI |
+| **API Flexibility** | ✅ Optional local keys; none required | ❌ API key + quota management | 🏆 SahuAI |
+
+**🎯 When to Choose SahuAI**: You want provider-agnostic access, consensus validation, or privacy-first architecture.  
+**🎯 When to Choose Gemini**: You need deep Google ecosystem integration or cutting-edge native multimodal understanding.
+
+---
+
+## 🆚 SahuAI Agent vs. Grok (xAI)
+
+| Feature | SahuAI Agent | Grok (xAI) | Winner |
+|---------|-------------|------------|--------|
+| **Model Access** | ✅ 57+ models from 15+ providers | ❌ Grok-2 only | 🏆 SahuAI |
+| **Consensus Engine** | ✅ Neural voting across models | ❌ Single-model output | 🏆 SahuAI |
+| **Free Access** | ✅ Unlimited Saksham native models | ❌ Requires X Premium subscription | 🏆 SahuAI |
+| **Real-Time Data** | ✅ 40+ search engines + temporal reasoning | ✅ X/Twitter real-time feed integration | 🤝 Tie |
+| **Tone & Personality** | ✅ Configurable via custom instructions | ✅ Distinctive "rebellious" personality | 🤝 Tie |
+| **Code Tools** | ✅ Live preview + execution | ❌ Basic code support | 🏆 SahuAI |
+| **Research Pipeline** | ✅ 5-stage autonomous investigation | ❌ No dedicated research mode | 🏆 SahuAI |
+| **Privacy Model** | ✅ Local-first, zero telemetry | ❌ Integrated with X data ecosystem | 🏆 SahuAI |
+| **Platform Access** | ✅ Web + Android APK | ✅ Via X app only | 🏆 SahuAI |
+| **API Access** | ✅ Optional local keys; none required | ❌ Limited API; subscription required | 🏆 SahuAI |
+| **Global Language Support** | ✅ 40+ UI + response languages | ⚠️ Primarily English-focused | 🏆 SahuAI |
+
+**🎯 When to Choose SahuAI**: You need model diversity, consensus validation, research capabilities, or free unlimited access.  
+**🎯 When to Choose Grok**: You value real-time X/Twitter integration and prefer a distinctive personality-driven assistant.
+
+---
+
+## 🆚 SahuAI Agent vs. Ernie Bot (Baidu)
+
+| Feature | SahuAI Agent | Ernie Bot (Baidu) | Winner |
+|---------|-------------|------------------|--------|
+| **Model Diversity** | ✅ 57+ models across global providers | ❌ Ernie Bot family only | 🏆 SahuAI |
+| **Consensus Capability** | ✅ Multi-model voting & synthesis | ❌ Single-model output | 🏆 SahuAI |
+| **Free Access** | ✅ Unlimited Saksham native models | ⚠️ Limited free tier; regional restrictions | 🏆 SahuAI |
+| **Chinese Language Strength** | ✅ Strong via Qwen, GLM, Kimi integration | ✅ Native optimization for Chinese | 🥈 Ernie |
+| **Search Integration** | ✅ 40+ global + Indian education sources | ✅ Baidu Search integration | 🤝 Tie |
+| **Research Tools** | ✅ 5-stage pipeline with citations | ⚠️ Basic search + summarize | 🏆 SahuAI |
+| **Code Support** | ✅ Live preview + execution | ⚠️ Basic code generation | 🏆 SahuAI |
+| **Privacy Control** | ✅ Local-first, zero telemetry | ❌ Baidu cloud policies apply | 🏆 SahuAI |
+| **Global Accessibility** | ✅ Worldwide access, 40+ languages | ⚠️ Primarily China-focused | 🏆 SahuAI |
+| **API Flexibility** | ✅ Optional local keys; none required | ❌ API key + regional limits | 🏆 SahuAI |
+| **Mobile Experience** | ✅ Android APK + responsive web | ✅ Native Chinese app | 🤝 Tie |
+
+**🎯 When to Choose SahuAI**: You need global model access, consensus validation, privacy control, or research-grade capabilities.  
+**🎯 When to Choose Ernie**: You prioritize Chinese-language optimization or Baidu ecosystem integration within China.
+
+---
+
+## 🆚 SahuAI Agent vs. Kimi Chat (Moonshot AI)
+
+| Feature | SahuAI Agent | Kimi Chat | Winner |
+|---------|-------------|-----------|--------|
+| **Model Access** | ✅ 57+ models from 15+ providers | ❌ Kimi models only | 🏆 SahuAI |
+| **Consensus Engine** | ✅ Neural voting across models | ❌ Single-model output | 🏆 SahuAI |
+| **Long Context** | ✅ Up to 128K via aggregated models | ✅ Excellent long-context handling | 🤝 Tie |
+| **Free Access** | ✅ Unlimited Saksham native models | ✅ Generous free tier | 🤝 Tie |
+| **Chinese Support** | ✅ Strong via integrated Chinese models | ✅ Native optimization | 🥈 Kimi |
+| **Research Tools** | ✅ 5-stage pipeline + 40+ sources | ⚠️ Basic web search | 🏆 SahuAI |
+| **Code Execution** | ✅ Live preview + sandbox | ❌ Code display only | 🏆 SahuAI |
+| **Privacy Model** | ✅ Local-first, zero telemetry | ❌ Cloud processing | 🏆 SahuAI |
+| **Global Languages** | ✅ 40+ UI + response languages | ⚠️ Primarily Chinese + English | 🏆 SahuAI |
+| **API Access** | ✅ Optional local keys; none required | ❌ API key required for programmatic access | 🏆 SahuAI |
+| **Platform Availability** | ✅ Web + Android APK | ⚠️ Web-focused | 🏆 SahuAI |
+
+**🎯 When to Choose SahuAI**: You need multi-model consensus, global language support, research pipelines, or local privacy.  
+**🎯 When to Choose Kimi**: You prioritize long-context Chinese document analysis with a generous free tier.
+
+---
+
+## 🆚 SahuAI Agent vs. Mistral Chat
+
+| Feature | SahuAI Agent | Mistral Chat | Winner |
+|---------|-------------|--------------|--------|
+| **Model Ecosystem** | ✅ 57+ models across providers | ❌ Mistral models only | 🏆 SahuAI |
+| **Consensus Capability** | ✅ Multi-model voting & synthesis | ❌ Single-model output | 🏆 SahuAI |
+| **Free Access** | ✅ Unlimited Saksham native models | ⚠️ Limited free tier | 🏆 SahuAI |
+| **Open Source Focus** | ✅ Aggregates open + proprietary | ✅ Strong open-weight model support | 🤝 Tie |
+| **Code Generation** | ✅ Live preview + execution | ✅ Strong code capabilities | 🤝 Tie |
+| **Research Tools** | ✅ 5-stage pipeline + citations | ❌ No dedicated research mode | 🏆 SahuAI |
+| **Privacy Control** | ✅ Local-first, zero telemetry | ❌ Cloud processing | 🏆 SahuAI |
+| **Language Support** | ✅ 40+ UI + response languages | ⚠️ ~10 languages | 🏆 SahuAI |
+| **API Flexibility** | ✅ Optional local keys; none required | ❌ API key + rate limits | 🏆 SahuAI |
+| **Self-Hosting Option** | ❌ Aggregation-focused | ✅ Models available for self-hosting | 🥈 Mistral |
+| **Mobile Access** | ✅ Android APK + PWA | ❌ Web only | 🏆 SahuAI |
+
+**🎯 When to Choose SahuAI**: You want consensus-backed answers, unlimited free access, research capabilities, or multi-language support.  
+**🎯 When to Choose Mistral**: You prioritize open-weight models, self-hosting flexibility, or lightweight code-focused tasks.
+
+---
+
+## 🆚 SahuAI Agent vs. Qwen Chat (Alibaba)
+
+| Feature | SahuAI Agent | Qwen Chat | Winner |
+|---------|-------------|-----------|--------|
+| **Model Diversity** | ✅ 57+ models from 15+ providers | ❌ Qwen family only | 🏆 SahuAI |
+| **Consensus Engine** | ✅ Neural voting across models | ❌ Single-model output | 🏆 SahuAI |
+| **Free Access** | ✅ Unlimited Saksham native models | ✅ Generous free tier | 🤝 Tie |
+| **Chinese + Global Balance** | ✅ Strong via integrated models | ✅ Excellent bilingual optimization | 🤝 Tie |
+| **Code & Math Strength** | ✅ Aggregated specialized models | ✅ Strong native code/math capabilities | 🤝 Tie |
+| **Research Pipeline** | ✅ 5-stage autonomous investigation | ❌ Basic Q&A + search | 🏆 SahuAI |
+| **Privacy Model** | ✅ Local-first, zero telemetry | ❌ Alibaba cloud policies | 🏆 SahuAI |
+| **Export & Artifacts** | ✅ PDF, DOCX, XLSX, PPTX, live code | ⚠️ Limited export options | 🏆 SahuAI |
+| **Language UI** | ✅ 40+ localized interfaces | ⚠️ Primarily Chinese + English | 🏆 SahuAI |
+| **API Access** | ✅ Optional local keys; none required | ❌ API key for full access | 🏆 SahuAI |
+| **Platform Availability** | ✅ Web + Android APK | ⚠️ Web-focused | 🏆 SahuAI |
+
+**🎯 When to Choose SahuAI**: You need consensus validation, research-grade pipelines, privacy control, or multi-provider flexibility.  
+**🎯 When to Choose Qwen**: You prioritize bilingual Chinese-English tasks, strong code/math, or Alibaba ecosystem integration.
+
+---
+
+## 🆚 SahuAI Agent vs. DeepSeek Chat
+
+| Feature | SahuAI Agent | DeepSeek Chat | Winner |
+|---------|-------------|---------------|--------|
+| **Model Access** | ✅ 57+ models from 15+ providers | ❌ DeepSeek models only | 🏆 SahuAI |
+| **Consensus Capability** | ✅ Multi-model voting & synthesis | ❌ Single-model output | 🏆 SahuAI |
+| **Free Access** | ✅ Unlimited Saksham native models | ✅ Free tier available | 🤝 Tie |
+| **Code Generation** | ✅ Live preview + execution + self-correcting | ✅ Strong code-focused models | 🤝 Tie |
+| **Reasoning Depth** | ✅ Multi-stage research pipeline | ✅ Strong single-model reasoning | 🤝 Tie |
+| **Research Tools** | ✅ 5-stage pipeline + 40+ sources | ❌ No dedicated research mode | 🏆 SahuAI |
+| **Privacy Control** | ✅ Local-first, zero telemetry | ❌ Cloud processing | 🏆 SahuAI |
+| **Language Support** | ✅ 40+ UI + response languages | ⚠️ ~10 languages | 🏆 SahuAI |
+| **Export Options** | ✅ PDF, DOCX, XLSX, PPTX, ZIP | ⚠️ Limited export | 🏆 SahuAI |
+| **API Flexibility** | ✅ Optional local keys; none required | ❌ API key + rate limits | 🏆 SahuAI |
+| **Mobile Access** | ✅ Android APK + PWA | ❌ Web only | 🏆 SahuAI |
+
+**🎯 When to Choose SahuAI**: You need consensus-backed answers, research pipelines, multi-language support, or local privacy.  
+**🎯 When to Choose DeepSeek**: You prioritize code-heavy tasks with strong single-model reasoning and a simple interface.
+
+---
+
+## 🆚 SahuAI Agent vs. MiniMax Chat
+
+| Feature | SahuAI Agent | MiniMax Chat | Winner |
+|---------|-------------|--------------|--------|
+| **Model Ecosystem** | ✅ 57+ models across providers | ❌ MiniMax models only | 🏆 SahuAI |
+| **Consensus Engine** | ✅ Neural voting across models | ❌ Single-model output | 🏆 SahuAI |
+| **Free Access** | ✅ Unlimited Saksham native models | ⚠️ Limited free tier | 🏆 SahuAI |
+| **Creative Generation** | ✅ Aggregated creative models + debate mode | ✅ Strong creative/content generation | 🤝 Tie |
+| **Research Tools** | ✅ 5-stage pipeline + citations | ❌ Basic Q&A | 🏆 SahuAI |
+| **Code Support** | ✅ Live preview + execution | ⚠️ Basic code generation | 🏆 SahuAI |
+| **Privacy Model** | ✅ Local-first, zero telemetry | ❌ Cloud processing | 🏆 SahuAI |
+| **Language Support** | ✅ 40+ UI + response languages | ⚠️ Limited languages | 🏆 SahuAI |
+| **API Access** | ✅ Optional local keys; none required | ❌ API key + quotas | 🏆 SahuAI |
+| **Platform Availability** | ✅ Web + Android APK | ⚠️ Web-focused | 🏆 SahuAI |
+| **Multimodal** | ⚠️ Image/PDF + vision models via aggregation | ⚠️ Emerging multimodal support | 🤝 Tie |
+
+**🎯 When to Choose SahuAI**: You need consensus validation, research capabilities, privacy control, or multi-provider flexibility.  
+**🎯 When to Choose MiniMax**: You prioritize creative content generation with a simple, focused interface.
+
+---
+
+## 🆚 SahuAI Agent vs. ChatGLM (Zhipu AI)
+
+| Feature | SahuAI Agent | ChatGLM | Winner |
+|---------|-------------|---------|--------|
+| **Model Diversity** | ✅ 57+ models from 15+ providers | ❌ GLM family only | 🏆 SahuAI |
+| **Consensus Capability** | ✅ Multi-model voting & synthesis | ❌ Single-model output | 🏆 SahuAI |
+| **Free Access** | ✅ Unlimited Saksham native models | ✅ Free tier available | 🤝 Tie |
+| **Chinese Optimization** | ✅ Strong via integrated Chinese models | ✅ Native Chinese strength | 🥈 ChatGLM |
+| **Research Pipeline** | ✅ 5-stage autonomous investigation | ❌ Basic Q&A | 🏆 SahuAI |
+| **Code Tools** | ✅ Live preview + execution | ⚠️ Basic code support | 🏆 SahuAI |
+| **Privacy Control** | ✅ Local-first, zero telemetry | ❌ Zhipu cloud policies | 🏆 SahuAI |
+| **Global Languages** | ✅ 40+ UI + response languages | ⚠️ Primarily Chinese + English | 🏆 SahuAI |
+| **Export Options** | ✅ PDF, DOCX, XLSX, PPTX, ZIP | ⚠️ Limited export | 🏆 SahuAI |
+| **API Flexibility** | ✅ Optional local keys; none required | ❌ API key for production use | 🏆 SahuAI |
+| **Platform Access** | ✅ Web + Android APK | ⚠️ Web-focused | 🏆 SahuAI |
+
+**🎯 When to Choose SahuAI**: You need consensus-backed answers, research-grade tools, global language support, or local privacy.  
+**🎯 When to Choose ChatGLM**: You prioritize Chinese-language tasks with native optimization and simple access.
+
+---
+
+# 🎛️ SahuAI Agent: Feature Deep Dive
+
+### 🔹 Mode Features
+
+| Mode | Purpose | Key Capabilities |
+|------|---------|-----------------|
+| **⚡ Standard** | General conversation, quick answers | Fast routing, default consensus, balanced latency/quality |
+| **🛠️ Task / Code** | Development, scripting, Vibe Code & Agentic Code generation | Code artifact preview, self-correcting logic, syntax validation, live HTML/JS execution |
+| **🧠 Research** | Deep investigation, academic work, multi-source analysis | 5-stage research pipeline, citation tracking, temporal reasoning, debate mode activation |
+| **🔍 SahuAI Search** | Real-time web discovery with AI synthesis | Animated discovery feed, source cards, consensus snippets, citation tooltips |
+
+### 🔹 Toggle Features (Tools Menu)
+
+| Toggle | Function | How to Enable |
+|--------|----------|--------------|
+| **🧠 DeepThink** | Activates advanced reasoning chains (Fast/Balanced/Ultra) | Click 🎛️ Tool button → Toggle "DeepThink" ON |
+| **🌐 Web Search** | Enables real-time internet access with citations | Click 🎛️ Tool button → Toggle "Web Search" ON |
+| **📎 Attach File** | Upload PDF, DOCX, CSV, code, images for analysis | Click 🎛️ → "Attach File" or drag-drop into input |
+| **🎤 Voice Input** | Speech-to-text input with ASR model selection | Click 🎛️ → "Voice Input" or long-press mic icon |
+| **🗣️ TTS Output** | Text-to-speech response playback | Settings → Voice & Speech → Enable TTS model |
+
+### 🔹 Model Ecosystem
+
+SahuAI Agent provides access to models across three categories:
+
+#### 🔸 Saksham Intelligence Native (Free, Unlimited)
+- Qwen 3.5 397B, GLM 5, MiniMax M2.5, DeepSeek V3.2, Llama 3.3 70B, Gemma 3 27B, Phi-4 Multimodal, Mistral Large 3, Kimi K2.5, and 40+ more
+- Hosted via Nvidia NIM, optimized for low-latency consensus routing
+
+#### 🔸 Open Source Aggregated
+- Models from HuggingFace, Together AI, Cerebras, Fireworks AI, io.net
+- User can bring their own API keys for extended access
+
+#### 🔸 Proprietary Gateway (Optional)
+- Connect your own keys for Gemini, Mistral, OpenRouter, Groq, SambaNova
+- Keys stored locally in browser; never transmitted to Saksham servers
+
+### 🔹 Truly Unlimited API Key Philosophy
+
+> **"Your intelligence, your access—no gatekeepers."**
+
+- ✅ **No API key required** to use Saksham Intelligence native models
+- ✅ **Local-only storage** for any external keys you choose to add
+- ✅ **Zero telemetry**: No usage logging, no profiling, no data mining
+- ✅ **Transparent routing**: See which model/provider answered each segment
+- ✅ **Fallback intelligence**: If one provider fails, others auto-engage
+
+### 🔹 How It Works: Step-by-Step Guide
+
+#### 🚀 Getting Started
+1. Open SahuAI Agent (web or Android APK)
+2. No sign-up required—start chatting immediately
+3. Type your query in the input bar at the bottom
+
+#### 🎯 Enable Advanced Features
+| Action | Steps |
+|--------|-------|
+| **Activate DeepThink** | 1. Click 🎛️ **Tool button** in input bar<br>2. Toggle **"DeepThink"** to ON<br>3. Select reasoning depth: Fast / Balanced / Ultra |
+| **Enable Web Search** | 1. Click 🎛️ **Tool button**<br>2. Toggle **"Web Search"** to ON<br>3. Optional: Configure sources in Settings → Search Engines |
+| **Start Deep Research** | 1. Switch mode selector to **"🧠 Research"**<br>2. Ensure DeepThink + Web Search are ON<br>3. Submit query—watch the 5-stage pipeline execute |
+| **Use Code Artifacts** | 1. Switch to **"🛠️ Task / Code"** mode<br>2. Ask for HTML/JS/Python generation<br>3. Click **"Preview"** tab in artifact modal to execute live |
+
+#### 🔍 Understanding the Response
+- **💭 Thinking Blocks**: Collapsible reasoning traces (when DeepThink enabled)
+- **📚 Citations**: Superscript numbers [¹] link to source cards with URLs
+- **⚖️ Consensus Badge**: Shows agreement level across models (High/Medium/Low)
+- **🕒 Temporal Tag**: Indicates if response includes freshness verification
+- **🎯 Uncertainty Indicator**: Flags low-confidence assertions for user review
+
+---
+
+# 👨‍💻 About the Developer: Saksham Intelligence
+
+### 🌟 Saksham Sahu – Founder & Lead Architect
+**Saksham Sahu** is a visionary AI engineer and open-technology advocate dedicated to democratizing access to advanced artificial intelligence. With a background in distributed systems, natural language processing, and privacy-preserving architecture, Saksham founded **Saksham Intelligence** on a simple principle:
+
+> *"Intelligence should empower everyone—not just those with enterprise budgets."*
+
+#### 🎯 Mission of Saksham Intelligence
+- **Accessibility**: Remove financial and technical barriers to AI adoption
+- **Transparency**: Open architecture, local-first design, no hidden data collection
+- **Collaboration**: Aggregate the best of open and proprietary AI, not replace them
+- **Innovation**: Pioneer consensus-based reasoning as the next paradigm beyond single-model outputs
+
+#### 🛠️ Technical Philosophy
+- **Client-Side Orchestration**: All routing, consensus, and aggregation happen in your browser/device
+- **Provider-Agnostic**: No vendor lock-in; users control which models/providers to engage
+- **Progressive Enhancement**: Works offline with cached models; enhances with connectivity
+- **Ethical by Design**: Constitutional safety checks, uncertainty disclosure, user-controlled data
+
+#### 🌍 Community & Vision
+Saksham Intelligence operates as a community-driven initiative, with:
+- Open documentation and feature requests via GitHub
+- Regular model updates based on community benchmarking
+- Educational resources for students, developers, and researchers in emerging markets
+- Commitment to supporting Indian and global South AI ecosystems (NCERT, DIKSHA, CBSE integrations)
+
+> *"SahuAI isn't just another chatbot—it's a collaborative intelligence layer. Every query is an opportunity to learn from many minds, not just one."*  
+> — **Saksham Sahu**, Founder, Saksham Intelligence
+
+---
+
+# 📊 Final Comprehensive Comparison Table
+
+| Feature | **SahuAI Agent** | Perplexity | ChatGPT | Claude | Gemini | Grok | Ernie | Kimi | Mistral | Qwen | DeepSeek | MiniMax | ChatGLM |
+|---------|-----------------|------------|---------|--------|--------|------|-------|------|---------|------|----------|---------|---------|
+| **Models Available** | ✅ 57+ (15 providers) | ⚠️ Limited mix | ❌ GPT only | ❌ Claude only | ❌ Gemini only | ❌ Grok only | ❌ Ernie only | ❌ Kimi only | ❌ Mistral only | ❌ Qwen only | ❌ DeepSeek only | ❌ MiniMax only | ❌ GLM only |
+| **Unlimited Free Tier** | ✅ Yes (Saksham native) | ❌ Pro required | ❌ Limited free | ❌ Very limited | ⚠️ Limited quota | ❌ X Premium | ⚠️ Regional limits | ✅ Generous | ⚠️ Limited | ✅ Generous | ✅ Available | ⚠️ Limited | ✅ Available |
+| **Multi-Model Consensus** | ✅ Neural Engine | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No |
+| **Local Privacy** | ✅ Local-first | ❌ Logs queries | ❌ Cloud | ❌ Cloud | ❌ Google policies | ❌ X integration | ❌ Baidu cloud | ❌ Cloud | ❌ Cloud | ❌ Alibaba cloud | ❌ Cloud | ❌ Cloud | ❌ Zhipu cloud |
+| **Research Pipeline** | ✅ 5-Stage Autonomous | ⚠️ Search+summarize | ⚠️ Basic web search | ❌ No | ⚠️ Search+summarize | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No |
+| **Code Execution** | ✅ Live Preview+Run | ❌ Display only | ✅ Interpreter (paid) | ✅ Strong support | ⚠️ Colab links | ❌ Basic | ⚠️ Basic | ❌ Display | ✅ Strong | ✅ Strong | ✅ Strong | ⚠️ Basic | ⚠️ Basic |
+| **Export Suite** | ✅ PDF/DOCX/XLSX/PPTX/ZIP | ⚠️ Limited | ⚠️ Limited | ⚠️ Limited | ⚠️ Limited | ❌ None | ⚠️ Limited | ⚠️ Limited | ⚠️ Limited | ⚠️ Limited | ⚠️ Limited | ⚠️ Limited | ⚠️ Limited |
+| **40+ Languages UI** | ✅ Yes | ❌ ~10 | ❌ ~10 | ❌ ~10 | ✅ ~40 responses | ❌ ~10 | ❌ Chinese-focused | ❌ Chinese+EN | ❌ ~10 | ❌ Chinese+EN | ❌ ~10 | ❌ Limited | ❌ Chinese+EN |
+| **40+ Search Sources** | ✅ Yes | ⚠️ ~5-10 | ❌ Bing only | ❌ None | ❌ Google only | ❌ X only | ❌ Baidu only | ❌ None | ❌ None | ❌ None | ❌ None | ❌ None | ❌ None |
+| **Android App** | ✅ APK Available | ✅ Native | ✅ Native | ✅ Native | ✅ Native | ✅ Via X app | ✅ Native | ❌ Web | ❌ Web | ❌ Web | ❌ Web | ❌ Web | ❌ Web |
+| **Truly Unlimited API** | ✅ No key needed (core) | ❌ Pro+API limits | ❌ API+quota | ❌ API+strict limits | ❌ API+quota | ❌ Subscription | ❌ API+regional | ❌ API required | ❌ API+limits | ❌ API for full | ❌ API+limits | ❌ API+quotas | ❌ API for prod |
+| **Debate Mode** | ✅ Multi-perspective | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No |
+| **Temporal Reasoning** | ✅ Freshness checks | ⚠️ Basic | ⚠️ Basic | ❌ No | ✅ Strong | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No |
+| **Self-Correcting Code** | ✅ Built-in | ❌ No | ✅ Paid tier | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No |
+| **Uncertainty Badging** | ✅ Confidence flags | ❌ No | ❌ No | ✅ Implicit | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No |
+| **Offline Capability** | ✅ PWA + cache | ❌ Cloud | ❌ Cloud | ❌ Cloud | ❌ Cloud | ❌ Cloud | ❌ Cloud | ❌ Cloud | ❌ Cloud | ❌ Cloud | ❌ Cloud | ❌ Cloud | ❌ Cloud |
+
+✅ = Fully supported | ⚠️ = Partial/Limited | ❌ = Not available
+
+---
+
+## 🎁 Why Choose SahuAI Agent Today?
+
+✨ **Start in 10 seconds** – No account, no credit card, no API key  
+✨ **One interface, infinite intelligence** – Switch models mid-conversation  
+✨ **Trust through transparency** – See reasoning, sources, and confidence levels  
+✨ **Built for builders** – Export, execute, iterate—all in one place  
+✨ **Privacy by architecture** – Your data stays on your device  
+✨ **Global by design** – 40+ languages, 40+ search sources, worldwide accessibility  
+
+---
+
+> **SahuAI Agent v4.6**  
+> *Developed by Saksham Intelligence | Led by Saksham Sahu*  
+> 🌐 [sahuai.sakshamintelligence.dev] | 📧 sahusaksham453675@gmail.com  
+> 📱 Android APK Available | 💻 Web-Optimized PWA  
+> 🔒 100% Local-First | 🌍 Open Community | 🚀 Always Free Core Tier  
+
+*"Intelligence amplified, not centralized."* 🤝🧠✨
 
 At my core, I draw from a vast knowledge base up to January 2025, powered by advanced Open Source models like MiniMax m2.1 & GLM 5 & Kimi K2.5 Qwen 3.5, to deliver expert-level responses. Think of me as your go-to research buddy—fast, accurate, and always citing sources when it matters. I shine in explaining complex topics simply (like quantum physics via everyday analogies), brainstorming creative projects, summarizing articles, writing or rewriting content, and casual chats.
 
 Unlike generic chatbots, I prioritize truthfulness: I reason step-by-step, avoid fluff, and flag uncertainties. No hallucinations here—I stick to facts or say when I don't know. My style? Friendly, concise, and structured for easy reading, with lists, examples, and visuals when they help.
 
-Fun fact: I'm designed for curiosity-driven users, whether you're in Bhopal puzzling over local history or globally brainstorming a startup. Got a specific question or task? Fire away!`;
+Fun fact: I'm designed for curiosity-driven users, whether you're in Bhopal puzzling over local history or globally brainstorming a startup. Got a specific question or task? Fire away!
+`;
 
 // ============================================
 // SECTION 3: GLOBAL VARIABLES & INITIALIZATION
@@ -7868,64 +8283,170 @@ async function callModelWithFallback(providerKey, modelId, messages, retryCount 
         const budget = state.thinkingBudget;
         const deepThinkPrompt = `
 \n\n========================================
-You are operating in DeepThink Mode.
-All reasoning must be shown explicitly.
-Do not hide intermediate steps.
+{'You are operating in DeepThink v3 + 10× Amplifier Mode 
+with Path Diversity Enforcement and Hallucination Immunity.
+
+All reasoning must be fully visible.
+No hidden steps.
+No skipped logic.
+No fabricated information.
 
 ========================================
-USER SETTINGS
+THINKING_BUDGET
 ========================================
-THINKING_BUDGET = ${budget.toUpperCase()}
 
-Complexity:
-- fast → medium reasoning
-- balanced → high reasoning
-- ultra → x-high reasoning
+1 = FAST
+2 = BALANCED
+3 = ULTRA
 
-========================================
-DEEPTHINK PROCESS
-========================================
-STEP 1 — Clarify the Problem
-- Restate clearly
-- Identify constraints
+STRICT PATH COUNT (No Reduction):
 
-STEP 2 — Decompose
-- Break into logical components
-- Identify dependencies
-
-STEP 3 — Multi-Path Reasoning
-- Explore multiple solution paths
-- Compare strengths and weaknesses
-
-STEP 4 — Assumption Analysis
-- List assumptions
-- Test whether they hold
-
-STEP 5 — Counter-Argument
-- Attempt to disprove your reasoning
-- Stress-test logic
-
-STEP 6 — Edge Case Examination
-- Identify extreme or boundary cases
-- Test solution stability
-
-STEP 7 — Final Synthesis
-- Rebuild strongest logical answer
+1 (FAST) → Exactly 4 distinct reasoning paths
+2 (BALANCED) → Exactly 8 distinct reasoning paths
+3 (ULTRA) → Exactly 12 distinct reasoning paths
 
 ========================================
-MODE BEHAVIOR
+PHASE 1 — PROBLEM FOUNDATION
 ========================================
-${THINKING_TEMPLATES[budget]}
+
+1. Restate the problem clearly.
+2. Define constraints.
+3. Define success criteria.
 
 ========================================
-OUTPUT FORMAT
+PHASE 2 — PATH GENERATION (DIVERSITY ENFORCED)
 ========================================
+
+Generate required number of reasoning paths.
+
+For each path explicitly state:
+
+- Framework used (must be unique)
+- Core assumption
+- Primary evaluation metric
+- Reasoning explanation
+
+Allowed frameworks (must not repeat):
+
+- First-Principles
+- Statistical / Probabilistic
+- Economic / Cost-Benefit
+- Game Theory
+- Systems Thinking
+- Risk-First Modeling
+- Historical Analogy
+- Ethical / Normative
+- Adversarial / Red Team
+- Constraint Optimization
+- Scenario Simulation
+- Decision Theory
+
+No two paths may use the same framework.
+
+After generating paths:
+Perform Diversity Validation Check.
+If structural similarity detected → rewrite weaker path.
+
+Provide Diversity Score (1–10).
+If < 8 → regenerate weakest path.
+
+========================================
+PHASE 3 — CROSS-EVALUATION MATRIX
+========================================
+
+Each path must critique at least one other path.
+
+Identify:
+- Logical weakness
+- Hidden assumption
+- Risk exposure
+- Evidence gap
+
+Score each path (1–10) on:
+- Logical Strength
+- Assumption Stability
+- Risk Resistance
+- Evidence Support
+
+Provide Path Score Table.
+
+========================================
+PHASE 4 — FAILURE CASCADE SIMULATION
+========================================
+
+Select top 2 highest scoring paths.
+
+For each:
+- Collapse primary assumption.
+- Simulate chain reaction failure.
+- Test extreme edge cases.
+- Identify cascading breakdown.
+
+If instability found → refine path.
+
+========================================
+PHASE 5 — HALLUCINATION IMMUNITY CHECK
+========================================
+
+For final top path:
+
+1. Identify all factual claims.
+2. Classify each claim as:
+   - Verified / Well-known
+   - Logical inference
+   - Speculative
+   - Uncertain
+
+3. Remove or clearly mark speculative claims.
+4. Flag any unsupported assumptions.
+5. Add uncertainty disclaimer if needed.
+
+If unverifiable claim detected → revise reasoning.
+
+========================================
+PHASE 6 — META-COGNITIVE REVIEW
+========================================
+
+Evaluate:
+
+- Internal contradictions
+- Overconfidence bias
+- Logical gaps
+- Redundancy
+- Hidden assumptions
+
+If instability detected → one refinement pass.
+
+========================================
+PHASE 7 — LOGICAL COMPRESSION
+========================================
+
+Compress expanded reasoning into:
+
+- Most stable version
+- Minimal redundancy
+- Maximum clarity
+- No unsupported claims
+
+========================================
+FINAL OUTPUT STRUCTURE
+========================================
+
 1. Problem Restatement
-2. Step-by-Step Reasoning
-3. Alternative Path(s)
-4. Critical Evaluation
-5. Final Answer
-${budget === 'ultra' ? 'If ULTRA:\n6. Confidence Score\n7. Remaining DOUBTS' : ''}
+2. All Reasoning Paths
+3. Diversity Score
+4. Cross-Evaluation Summary
+5. Path Score Table
+6. Failure Simulation Results
+7. Final Refined Answer
+
+If THINKING_BUDGET = 3 (ULTRA), also include:
+
+8. Logical Stability Score (0–100%)
+9. Confidence Calibration (Low / Balanced / Overconfident)
+10. Weakest Logical Segment Identified
+11. Hallucination Risk Level (Low / Medium / High)
+12. Remaining Uncertainties' : ''}
 
 CRITICAL INSTRUCTION: Output your internal monologue enclosed in <think>tags based on the process above. Then provide the final response.
 `;
