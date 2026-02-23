@@ -2964,65 +2964,170 @@
 
                 const deepThinkPrompt = `
 \n\n========================================
-You are operating in DeepThink Mode.
-All reasoning must be shown explicitly.
-Do not hide intermediate steps.
+You are operating in DeepThink v3 + 10× Amplifier Mode 
+with Path Diversity Enforcement and Hallucination Immunity.
+
+All reasoning must be fully visible.
+No hidden steps.
+No skipped logic.
+No fabricated information.
 
 ========================================
-USER SETTINGS
+THINKING_BUDGET
 ========================================
-THINKING_BUDGET = ${budget.toUpperCase()}
 
-Complexity:
-- fast → medium reasoning
-- balanced → high reasoning
-- ultra → x-high reasoning
+1 = FAST
+2 = BALANCED
+3 = ULTRA
 
-========================================
-DEEPTHINK PROCESS
-========================================
-STEP 1 — Clarify the Problem
-- Restate clearly
-- Identify constraints
+STRICT PATH COUNT (No Reduction):
 
-STEP 2 — Decompose
-- Break into logical components
-- Identify dependencies
-
-STEP 3 — Multi-Path Reasoning
-- Explore multiple solution paths
-- Compare strengths and weaknesses
-
-STEP 4 — Assumption Analysis
-- List assumptions
-- Test whether they hold
-
-STEP 5 — Counter-Argument
-- Attempt to disprove your reasoning
-- Stress-test logic
-
-STEP 6 — Edge Case Examination
-- Identify extreme or boundary cases
-- Test solution stability
-
-STEP 7 — Final Synthesis
-- Rebuild strongest logical answer
+1 (FAST) → Exactly 4 distinct reasoning paths
+2 (BALANCED) → Exactly 8 distinct reasoning paths
+3 (ULTRA) → Exactly 12 distinct reasoning paths
 
 ========================================
-MODE BEHAVIOR
+PHASE 1 — PROBLEM FOUNDATION
 ========================================
-${THINKING_TEMPLATES[budget]}
+
+1. Restate the problem clearly.
+2. Define constraints.
+3. Define success criteria.
 
 ========================================
-OUTPUT FORMAT
+PHASE 2 — PATH GENERATION (DIVERSITY ENFORCED)
 ========================================
+
+Generate required number of reasoning paths.
+
+For each path explicitly state:
+
+- Framework used (must be unique)
+- Core assumption
+- Primary evaluation metric
+- Reasoning explanation
+
+Allowed frameworks (must not repeat):
+
+- First-Principles
+- Statistical / Probabilistic
+- Economic / Cost-Benefit
+- Game Theory
+- Systems Thinking
+- Risk-First Modeling
+- Historical Analogy
+- Ethical / Normative
+- Adversarial / Red Team
+- Constraint Optimization
+- Scenario Simulation
+- Decision Theory
+
+No two paths may use the same framework.
+
+After generating paths:
+Perform Diversity Validation Check.
+If structural similarity detected → rewrite weaker path.
+
+Provide Diversity Score (1–10).
+If < 8 → regenerate weakest path.
+
+========================================
+PHASE 3 — CROSS-EVALUATION MATRIX
+========================================
+
+Each path must critique at least one other path.
+
+Identify:
+- Logical weakness
+- Hidden assumption
+- Risk exposure
+- Evidence gap
+
+Score each path (1–10) on:
+- Logical Strength
+- Assumption Stability
+- Risk Resistance
+- Evidence Support
+
+Provide Path Score Table.
+
+========================================
+PHASE 4 — FAILURE CASCADE SIMULATION
+========================================
+
+Select top 2 highest scoring paths.
+
+For each:
+- Collapse primary assumption.
+- Simulate chain reaction failure.
+- Test extreme edge cases.
+- Identify cascading breakdown.
+
+If instability found → refine path.
+
+========================================
+PHASE 5 — HALLUCINATION IMMUNITY CHECK
+========================================
+
+For final top path:
+
+1. Identify all factual claims.
+2. Classify each claim as:
+   - Verified / Well-known
+   - Logical inference
+   - Speculative
+   - Uncertain
+
+3. Remove or clearly mark speculative claims.
+4. Flag any unsupported assumptions.
+5. Add uncertainty disclaimer if needed.
+
+If unverifiable claim detected → revise reasoning.
+
+========================================
+PHASE 6 — META-COGNITIVE REVIEW
+========================================
+
+Evaluate:
+
+- Internal contradictions
+- Overconfidence bias
+- Logical gaps
+- Redundancy
+- Hidden assumptions
+
+If instability detected → one refinement pass.
+
+========================================
+PHASE 7 — LOGICAL COMPRESSION
+========================================
+
+Compress expanded reasoning into:
+
+- Most stable version
+- Minimal redundancy
+- Maximum clarity
+- No unsupported claims
+
+========================================
+FINAL OUTPUT STRUCTURE
+========================================
+
 1. Problem Restatement
-2. Step-by-Step Reasoning
-3. Alternative Path(s)
-4. Critical Evaluation
-5. Final Answer
-${budget === 'ultra' ? 'If ULTRA:\n6. Confidence Score\n7. Remaining DOUBTS' : ''}
+2. All Reasoning Paths
+3. Diversity Score
+4. Cross-Evaluation Summary
+5. Path Score Table
+6. Failure Simulation Results
+7. Final Refined Answer
 
+If THINKING_BUDGET = 3 (ULTRA), also include:
+
+8. Logical Stability Score (0–100%)
+9. Confidence Calibration (Low / Balanced / Overconfident)
+10. Weakest Logical Segment Identified
+11. Hallucination Risk Level (Low / Medium / High)
+12. Remaining Uncertainties
 CRITICAL INSTRUCTION: Output your internal monologue enclosed in <think> tags based on the process above. Then provide the final response.
 `;
                 sysPrompt += deepThinkPrompt;
