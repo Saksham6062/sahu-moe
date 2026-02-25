@@ -2547,7 +2547,7 @@
             }
 
             const encodedQuery = encodeURIComponent(query);
-            const corsProxy = 'https://proxy.cors.sh/?'; 
+            const corsProxy = 'https://proxy.corsfix.com/?'; 
             
             const fetchJson = async (url) => {
                 const controller = new AbortController();
@@ -3198,9 +3198,9 @@ CRITICAL INSTRUCTION: Output your internal monologue enclosed in <think> tags ba
             let url = provider.endpoint;
             if (providerKey === 'nvidia') {
                if (modelId === 'nvidia/cosmos-reason2-8b') {
-                   url = 'https://api.allorigins.win/?' + provider.endpoint;
+                   url = 'https://proxy.corsfix.com/?' + provider.endpoint;
                } else {
-                   url = 'https://proxy.cors.sh/?' + encodeURIComponent(provider.endpoint);
+                   url = 'https://proxy.cors.sh' + encodeURIComponent(provider.endpoint);
                }
             }
             if (providerKey === 'ollama') url = 'https://corsproxy.io/?' + provider.endpoint;
