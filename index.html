@@ -887,6 +887,12 @@
         @media (min-width: 768px) { .sidebar { position: relative; left: 0; width: 280px; } .sidebar-overlay { display: none !important; } }
         @media (max-width: 480px) { .export-btn span { display: none; } .export-btn { padding: 10px 12px; } }
 
+            .assistant-text {
+    font-size: 1.250rem 
+    !important; /* 18px */
+    line-height: 1.6;
+}
+
         /* SAHU 2.0 Feature Styles */
         .citation { vertical-align: super; font-size: 0.7em; color: var(--accent); cursor: pointer; margin: 0 1px; font-weight: bold; text-decoration: none; padding: 0 2px; border-radius: 3px; background: rgba(102, 126, 234, 0.1); }
         .citation:hover { text-decoration: none; background: rgba(102, 126, 234, 0.2); }
@@ -2528,9 +2534,9 @@
                     container.innerHTML = '';
                     state.messages.forEach(msg => {
                         if(msg.role === 'user') {
-                             container.innerHTML += `<div class="flex justify-end mb-4"><div class="message-user px-4 py-3 rounded-2xl max-w-[85%] shadow-lg"><p class="text-white text-sm whitespace-pre-wrap">${escapeHtml(msg.content)}</p></div></div>`;
+                             container.innerHTML += `<div class="flex justify-end mb-4"><div class="message-user px-4 py-3 rounded-2xl max-w-[85%] shadow-lg"><p class="text-white text-whitespace-pre-wrap">${escapeHtml(msg.content)}</p></div></div>`;
                         } else if (msg.role === 'assistant') {
-                             container.innerHTML += `<div class="flex justify-start mb-4"><div class="message-assistant px-4 py-3 rounded-2xl max-w-[85%] border border-[var(--border)] shadow-sm"><div class="prose max-w-none text-sm">${formatMarkdown(msg.content)}</div></div></div>`;
+                             container.innerHTML += `<div class="flex justify-start mb-4"><div class="message-assistant px-4 py-3 rounded-2xl max-w-[85%] border border-[var(--border)] shadow-sm"><div class="prose max-w-none assistant-text">${formatMarkdown(msg.content)}</div></div></div>`;
                         }
                     });
                     setTimeout(() => container.scrollTop = container.scrollHeight, 100);
