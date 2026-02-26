@@ -890,6 +890,16 @@
         /* SAHU 2.0 Feature Styles */
         .citation { vertical-align: super; font-size: 0.7em; color: var(--accent); cursor: pointer; margin: 0 1px; font-weight: bold; text-decoration: none; padding: 0 2px; border-radius: 3px; background: rgba(102, 126, 234, 0.1); }
         .citation:hover { text-decoration: none; background: rgba(102, 126, 234, 0.2); }
+
+            @keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+.spinning-globe {
+    display: inline-block;
+    animation: spin 3s linear infinite;
+}
         
         /* Inline Citation Tooltip */
         .citation-tooltip {
