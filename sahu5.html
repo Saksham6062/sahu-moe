@@ -3214,9 +3214,9 @@ CRITICAL INSTRUCTION: Output your internal monologue enclosed in <think> tags ba
             let url = provider.endpoint;
             if (providerKey === 'nvidia') {
                if (modelId === 'nvidia/cosmos-reason2-8b') {
-                   url = 'https://proxy.sahusaksham453675.workers.dev/?url' + provider.endpoint;
+                   url = 'https://proxy.sahusaksham453675.workers.dev/?url =$ {provider.endpoint}';
                } else {
-                   url = 'https://proxy.sahusaksham453675.workers.dev/?url' + encodeURIComponent(provider.endpoint);
+                   url = 'https://proxy.sahusaksham453675.workers.dev/?url=${ encodeURIComponent(provider.endpoint)}';
                }
             }
             if (providerKey === 'ollama') url = 'https://corsproxy.io/?' + provider.endpoint;
