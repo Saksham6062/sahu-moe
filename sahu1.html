@@ -7825,7 +7825,7 @@ async function callModelWithFallback(providerKey, modelId, messages, retryCount 
     
     // Determine streaming support
     let useRealStreaming = true;
-    if (providerKey !== 'nvidia' && providerKey !== 'gemini') {
+    if (providerKey !== 'gemini') {
         useRealStreaming = false;
     }
     
