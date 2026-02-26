@@ -3198,7 +3198,7 @@ CRITICAL INSTRUCTION: Output your internal monologue enclosed in <think> tags ba
             let url = provider.endpoint;
             if (providerKey === 'nvidia') {
                if (modelId === 'nvidia/cosmos-reason2-8b') {
-                   url = 'https://corsproxy.io/?' + provider.endpoint;
+                   url = 'https://api.allorigins.win/raw?url=' + provider.endpoint;
                } else {
                    url = 'https://corsproxy.io/?' + encodeURIComponent(provider.endpoint);
                }
