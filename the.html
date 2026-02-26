@@ -3214,8 +3214,23 @@ CRITICAL INSTRUCTION: Output your internal monologue enclosed in <think> tags ba
             let url = provider.endpoint;
             if (providerKey === 'nvidia') {
                if (modelId === 'nvidia/cosmos-reason2-8b') {
-                   url = 'https://proxy.sahusaksham453675.workers.dev/?url=' + provider.endpoint;
-               } else {
+                   url = 'https://corsproxy.io/?' + provider.endpoint;
+               } if (modelId === 'minimax/minimax-m2') {
+                   url = 'https://corsproxy.io/?' + provider.endpoint;
+               } if (modelId === 'qwen/qwen3-coder-480b-a35b-instruct') {
+                   url = 'https://corsproxy.io/?' + provider.endpoint;
+               }if (modelId === 'mistralai/mamba-codestral-7b-v0.1') {
+                   url = 'https://corsproxy.io/?' + provider.endpoint;
+               }if (modelId === 'nvidia/nemotron-4-mini-hindi-4b-instruct') {
+                   url = 'https://corsproxy.io/?' + provider.endpoint;
+               } 
+               if (modelId === 'thudm/chatglm') {
+                   url = 'https://corsproxy.io/?' + provider.endpoint;
+               }if (modelId === 'moonshotai/kimi-k2.5') {
+                   url = 'https://corsproxy.io/?' + provider.endpoint;
+               }if (modelId === 'moonshotai/kimi-k2-thinking') {
+                   url = 'https://corsproxy.io/?' + provider.endpoint;
+               }else {
                    url = 'https://proxy.sahusaksham453675.workers.dev/?url=' + encodeURIComponent(provider.endpoint);
                }
             }
