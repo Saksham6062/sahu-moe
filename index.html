@@ -2748,7 +2748,7 @@
         function loadSettings() {
             try { state.activeProviders = JSON.parse(localStorage.getItem('sahu_active_providers') || '["nvidia"]'); } catch(e){}
             const defaultModels = [
-                {provider: 'nvidia', modelKey: 'Qwen 3.5 397B', modelId: 'qwen/qwen3.5-397b-a17b-instruct', stage: 'none'}, 
+                {provider: 'nvidia', modelKey: 'Qwen 3.5 397B', modelId: 'qwen/qwen3.5-397b-a17b', stage: 'none'}, 
                 {provider: 'nvidia', modelKey: 'MiniMax M2.5', modelId: 'minimaxai/minimax-m2.5', stage: 'none'}, 
                 {provider: 'nvidia', modelKey: 'Kimi K2.5', modelId: 'moonshotai/kimi-k2.5', stage: 'none'},
                 {provider: 'nvidia', modelKey: 'GLM 5', modelId: 'z-ai/glm5', stage: '1'},
@@ -3624,7 +3624,7 @@ CRITICAL INSTRUCTION: Output your internal monologue enclosed in <think> tags ba
                 input.value = ''; input.style.height = 'auto'; removeFile();
 
                 const searchId = `search-${Date.now()}`;
-                container.innerHTML += `<div class="p-3 mb-2 rounded-xl bg-[var(--bg-tertiary)] text-xs border border-dashed border-[var(--accent)]" id="${searchId}"><i class="fas fa-globe animate-spin mr-2"></i>Searching Web...</div>`;
+                container.innerHTML += `<div class="p-3 mb-2 rounded-xl bg-[var(--bg-tertiary)] text-xs border border-dashed border-[var(--accent)]" id="${searchId}">🌏 Searching Web...</div>`;
                 
                 let fullPrompt = content;
                 const searchResJson = await searchWeb(content); 
