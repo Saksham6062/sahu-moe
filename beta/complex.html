@@ -4876,14 +4876,14 @@ const UI_TRANSLATIONS = {
  * Model-specific configurations
  */
 const MODEL_CONFIGS = {
-    'sarvamai/sarvam-m': { max_tokens: 30000 },
-    'qwen/qwq-32b': { max_tokens: 30000 },
-    'qwen/qwen2.5-7b-instruct': { max_tokens: 30000 },
-    'mistralai/mamba-codestral-7b-v0.1': { max_tokens: 30000 },
-    'google/gemma-3-1b-it': { max_tokens: 30000 },
-    'google/gemma-3n-e4b-it': { max_tokens: 30000 },
-    'microsoft/phi-4-mini-flash-reasoning': { max_tokens: 60000 },
-    'mistralai/mixtral-8x22b-instruct-v0.1': { max_tokens: 60000 },
+    'sarvamai/sarvam-m': { max_tokens: 20000 ,noStream: true },
+    'qwen/qwq-32b': { max_tokens: 20000  },
+    'qwen/qwen2.5-7b-instruct': { max_tokens: 20000  },
+    'mistralai/mamba-codestral-7b-v0.1': { max_tokens: 20000 ,noStream: true},
+    'google/gemma-3-1b-it': { max_tokens: 20000 },
+    'google/gemma-3n-e4b-it': { max_tokens: 20000 },
+    'microsoft/phi-4-mini-flash-reasoning': { max_tokens: 50000 ,noStream: true},
+    'mistralai/mixtral-8x22b-instruct-v0.1': { max_tokens: 50000 ,noStream: true},
     'google/shieldgemma-9b': { max_tokens: 1000 },
     'google/gemma-7b': { max_tokens: 6000, noSystemRole: true },
     'google/gemma-2-27b-it': { max_tokens: 6000, noSystemRole: true },
@@ -4898,8 +4898,8 @@ const MODEL_CONFIGS = {
     'z-ai/glm4.7': { noStream: true, max_tokens: 30000 },
     'nvidia/cosmos-reason2-8b': { max_tokens: 4000 },
     'stockmark/stockmark-2-100b-instruct': { max_tokens: 30000 },
-    'minimaxai/minimax-m2.1': { max_tokens: 30000 },
-    'minimaxai/minimax-m2.5': { max_tokens: 30000 },
+    'minimaxai/minimax-m2.1': { max_tokens: 30000 ,noStream: true},
+    'minimaxai/minimax-m2.5': { max_tokens: 30000 ,noStream: true},
     'moonshotai/kimi-k2.5': { max_tokens: 30000 },
     'moonshotai/kimi-k2-thinking': { max_tokens: 30000 }
 };
@@ -7825,7 +7825,7 @@ async function callModelWithFallback(providerKey, modelId, messages, retryCount 
     
     // Determine streaming support
     let useRealStreaming = true;
-    if (providerKey !== 'gemini') {
+    if (providerKey !== 'gemini' && providerKey !== 'nvidia') {
         useRealStreaming = false;
     }
     
@@ -8004,10 +8004,8 @@ CRITICAL INSTRUCTION: Output your internal monologue enclosed in <think>tags bas
     // Build URL with CORS proxy if needed
     let url = provider.endpoint;
     if (providerKey === 'nvidia') {
-        if (modelId === 'nvidia/cosmos-reason2-8b' && 'google/gemma-3-27b') {
-            url = 'https://corsproxy.io/?' + provider.endpoint;
-        }if (modelId === 'minimax/minimax-m2') {
-                   url = 'https://corsproxy.io/?' + provider.endpoint;
+        if (modelId === 'nvidia/cosmos-reason2-8b' && 'google/gemma-3-27b' && 'thudm/chatglm3-6b' &&' qwen/qwq-32b' && 'google/gemma-3-1b-it' && 'nvidia/nemotron-4-mini-hindi-4b-instruct' && 'google/gemma-3n-e4b-it' && 'qwen/qwen2.5-7b-instruct' && 'ibm/granite-guardian-3.0-8b' && 'meta/llama-guard-4-12b' &&  'stockmark/stockmark-2-100b-instruct' && 'google/gemma-7b' && 'google/gemma-2-27b-it' && 'microsoft/phi-3-medium-4k-instruct' && 'microsoft/phi-3.5-vision-instruct' && 'minimaxai/minimax-m2' && 'deepseek-ai/deepseek-v3.1' && 'meta/llama-3.2-3b-instruct' && 'stepfun-ai/step-3.5-flash' && 'openai/gpt-oss-20b' && 'nvidia/nvidia-nemotron-nano-9b-v2' && 'nvidia/nemotron-nano-12b-v2-vl' && 'nvidia/usdcode-llama-3.1-70b-instruct') {
+             url = 'https://corsproxy.io/?' + provider.endpoint;
                }else {
             url = 'https://ancient-tree-1c06.sahusaksham453675.workers.dev/?url=' + encodeURIComponent(provider.endpoint);
         }
