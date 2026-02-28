@@ -2946,7 +2946,7 @@
             if (!apiKey) throw new Error(`No API key for ${provider.name}`);
             
             let useRealStreaming = true;
-            if (providerKey !== 'gemini' && providerKey !== 'nvidia' ) {
+            if (providerKey !== 'gemini' ) {
                 useRealStreaming = false;
             }
 
@@ -3216,7 +3216,7 @@ CRITICAL INSTRUCTION: Output your internal monologue enclosed in <think> tags ba
                if (modelId === 'nvidia/cosmos-reason2-8b' && 'moonshotai/kimi-k2-thinking' && 'thudm/chatglm3-6b' && 'mistralai/mamba-codestral-7b-v0.1'){
                    url = 'https://corsproxy.io/?' + provider.endpoint;
                } else {
-                   url = 'https://proxy.sahusaksham453675.workers.dev/?url=' + encodeURIComponent(provider.endpoint);
+                   url = 'https://corsproxy.io/?' + encodeURIComponent(provider.endpoint);
                }
             }
             if (providerKey === 'ollama') url = 'https://corsproxy.io/?' + provider.endpoint;
