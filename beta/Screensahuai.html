@@ -4152,7 +4152,7 @@
                             <span>SahuAI</span>
                         </button>
                         <button id="modeSearchBtn" class="mode-toggle-btn" onclick="setModeToggle('search')">
-                            <i class="fas fa-globe"></i>
+                            <i class="fas fa-search"></i>
                             <span>Search</span>
                         </button>
                     </div>
@@ -4202,7 +4202,7 @@
                     <!-- Welcome Screen -->
                     <div id="welcomeScreen" class="welcome-screen">
                         <!-- SahuAI Search Header (Only visible in search mode) -->
-                        <div id="sahuSearchHeader" class="sahu-search-header" style="display:none">SahuAI</div>
+                        <div id="sahuSearchHeader" class="sahu-search-header" style="display:none">🦅 SahuAI Search</div>
                         
                         <!-- Default Welcome Content -->
                         <div id="defaultWelcomeContent" style="display: block;">
@@ -6606,11 +6606,10 @@ const PROVIDERS = {
         endpoint: 'https://integrate.api.nvidia.com/v1/chat/completions',
         keyName: 'sahu_nvidia_key',
         color: 'nvidia',
-        icon: '🟢',
+        icon: '🦅',
         models: {
             'Qwen 3.5 397B': 'qwen/qwen3.5-397b-a17b',
             'Qwen 3.5 122B': 'qwen/qwen3.5-122b-a10b',
-            'Phi 3.5 Vision': 'microsoft/phi-3.5-vision-instruct',
             'Llama 3.2 90B Vision': 'meta/llama-3.2-90b-vision-instruct',
             'GLM 5': 'z-ai/glm5',
             'MiniMax M2.5': 'minimaxai/minimax-m2.5',
@@ -6618,17 +6617,12 @@ const PROVIDERS = {
             'GLM 4.7': 'z-ai/glm4.7',
             'Seed OSS 36B': 'bytedance/seed-oss-36b-instruct',
             'DeepSeek V3.2': 'deepseek-ai/deepseek-v3.2',
-            'DeepSeek V3.1': 'deepseek-ai/deepseek-v3.1',
             'DeepSeek V3.1 Terminus': 'deepseek-ai/deepseek-v3.1-terminus',
-            'DeepSeek R1 Distill Llama 8B': 'deepseek-ai/deepseek-r1-distill-llama-8b',
             'Gemma 3N E4B': 'google/gemma-3n-e4b-it',
             'Gemma 3 27B': 'google/gemma-3-27b-it',
             'Gemma 4 31B': 'google/gemma-4-31b-it',
             'Phi 4 Multimodal': 'microsoft/phi-4-multimodal-instruct',
-            'Phi 4 Mini Reasoning': 'microsoft/phi-4-mini-flash-reasoning',
-            'Phi 3 Medium': 'microsoft/phi-3-medium-4k-instruct',
             'Llama 3.3 70B': 'meta/llama-3.3-70b-instruct',
-            'Llama 3.2 3B': 'meta/llama-3.2-3b-instruct',
             'Kimi K2.5': 'moonshotai/kimi-k2.5',
             'Kimi K2 Thinking': 'moonshotai/kimi-k2-thinking',
             'Kimi K2 Instruct': 'moonshotai/kimi-k2-instruct',
@@ -6638,7 +6632,6 @@ const PROVIDERS = {
             'Ministral 14B': 'mistralai/ministral-14b-instruct-2512',
             'Magistral Small': 'mistralai/magistral-small-2506',
             'Mixtral 8x22B': 'mistralai/mixtral-8x22b-instruct-v0.1',
-            'Mamba Codestral 7B': 'mistralai/mamba-codestral-7b-v0.1',
             'Step 3.5 Flash': 'stepfun-ai/step-3.5-flash',
             'GPT OSS 120B': 'openai/gpt-oss-120b',
             'GPT OSS 20B': 'openai/gpt-oss-20b',
@@ -6647,7 +6640,6 @@ const PROVIDERS = {
             'Qwen3 Next 80B': 'qwen/qwen3-next-80b-a3b-instruct',
             'Qwen3 Next 80B Thinking': 'qwen/qwen3-next-80b-a3b-thinking',
             'Qwen3 Coder 480B': 'qwen/qwen3-coder-480b-a35b-instruct',
-            'QwQ 32B': 'qwen/qwq-32b',
             'Nemotron 30B': 'nvidia/nemotron-3-nano-30b-a3b',
             'Nemotron 3 Super 120B': 'nvidia/nemotron-3-super-120b-a12b',
             'Nemotron 12B VL': 'nvidia/nemotron-nano-12b-v2-vl',
@@ -6661,7 +6653,6 @@ const PROVIDERS = {
         color: 'sambanova',
         icon: '🌊',
         models: {
-            'ALLaM 7B': 'ALLaM-7B-Instruct-preview',
             'DeepSeek R1': 'DeepSeek-R1-0528',
             'DeepSeek R1 Distill 70B': 'DeepSeek-R1-Distill-Llama-70B',
             'DeepSeek V3.1': 'DeepSeek-V3.1',
@@ -7008,16 +6999,6 @@ const SEARCH_ENGINES_CONFIG = {
     baidu: { name: 'Baidu (English)', type: 'searx', bang: '!baidu' },
     youtube: { name: 'YouTube', type: 'searx', bang: '!yt' },
     twitter: { name: 'X (Twitter)', type: 'searx', bang: '!twitter' },
-    ncert: { name: 'NCERT', type: 'searx', site: 'ncert.nic.in' },
-    diksha: { name: 'DIKSHA', type: 'searx', site: 'diksha.gov.in' },
-    cbse: { name: 'CBSE Academic', type: 'searx', site: 'cbseacademic.nic.in' },
-    epathshala: { name: 'ePathshala', type: 'searx', site: 'epathshala.nic.in' },
-    vedantu: { name: 'Vedantu', type: 'searx', site: 'vedantu.com' },
-    magnetbrains: { name: 'Magnet Brains', type: 'searx', site: 'magnetbrains.com' },
-    byjus: { name: 'Byjus', type: 'searx', site: 'byjus.com' },
-    unacademy: { name: 'Unacademy', type: 'searx', site: 'unacademy.com' },
-    mpboard: { name: 'MP Board Solutions', type: 'searx', site: 'mpboardsolutions.in' },
-    sahuacademy: { name: 'Sahu Academy', type: 'searx', site: 'saksham6062.github.io/sahu-10' },
     copilot: { name: 'Microsoft Copilot', type: 'searx', site: 'microsoft.com' },
     chatgpt: { name: 'ChatGPT', type: 'searx', site: 'openai.com' },
     chatglm: { name: 'ChatGLM', type: 'searx', site: 'chatglm.cn' },
